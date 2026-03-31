@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.1] - 2026-03-31 - Reliable Upgrade Detection
+
+### Changed
+
+- Updated the skill startup instructions so failed remote version checks are surfaced to the user instead of silently skipped.
+- Added Codex-specific guidance to prefer reinstalling from the public GitHub skill URL over ad hoc `curl` updates when possible.
+- Clarified that hosts without network access or browsing support must say that update checking is unavailable.
+
 ## [0.2.0] - 2026-03-31 - Claude + Codex Compatibility
 
 ### Changed

@@ -54,7 +54,7 @@ echo "hci-office-hours-with-mike v$_V"
 
 Print the version line to the user: `hci-office-hours-with-mike v{version}`
 
-Then check for updates:
+Then check for updates. In Codex, prefer a browsing or web-fetch capability over shell `curl` because shell network access may be blocked. Only fall back to shell `curl` when the host allows it.
 
 ```bash
 _LOCAL="$_V"
@@ -68,29 +68,27 @@ if [ -n "$_REMOTE" ] && [ "$_REMOTE" != "$_LOCAL" ]; then
 fi
 ```
 
-**If `UPDATE_AVAILABLE` is printed:** Pause and ask the user whether to update now:
+If browsing/web fetch succeeds, compare the remote version to the local version.
+
+- If the remote version is newer: pause and ask the user whether to update now.
+- If the remote version matches: continue normally.
+- If the host cannot fetch the remote version at all: explicitly tell the user `Version check unavailable in this environment; continuing with local version v{local}.` Do not silently skip this.
+
+**If an update is available:** Pause and ask the user whether to update now:
 
 > hci-office-hours-with-mike **v{remote}** is available (you're on v{local}). Update now?
 >
-> - **Update now** — download the latest version (requires session restart)
+> - **Update now** — install the latest version (requires session restart)
 > - **Skip this time** — continue with the current version
 
 **If "Update now":** Run the upgrade using `$_SKILL_DIR` detected at startup:
-```bash
-if [ -d "$_SKILL_DIR/.git" ]; then
-  cd "$_SKILL_DIR" && git pull origin main
-else
-  mkdir -p "$_SKILL_DIR/agents"
-  curl -sf "https://raw.githubusercontent.com/profmike/hci-stack/main/hci-office-hours-with-mike/SKILL.md" \
-    -o "$_SKILL_DIR/SKILL.md"
-  curl -sf "https://raw.githubusercontent.com/profmike/hci-stack/main/hci-office-hours-with-mike/VERSION" \
-    -o "$_SKILL_DIR/VERSION" || \
-    curl -sf "https://raw.githubusercontent.com/profmike/hci-stack/main/VERSION" \
-      -o "$_SKILL_DIR/VERSION"
-  curl -sf "https://raw.githubusercontent.com/profmike/hci-stack/main/hci-office-hours-with-mike/agents/openai.yaml" \
-    -o "$_SKILL_DIR/agents/openai.yaml" 2>/dev/null || true
-fi
-```
+Use the most reliable path for the current host:
+
+- **Codex (preferred):** Reinstall from the public skill URL `https://github.com/profmike/hci-stack/tree/main/hci-office-hours-with-mike` using the host's skill installer or equivalent GitHub skill install flow.
+- **Git checkout installs:** If `$_SKILL_DIR/.git` exists, run `git pull origin main`.
+- **Direct file installs:** If the host can write files and fetch URLs, refresh `SKILL.md`, `VERSION`, and `agents/openai.yaml` from the same public GitHub path.
+- **If none of those are available:** Tell the user `Automatic upgrade is unavailable in this environment. Reinstall from https://github.com/profmike/hci-stack/tree/main/hci-office-hours-with-mike after this session.`
+
 Then tell the user: "Upgraded to v{new}. Restart the session to use the new version." Do not proceed to Phase 1.
 
 **If "Skip this time":** Proceed to Phase 1 with the current version.
