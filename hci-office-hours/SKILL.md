@@ -43,7 +43,7 @@ echo "hci-office-hours v$_V"
 
 Print the version line to the user: `hci-office-hours v{version}`
 
-Then check for updates (non-blocking — don't stall the session):
+Then check for updates:
 
 ```bash
 _LOCAL=$(cat ~/.claude/skills/hci-office-hours/VERSION 2>/dev/null || echo "unknown")
@@ -53,9 +53,14 @@ if [ -n "$_REMOTE" ] && [ "$_REMOTE" != "$_LOCAL" ]; then
 fi
 ```
 
-**If `UPDATE_AVAILABLE` is printed:** Tell the user: "Update available: v{local} → v{remote}. Run `/hci-office-hours upgrade` or say 'upgrade' to update." Then continue with Phase 1 — do not block.
+**If `UPDATE_AVAILABLE` is printed:** Pause and ask the user via AskUserQuestion:
 
-**If the user says "upgrade":** Run the upgrade:
+> hci-office-hours **v{remote}** is available (you're on v{local}). Update now?
+>
+> - **Update now** — download the latest version (requires session restart)
+> - **Skip this time** — continue with the current version
+
+**If "Update now":** Run the upgrade:
 ```bash
 if [ -d ~/.claude/skills/hci-office-hours/.git ]; then
   cd ~/.claude/skills/hci-office-hours && git pull origin main
@@ -66,7 +71,9 @@ else
     -o ~/.claude/skills/hci-office-hours/VERSION
 fi
 ```
-Then tell the user: "Upgraded to v{new}. Restart the session to use the new version."
+Then tell the user: "Upgraded to v{new}. Restart the session to use the new version." Do not proceed to Phase 1.
+
+**If "Skip this time":** Proceed to Phase 1 with the current version.
 
 ---
 
