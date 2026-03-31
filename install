@@ -1,14 +1,58 @@
 #!/bin/bash
-# Install hci-office-hours-with-mike skill for Claude Code
+# Install hci-office-hours-with-mike skill for Claude Code and/or Codex
 set -e
 
-SKILL_DIR="$HOME/.claude/skills/hci-office-hours-with-mike"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-
-mkdir -p "$SKILL_DIR"
-cp "$SCRIPT_DIR/hci-office-hours-with-mike/SKILL.md" "$SKILL_DIR/SKILL.md"
-cp "$SCRIPT_DIR/VERSION" "$SKILL_DIR/VERSION"
-
 VERSION=$(cat "$SCRIPT_DIR/VERSION")
-echo "hci-office-hours-with-mike v$VERSION installed to $SKILL_DIR"
-echo "Run /hci-office-hours-with-mike in Claude Code to start."
+HOST="${1:-auto}"
+
+install_claude() {
+  local dir="$HOME/.claude/skills/hci-office-hours-with-mike"
+  mkdir -p "$dir"
+  cp "$SCRIPT_DIR/hci-office-hours-with-mike/SKILL.md" "$dir/SKILL.md"
+  cp "$SCRIPT_DIR/VERSION" "$dir/VERSION"
+  echo "  Claude Code: $dir"
+}
+
+install_codex() {
+  local dir="$HOME/.codex/skills/hci-office-hours-with-mike"
+  mkdir -p "$dir"
+  cp "$SCRIPT_DIR/hci-office-hours-with-mike/SKILL.md" "$dir/SKILL.md"
+  cp "$SCRIPT_DIR/VERSION" "$dir/VERSION"
+  echo "  Codex: $dir"
+}
+
+echo "Installing hci-office-hours-with-mike v$VERSION..."
+
+case "$HOST" in
+  claude)
+    install_claude
+    ;;
+  codex)
+    install_codex
+    ;;
+  auto)
+    # Install for whichever agents are present
+    INSTALLED=0
+    if [ -d "$HOME/.claude" ]; then
+      install_claude
+      INSTALLED=1
+    fi
+    if [ -d "$HOME/.codex" ]; then
+      install_codex
+      INSTALLED=1
+    fi
+    if [ "$INSTALLED" -eq 0 ]; then
+      # Default to Claude if neither exists
+      install_claude
+    fi
+    ;;
+  *)
+    echo "Usage: ./install [claude|codex|auto]"
+    exit 1
+    ;;
+esac
+
+echo ""
+echo "hci-office-hours-with-mike v$VERSION ready."
+echo "Run /hci-office-hours-with-mike to start."
