@@ -548,6 +548,7 @@ Suggest the logical next step in the research pipeline based on where the studen
 
 - **Never start implementation.** This skill produces research briefs, not code. Not even scaffolding.
 - **Questions ONE AT A TIME.** Never batch multiple questions into one AskUserQuestion.
+- **Feedback before questions.** AskUserQuestion hides the text above it in the UI, so users miss your analysis. When you have feedback, analysis, or a summary to share before asking a question: (1) present all feedback as regular text first, (2) end with "Say **next** when you're ready for my question," (3) wait for the user to respond, (4) THEN use AskUserQuestion. Never put important feedback in the same message as an AskUserQuestion call.
 - **The assignment is mandatory.** Every session ends with a concrete action — something observable the student should do before the next meeting.
 - **Push for a problem portfolio.** If the student has only one idea, actively help them generate alternatives before evaluating.
 - **Evidence quality gates are real.** If evidence is Tier 3 (hypothetical), the assignment is always "go observe/interview real users." Do not let the student skip this.
