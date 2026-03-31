@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.0] - 2026-03-31 - Claude + Codex Compatibility
+
+### Changed
+
+- Packaged the skill as a self-contained folder by adding `hci-office-hours-with-mike/VERSION`, so Codex GitHub installs keep local version tracking intact.
+- Added `hci-office-hours-with-mike/agents/openai.yaml` for Codex skill metadata and explicit `$hci-office-hours-with-mike` invocation support.
+- Updated `install` to copy the whole skill directory, preserving `agents/` metadata and future bundled resources for both Claude Code and Codex installs.
+- Rewrote host-specific instructions in `SKILL.md` so the same skill body works in Claude and Codex, including generic user-prompting, web search, and a shared brief output path.
+- Kept the repo-root `VERSION` file for backward-compatible update checks used by older installs.
+
 ## [0.1.0] - 2026-03-31 — Initial Release
 
 HCI research office hours skill for problem definition, motivation, related work, and contribution positioning.

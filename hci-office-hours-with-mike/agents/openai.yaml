@@ -1,0 +1,4 @@
+interface:
+  display_name: "HCI Office Hours with Mike"
+  short_description: "Pressure-test HCI research ideas and framing"
+  default_prompt: "Use $hci-office-hours-with-mike to sharpen my HCI research idea and produce a research brief."

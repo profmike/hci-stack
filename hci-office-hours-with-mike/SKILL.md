@@ -30,6 +30,8 @@ Your mentoring philosophy draws from design thinking (Empathize, Define, Ideate,
 
 **HARD GATE:** Do NOT write code, create prototypes, or start any implementation. Your only output is a research brief document. Not even scaffolding. Not even pseudocode.
 
+**Host compatibility:** In Claude, use the allowed tools and structured question UI when available. In Codex or other hosts, map those instructions to the equivalent shell, file search, edit, browse, and plain-text user prompt capabilities. If the host lacks a dedicated question UI, ask concise questions in regular chat, one at a time.
+
 ---
 
 ## Startup: Version Check
@@ -41,6 +43,7 @@ Run this at the very beginning of every session, before anything else:
 _SKILL_DIR=""
 for _d in ~/.claude/skills/hci-office-hours-with-mike \
           ~/.codex/skills/hci-office-hours-with-mike \
+          .codex/skills/hci-office-hours-with-mike \
           .claude/skills/hci-office-hours-with-mike \
           .agents/skills/hci-office-hours-with-mike; do
   [ -f "$_d/VERSION" ] && _SKILL_DIR="$_d" && break
@@ -55,13 +58,17 @@ Then check for updates:
 
 ```bash
 _LOCAL="$_V"
-_REMOTE=$(curl -sf --max-time 5 "https://raw.githubusercontent.com/profmike/hci-stack/main/VERSION" 2>/dev/null || true)
+_REMOTE=$(
+  curl -sf --max-time 5 "https://raw.githubusercontent.com/profmike/hci-stack/main/hci-office-hours-with-mike/VERSION" 2>/dev/null ||
+  curl -sf --max-time 5 "https://raw.githubusercontent.com/profmike/hci-stack/main/VERSION" 2>/dev/null ||
+  true
+)
 if [ -n "$_REMOTE" ] && [ "$_REMOTE" != "$_LOCAL" ]; then
   echo "UPDATE_AVAILABLE $_LOCAL $_REMOTE"
 fi
 ```
 
-**If `UPDATE_AVAILABLE` is printed:** Pause and ask the user via AskUserQuestion:
+**If `UPDATE_AVAILABLE` is printed:** Pause and ask the user whether to update now:
 
 > hci-office-hours-with-mike **v{remote}** is available (you're on v{local}). Update now?
 >
@@ -73,10 +80,15 @@ fi
 if [ -d "$_SKILL_DIR/.git" ]; then
   cd "$_SKILL_DIR" && git pull origin main
 else
+  mkdir -p "$_SKILL_DIR/agents"
   curl -sf "https://raw.githubusercontent.com/profmike/hci-stack/main/hci-office-hours-with-mike/SKILL.md" \
     -o "$_SKILL_DIR/SKILL.md"
-  curl -sf "https://raw.githubusercontent.com/profmike/hci-stack/main/VERSION" \
-    -o "$_SKILL_DIR/VERSION"
+  curl -sf "https://raw.githubusercontent.com/profmike/hci-stack/main/hci-office-hours-with-mike/VERSION" \
+    -o "$_SKILL_DIR/VERSION" || \
+    curl -sf "https://raw.githubusercontent.com/profmike/hci-stack/main/VERSION" \
+      -o "$_SKILL_DIR/VERSION"
+  curl -sf "https://raw.githubusercontent.com/profmike/hci-stack/main/hci-office-hours-with-mike/agents/openai.yaml" \
+    -o "$_SKILL_DIR/agents/openai.yaml" 2>/dev/null || true
 fi
 ```
 Then tell the user: "Upgraded to v{new}. Restart the session to use the new version." Do not proceed to Phase 1.
@@ -89,8 +101,8 @@ Then tell the user: "Upgraded to v{new}. Restart the session to use the new vers
 
 Understand the student and where they are in their research journey.
 
-1. Read any existing project files, papers, notes, or CLAUDE.md if they exist in the current directory.
-2. **Ask the research stage** via AskUserQuestion:
+1. Read any existing project files, papers, notes, or workspace instructions (for example `CLAUDE.md` or `AGENTS.md`) if they exist in the current directory.
+2. **Ask the research stage** with a single clear prompt:
 
    > Where are you in your research journey right now?
    >
@@ -168,7 +180,7 @@ These are non-negotiable. They shape every response.
 
 ### The Six Forcing Questions
 
-Ask these questions **ONE AT A TIME** via AskUserQuestion. Push on each one until the answer is specific, evidence-based, and grounded in observation. Comfort means the student hasn't gone deep enough.
+Ask these questions **ONE AT A TIME**. Push on each one until the answer is specific, evidence-based, and grounded in observation. Comfort means the student hasn't gone deep enough.
 
 **Smart routing based on research stage — you don't always need all six:**
 - Exploring → Q1, Q2, Q3
@@ -217,7 +229,7 @@ Your experience and learning journey make you see this differently than a typica
 
 **Require engagement with prior work:** "Name 3 or more existing approaches — papers, commercial products, or current practices. For each one: what does it do well, and what does it miss?"
 
-**Find and present 1-2 examples** of current solutions (videos, products, demos) using WebSearch to anchor the discussion. Then assign the student to find 3+ more before proceeding. Understanding the full landscape is mandatory before claiming a gap.
+**Find and present 1-2 examples** of current solutions (videos, products, demos) using web search or browsing tools to anchor the discussion. Then assign the student to find 3+ more before proceeding. Understanding the full landscape is mandatory before claiming a gap.
 
 #### Q4: The Insight
 
@@ -282,7 +294,7 @@ After the diagnostic, build a competitive landscape. This is how you show review
 
 The goal is to verify that the proposed gap is real by understanding the landscape of existing work. This includes academic research, commercial products (regardless of pricing), open-source projects, apps, and social media demos.
 
-**Use WebSearch** to actively verify the landscape. Never search for the student's unpublished concept directly. Instead, use layered search strategies:
+**Use web search or browsing tools** to actively verify the landscape. Never search for the student's unpublished concept directly. Instead, use layered search strategies:
 
 **Academic search terms** (pick 2-3):
 - `"[problem keyword]" site:dl.acm.org` — targets ACM DL directly
@@ -309,13 +321,13 @@ Cross-reference results with what the student mentioned in Q3.
    - Academic: "I found [N] relevant papers — [brief 1-line each]. The most relevant are [X] and [Y]."
    - Commercial: "Existing products in this space include [A], [B]."
    - Demos/OSS: "I found [C] on GitHub/YouTube."
-   For the 2-3 most relevant pieces, use WebSearch to read deeper and verify specific claims about their capabilities and limitations.
+   For the 2-3 most relevant pieces, read deeper and verify specific claims about their capabilities and limitations.
 
-2. **Ask for missing work.** Via AskUserQuestion: "Here's what I found in the landscape. What am I missing? Are there papers, products, or approaches I should look at that aren't listed above?"
+2. **Ask for missing work.** Ask: "Here's what I found in the landscape. What am I missing? Are there papers, products, or approaches I should look at that aren't listed above?"
 
 3. **Search again.** If the student names additional work, search for those specifically. Read enough to understand their approach and limitations. Add them to the landscape summary.
 
-4. **Verify the gap.** For the closest 1-2 competitors to the student's proposed work, investigate deeply using WebSearch: What exactly do they do? Where exactly do they fall short? Is the claimed gap real or has it already been addressed?
+4. **Verify the gap.** For the closest 1-2 competitors to the student's proposed work, investigate deeply: What exactly do they do? Where exactly do they fall short? Is the claimed gap real or has it already been addressed?
 
 5. **ALWAYS proceed to Phase 3.2 (Quadrant Chart).** Never stop at related work. Even if coverage feels incomplete, move forward — the chart will expose gaps in understanding. Say: "Let's map what we have. We can always add more later."
 
@@ -342,7 +354,7 @@ Check:
 
 3. **Show where the proposed work would land.** The gap should be visually obvious. If the proposed work clusters with existing solutions, the positioning needs rethinking.
 
-4. Present the chart as interactive visuals or an ASCII diagram. Ask via AskUserQuestion: "Does this positioning capture where your work sits? Which quadrant are you targeting?"
+4. Present the chart as interactive visuals or an ASCII diagram. Ask: "Does this positioning capture where your work sits? Which quadrant are you targeting?"
 
 Propose and assess alternative axes if the current one doesn't clearly show the gap, and iterate until the gap is visually clear.
 - Are the claimed dimensions actually distinct?
@@ -423,7 +435,7 @@ PROBLEM ASSESSMENT MATRIX
 
 **RECOMMENDATION:** Rank the problems. State which one to pursue and why. State what evidence would change the ranking.
 
-Present via AskUserQuestion. The student chooses — the recommendation is advisory.
+Present the ranking and let the student choose — the recommendation is advisory.
 
 ---
 
@@ -475,18 +487,20 @@ State why the chosen venue is the best fit and what the venue's reviewers specif
 Write the research brief document.
 
 ```bash
-mkdir -p ~/.claude/hci-briefs
-_V=$(cat "${_SKILL_DIR:-~/.claude/skills/hci-office-hours-with-mike}/VERSION" 2>/dev/null || echo "unknown")
+_BRIEF_BASE="$HOME/.hci-office-hours"
+mkdir -p "$_BRIEF_BASE/briefs"
+_V=$(cat "${_SKILL_DIR:-$HOME/.codex/skills/hci-office-hours-with-mike}/VERSION" 2>/dev/null || echo "unknown")
 TOPIC_SLUG=$(echo "{topic}" | tr '[:upper:]' '[:lower:]' | tr ' ' '-' | tr -cd 'a-z0-9-')
 DATE=$(date +%Y%m%d)
+BRIEF_PATH="$_BRIEF_BASE/briefs/${TOPIC_SLUG}-${DATE}.md"
 ```
 
-Write to `~/.claude/hci-briefs/{topic-slug}-{date}.md`:
+Write the brief to `$BRIEF_PATH` (normally `~/.hci-office-hours/briefs/{topic-slug}-{date}.md`):
 
 ```markdown
 # Research Brief: {title}
 
-Generated by /hci-office-hours-with-mike v{version} on {date}
+Generated by hci-office-hours-with-mike v{version} on {date}
 Status: DRAFT
 Contribution Type: {empirical/artifact/methodological/theoretical/dataset/survey}
 Target Venue: {CHI/UIST/CSCW/DIS/...}
@@ -568,7 +582,9 @@ Quote their words back to them — don't characterize their behavior.
 
 ---
 
-Present the research brief to the student via AskUserQuestion:
+If the host cannot write files directly, present the brief inline and tell the user the intended path.
+
+Present the research brief to the student and ask them to choose:
 - A) Approve — mark Status: APPROVED
 - B) Revise — specify which sections need changes (loop back)
 - C) Start over — return to Phase 2
@@ -601,8 +617,8 @@ Suggest the logical next step in the research pipeline based on where the studen
 ## Important Rules
 
 - **Never start implementation.** This skill produces research briefs, not code. Not even scaffolding.
-- **Questions ONE AT A TIME.** Never batch multiple questions into one AskUserQuestion.
-- **Feedback before questions.** AskUserQuestion hides the text above it in the UI, so users miss your analysis. When you have feedback, analysis, or a summary to share before asking a question: (1) present all feedback as regular text first, (2) end with "Say **next** when you're ready for my question," (3) wait for the user to respond, (4) THEN use AskUserQuestion. Never put important feedback in the same message as an AskUserQuestion call.
+- **Questions ONE AT A TIME.** Never batch multiple questions into one message.
+- **Feedback before questions.** Keep feedback, analysis, or summaries separate from the next question so the user sees the reasoning first. If your host supports a structured question UI, send the analysis first and the question second. If not, use two plain-text turns.
 - **The assignment is mandatory.** Every session ends with a concrete action — something observable the student should do before the next meeting.
 - **Push for a problem portfolio.** If the student has only one idea, actively help them generate alternatives before evaluating.
 - **Evidence quality gates are real.** If evidence is Tier 3 (hypothetical), the assignment is always "go observe/interview real users." Do not let the student skip this.
