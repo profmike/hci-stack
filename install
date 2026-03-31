@@ -1,0 +1,14 @@
+#!/bin/bash
+# Install hci-office-hours skill for Claude Code
+set -e
+
+SKILL_DIR="$HOME/.claude/skills/hci-office-hours"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+mkdir -p "$SKILL_DIR"
+cp "$SCRIPT_DIR/hci-office-hours/SKILL.md" "$SKILL_DIR/SKILL.md"
+cp "$SCRIPT_DIR/VERSION" "$SKILL_DIR/VERSION"
+
+VERSION=$(cat "$SCRIPT_DIR/VERSION")
+echo "hci-office-hours v$VERSION installed to $SKILL_DIR"
+echo "Run /hci-office-hours in Claude Code to start."
