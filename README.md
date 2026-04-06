@@ -1,14 +1,15 @@
 # hci-stack
 
-Mike Chen's (opinionated) exploration of agent skills for HCI research.
+Prof. Mike Chen's exploration of agent skills for HCI research.
 
-***How should HCI research and education evolve with AI, when AI can accelerate many aspects of a research project's lifecycle by 10-100x?***
+***As AI accelerates much of the research lifecycle by 10-100×, how should HCI research and education redefine their purpose, priorities, and practice?***
 
-Related work research that used to take students days to report back — AI now completes it more thoroughly in minutes. Prototypes that used to wait weeks for students to build — AI now implements in hours. How do we use the 10-100x to increase research quality and impact?
+hci-stack turns HCI research mentoring workflows into AI skills. The goal is not just to make research faster. It is to use AI to help researchers choose better problems, build stronger motivation, frame contributions more clearly, and improve the quality of what they study and build.
 
-This is my exploration of that question, inspired by [gstack](https://github.com/garrytan/gstack) by Garry Tan (President & CEO of [Y Combinator](https://www.ycombinator.com/)), and informed by my varied experience at startups, accelerators ([IK12](https://ik12.org/)+[YC](https://www.ycombinator.com/)), academic research (systems research with [Prof. Eric Brewer](https://people.eecs.berkeley.edu/~brewer/) and [Prof. David Patterson](https://www2.eecs.berkeley.edu/Faculty/Homepages/patterson.html) at Berkeley), and corporate research (ubicomp research at Intel Research Seattle with [Prof. James Landay](https://profiles.stanford.edu/james-landay)).
+This repository is one step in that exploration. It is inspired by [gstack](https://github.com/garrytan/gstack) by Garry Tan, President and CEO of [Y Combinator](https://www.ycombinator.com/), and informed by my experience mentoring Master's students to publish more than 30 ACM CHI papers, including 2 CHI Best Paper Awards (top 1%, in 2023 and 2026) and 4 CHI Honorable Mention Awards (top 5%).
 
-For the past 15 years, I've been an HCI professor at NTU, during which I have mentored Masters students to publish more than 30 ACM CHI papers, including 2 CHI Best Paper Awards (top 1%, in 2023 and 2026) and 4 CHI Honorable Mention Awards (top 5%).
+It also reflects how I approach research problems based on experience across startups, accelerators ([IK12](https://ik12.org/) + [YC](https://www.ycombinator.com/)), academic research (systems research with [Prof. Eric Brewer](https://people.eecs.berkeley.edu/~brewer/) and [Prof. David Patterson](https://www2.eecs.berkeley.edu/Faculty/Homepages/patterson.html) at Berkeley), and corporate research (ubiquitous computing research at Intel Research Seattle with [Prof. James Landay](https://profiles.stanford.edu/james-landay)). Their examples have strongly shaped how I think about ambitious problems, rigorous research, and work that matters in practice.
+
 
 ## Skills
 
