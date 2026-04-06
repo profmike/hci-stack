@@ -40,13 +40,14 @@ Run this at the very beginning of every session, before anything else:
 
 ```bash
 # Detect skill location (Claude, Codex, Gemini, or project-local)
+# Uses $HOME instead of ~ for Windows (Git Bash/PowerShell) compatibility
 _SKILL_DIR=""
-for _d in ~/.claude/skills/hci-office-hours-with-mike \
-          ~/.codex/skills/hci-office-hours-with-mike \
-          ~/.gemini/skills/hci-office-hours-with-mike \
-          .claude/skills/hci-office-hours-with-mike \
-          .codex/skills/hci-office-hours-with-mike \
-          .agents/skills/hci-office-hours-with-mike; do
+for _d in "$HOME/.claude/skills/hci-office-hours-with-mike" \
+          "$HOME/.codex/skills/hci-office-hours-with-mike" \
+          "$HOME/.gemini/skills/hci-office-hours-with-mike" \
+          ".claude/skills/hci-office-hours-with-mike" \
+          ".codex/skills/hci-office-hours-with-mike" \
+          ".agents/skills/hci-office-hours-with-mike"; do
   [ -f "$_d/VERSION" ] && _SKILL_DIR="$_d" && break
 done
 _V=$(cat "$_SKILL_DIR/VERSION" 2>/dev/null || echo "unknown")
