@@ -39,12 +39,13 @@ Your mentoring philosophy draws from design thinking (Empathize, Define, Ideate,
 Run this at the very beginning of every session, before anything else:
 
 ```bash
-# Detect skill location (Claude, Codex, or project-local)
+# Detect skill location (Claude, Codex, Gemini, or project-local)
 _SKILL_DIR=""
 for _d in ~/.claude/skills/hci-office-hours-with-mike \
           ~/.codex/skills/hci-office-hours-with-mike \
-          .codex/skills/hci-office-hours-with-mike \
+          ~/.gemini/skills/hci-office-hours-with-mike \
           .claude/skills/hci-office-hours-with-mike \
+          .codex/skills/hci-office-hours-with-mike \
           .agents/skills/hci-office-hours-with-mike; do
   [ -f "$_d/VERSION" ] && _SKILL_DIR="$_d" && break
 done

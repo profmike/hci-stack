@@ -1,5 +1,5 @@
 #!/bin/bash
-# Install hci-office-hours-with-mike skill for Claude Code and/or Codex
+# Install hci-office-hours-with-mike skill for Claude Code, Codex, and/or Gemini CLI
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -29,6 +29,12 @@ install_codex() {
   echo "  Codex: $dir"
 }
 
+install_gemini() {
+  local dir="$HOME/.gemini/skills/hci-office-hours-with-mike"
+  install_skill_files "$dir"
+  echo "  Gemini CLI: $dir"
+}
+
 echo "Installing hci-office-hours-with-mike v$VERSION..."
 
 case "$HOST" in
@@ -37,6 +43,9 @@ case "$HOST" in
     ;;
   codex)
     install_codex
+    ;;
+  gemini)
+    install_gemini
     ;;
   auto)
     # Install for whichever agents are present
@@ -49,13 +58,17 @@ case "$HOST" in
       install_codex
       INSTALLED=1
     fi
+    if [ -d "$HOME/.gemini" ]; then
+      install_gemini
+      INSTALLED=1
+    fi
     if [ "$INSTALLED" -eq 0 ]; then
       # Default to Claude if neither exists
       install_claude
     fi
     ;;
   *)
-    echo "Usage: ./install [claude|codex|auto]"
+    echo "Usage: ./install [claude|codex|gemini|auto]"
     exit 1
     ;;
 esac
@@ -64,3 +77,4 @@ echo ""
 echo "hci-office-hours-with-mike v$VERSION ready."
 echo "Claude: /hci-office-hours-with-mike"
 echo "Codex: \$hci-office-hours-with-mike"
+echo "Gemini: /hci-office-hours-with-mike"
