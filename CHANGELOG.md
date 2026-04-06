@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.3.0] - 2026-04-06 — Cross-Platform, Multi-Agent
+
+### Added
+
+- **Gemini CLI support.** Install script detects `~/.gemini/` and copies skill there. Version check scans Gemini skill path. Usage: `./install gemini`.
+- **Windows support.** Added `install.ps1` PowerShell script. Version check uses `$HOME` instead of `~` for Git Bash and PowerShell compatibility.
+- **CC BY-NC-SA 4.0 license.** Added LICENSE file.
+
+### Changed
+
+- **Install script now supports 4 targets:** `./install [claude|codex|gemini|auto]`. Auto-detect installs for all agents found on the system.
+- **Version check is cross-platform.** Path detection loop uses `$HOME` and covers Claude, Codex, Gemini, and project-local installs.
+
 ## [0.2.1] - 2026-03-31 - Reliable Upgrade Detection
 
 ### Changed
