@@ -1,6 +1,6 @@
 # hci-stack
 
-Prof. Mike Chen's exploration of agent skills for HCI research.
+[Prof. Mike Chen](https://mikechen.com/)'s exploration of agent skills for HCI research.
 
 ***As AI accelerates much of the research lifecycle by 10-100×, how should HCI research and education redefine their purpose, priorities, and practice?***
 
