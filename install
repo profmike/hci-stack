@@ -1,41 +1,62 @@
 #!/bin/bash
-# Install hci-office-hours-with-mike skill for Claude Code, Codex, and/or Gemini CLI
+# Install all hci-stack skills for Claude Code, Codex, and/or Gemini CLI
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-SKILL_SRC_DIR="$SCRIPT_DIR/hci-office-hours-with-mike"
-VERSION_FILE="$SKILL_SRC_DIR/VERSION"
-if [ ! -f "$VERSION_FILE" ]; then
-  VERSION_FILE="$SCRIPT_DIR/VERSION"
-fi
+SKILLS=(
+  "hci-office-hours-with-mike"
+  "hci-motivation-and-contributions"
+)
+VERSION_FILE="$SCRIPT_DIR/VERSION"
 VERSION=$(cat "$VERSION_FILE")
 HOST="${1:-auto}"
+INSTALL_HOME="${HCI_STACK_INSTALL_HOME:-$HOME}"
 
 install_skill_files() {
-  local dir="$1"
+  local skill="$1"
+  local dir="$2/$skill"
+  case "$dir" in
+    "$INSTALL_HOME/.claude/skills/$skill"|"$INSTALL_HOME/.codex/skills/$skill"|"$INSTALL_HOME/.gemini/skills/$skill") ;;
+    *)
+      echo "Refusing unexpected install destination: $dir" >&2
+      exit 1
+      ;;
+  esac
+  if [ -e "$dir" ]; then
+    rm -rf -- "$dir"
+  fi
   mkdir -p "$dir"
-  cp -R "$SKILL_SRC_DIR/." "$dir/"
+  cp -R "$SCRIPT_DIR/$skill/." "$dir/"
 }
 
 install_claude() {
-  local dir="$HOME/.claude/skills/hci-office-hours-with-mike"
-  install_skill_files "$dir"
-  echo "  Claude Code: $dir"
+  local root="$INSTALL_HOME/.claude/skills"
+  local skill
+  for skill in "${SKILLS[@]}"; do
+    install_skill_files "$skill" "$root"
+    echo "  Claude Code: $root/$skill"
+  done
 }
 
 install_codex() {
-  local dir="$HOME/.codex/skills/hci-office-hours-with-mike"
-  install_skill_files "$dir"
-  echo "  Codex: $dir"
+  local root="$INSTALL_HOME/.codex/skills"
+  local skill
+  for skill in "${SKILLS[@]}"; do
+    install_skill_files "$skill" "$root"
+    echo "  Codex: $root/$skill"
+  done
 }
 
 install_gemini() {
-  local dir="$HOME/.gemini/skills/hci-office-hours-with-mike"
-  install_skill_files "$dir"
-  echo "  Gemini CLI: $dir"
+  local root="$INSTALL_HOME/.gemini/skills"
+  local skill
+  for skill in "${SKILLS[@]}"; do
+    install_skill_files "$skill" "$root"
+    echo "  Gemini CLI: $root/$skill"
+  done
 }
 
-echo "Installing hci-office-hours-with-mike v$VERSION..."
+echo "Installing hci-stack v$VERSION..."
 
 case "$HOST" in
   claude)
@@ -50,15 +71,15 @@ case "$HOST" in
   auto)
     # Install for whichever agents are present
     INSTALLED=0
-    if [ -d "$HOME/.claude" ]; then
+    if [ -d "$INSTALL_HOME/.claude" ]; then
       install_claude
       INSTALLED=1
     fi
-    if [ -d "$HOME/.codex" ]; then
+    if [ -d "$INSTALL_HOME/.codex" ]; then
       install_codex
       INSTALLED=1
     fi
-    if [ -d "$HOME/.gemini" ]; then
+    if [ -d "$INSTALL_HOME/.gemini" ]; then
       install_gemini
       INSTALLED=1
     fi
@@ -74,7 +95,10 @@ case "$HOST" in
 esac
 
 echo ""
-echo "hci-office-hours-with-mike v$VERSION ready."
+echo "hci-stack v$VERSION ready."
 echo "Claude: /hci-office-hours-with-mike"
+echo "Claude: /hci-motivation-and-contributions"
 echo "Codex: \$hci-office-hours-with-mike"
+echo "Codex: \$hci-motivation-and-contributions"
 echo "Gemini: /hci-office-hours-with-mike"
+echo "Gemini: /hci-motivation-and-contributions"

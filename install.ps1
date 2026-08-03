@@ -1,40 +1,50 @@
-# Install hci-office-hours-with-mike skill for Claude Code, Codex, and/or Gemini CLI (Windows)
+# Install all hci-stack skills for Claude Code, Codex, and/or Gemini CLI (Windows)
 param(
     [string]$Host_ = "auto"
 )
 
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$SkillSrcDir = Join-Path $ScriptDir "hci-office-hours-with-mike"
-$VersionFile = Join-Path $SkillSrcDir "VERSION"
-if (-not (Test-Path $VersionFile)) {
-    $VersionFile = Join-Path $ScriptDir "VERSION"
-}
+$Skills = @("hci-office-hours-with-mike", "hci-motivation-and-contributions")
+$VersionFile = Join-Path $ScriptDir "VERSION"
 $Version = (Get-Content $VersionFile -Raw).Trim()
+$InstallHome = if ($env:HCI_STACK_INSTALL_HOME) { $env:HCI_STACK_INSTALL_HOME } else { $env:USERPROFILE }
 
-function Install-SkillFiles($Dir) {
+function Install-SkillFiles($Skill, $Root) {
+    $SkillSrcDir = Join-Path $ScriptDir $Skill
+    $Dir = Join-Path $Root $Skill
+    if (Test-Path $Dir) {
+        Remove-Item -Recurse -Force $Dir
+    }
     New-Item -ItemType Directory -Force -Path $Dir | Out-Null
     Copy-Item -Recurse -Force "$SkillSrcDir\*" $Dir
+    return $Dir
 }
 
 function Install-Claude {
-    $Dir = Join-Path $env:USERPROFILE ".claude\skills\hci-office-hours-with-mike"
-    Install-SkillFiles $Dir
-    Write-Host "  Claude Code: $Dir"
+    $Root = Join-Path $InstallHome ".claude\skills"
+    foreach ($Skill in $Skills) {
+        $Dir = Install-SkillFiles $Skill $Root
+        Write-Host "  Claude Code: $Dir"
+    }
 }
 
 function Install-Codex {
-    $Dir = Join-Path $env:USERPROFILE ".codex\skills\hci-office-hours-with-mike"
-    Install-SkillFiles $Dir
-    Write-Host "  Codex: $Dir"
+    $Root = Join-Path $InstallHome ".codex\skills"
+    foreach ($Skill in $Skills) {
+        $Dir = Install-SkillFiles $Skill $Root
+        Write-Host "  Codex: $Dir"
+    }
 }
 
 function Install-Gemini {
-    $Dir = Join-Path $env:USERPROFILE ".gemini\skills\hci-office-hours-with-mike"
-    Install-SkillFiles $Dir
-    Write-Host "  Gemini CLI: $Dir"
+    $Root = Join-Path $InstallHome ".gemini\skills"
+    foreach ($Skill in $Skills) {
+        $Dir = Install-SkillFiles $Skill $Root
+        Write-Host "  Gemini CLI: $Dir"
+    }
 }
 
-Write-Host "Installing hci-office-hours-with-mike v$Version..."
+Write-Host "Installing hci-stack v$Version..."
 
 switch ($Host_) {
     "claude"  { Install-Claude }
@@ -42,13 +52,13 @@ switch ($Host_) {
     "gemini"  { Install-Gemini }
     "auto" {
         $Installed = 0
-        if (Test-Path (Join-Path $env:USERPROFILE ".claude")) {
+        if (Test-Path (Join-Path $InstallHome ".claude")) {
             Install-Claude; $Installed = 1
         }
-        if (Test-Path (Join-Path $env:USERPROFILE ".codex")) {
+        if (Test-Path (Join-Path $InstallHome ".codex")) {
             Install-Codex; $Installed = 1
         }
-        if (Test-Path (Join-Path $env:USERPROFILE ".gemini")) {
+        if (Test-Path (Join-Path $InstallHome ".gemini")) {
             Install-Gemini; $Installed = 1
         }
         if ($Installed -eq 0) {
@@ -62,7 +72,10 @@ switch ($Host_) {
 }
 
 Write-Host ""
-Write-Host "hci-office-hours-with-mike v$Version ready."
+Write-Host "hci-stack v$Version ready."
 Write-Host "Claude: /hci-office-hours-with-mike"
+Write-Host "Claude: /hci-motivation-and-contributions"
 Write-Host "Codex: `$hci-office-hours-with-mike"
+Write-Host "Codex: `$hci-motivation-and-contributions"
 Write-Host "Gemini: /hci-office-hours-with-mike"
+Write-Host "Gemini: /hci-motivation-and-contributions"

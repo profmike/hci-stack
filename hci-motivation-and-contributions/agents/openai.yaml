@@ -1,0 +1,4 @@
+interface:
+  display_name: "HCI Motivation and Contributions"
+  short_description: "Interactive evidence and framing collaboration"
+  default_prompt: "Use $hci-motivation-and-contributions to keep this session interactive, maintain a live Phase 1 workboard, use bounded subagents by default for literature research, treat author-provided references as search seeds rather than the evidence ceiling, obtain and assess full sources, challenge unsupported high-impact assumptions, and account for author claims, demonstrations, operated capabilities, evaluated results, capability collisions, and contribution credit independently before resolving motivation, related work, gap, approach, terminology, and contributions."

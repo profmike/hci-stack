@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.4.0] - 2026-08-03 — Motivation and Contributions
+
+### Added
+
+- **HCI Motivation and Contributions skill.** Added the complete Phase 1 framing workflow,
+  evidence templates, strict prior-work contribution accounting, report tooling, and tests.
+- **Private research-source mirroring.** Copyright and license status no longer blocks storing
+  full sources in a private project repository, tracking them in version control, or uploading
+  them to a private project NotebookLM notebook.
+
+### Changed
+
+- **Multi-skill installers.** The Unix and Windows installers now synchronize every packaged HCI
+  skill into each selected local agent rather than installing only Office Hours.
+- **Canonical synchronization.** Reusable skill changes are versioned here first and then copied
+  to local agent installations so repository and installed copies remain identical.
+
 ## [0.3.0] - 2026-04-06 — Cross-Platform, Multi-Agent
 
 ### Added

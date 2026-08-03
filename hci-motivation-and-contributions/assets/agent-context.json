@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "project": {
+    "name": "REPLACE_WITH_PROJECT_NAME",
+    "repository_root": "."
+  },
+  "phase": {
+    "name": "Phase 1",
+    "skill": "hci-motivation-and-contributions",
+    "status": "active"
+  },
+  "context": {
+    "always_include": [
+      "research-framing/phase-1-collaboration-workboard.md",
+      "research-framing/author-decisions.md",
+      "research-framing/starting-state.md"
+    ],
+    "include_when_relevant": [
+      "research-framing/source-manifest.md",
+      "research-framing/notebooklm-maintenance.md",
+      "research-framing/prior-work-evidence-accounting.csv",
+      "research-framing/prior-work-contribution-boundary.md",
+      "research-framing/phase-2-handoff.md"
+    ],
+    "repo_read_allow": [
+      "research-framing/**"
+    ]
+  },
+  "notebooklm": {
+    "notebook_id": "",
+    "title": "",
+    "profile": "default",
+    "source_manifest": "research-framing/source-manifest.md",
+    "maintenance": "research-framing/notebooklm-maintenance.md"
+  }
+}
