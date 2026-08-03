@@ -38,6 +38,17 @@ class Phase1ReportTests(unittest.TestCase):
         (self.root / "phase-1-collaboration-workboard.md").write_text(
             "# Phase 1 collaboration workboard\n\n"
             "Status: `ACTIVE`\n\n"
+            "## Current state — read this first\n\n"
+            "- **Direction and readiness:** Landscape research is active.\n"
+            "- **Established now:** One closest-work boundary is supported.\n"
+            "- **Settled decisions and claim boundaries:** No firstness claim.\n"
+            "- **Active blockers or access needs:** None.\n"
+            "- **Immediate next action and owner:** Agent prepares the comparison.\n\n"
+            "### Decisions needed now (maximum three)\n\n"
+            "| Priority | Decision ID | Exact question | Recommendation | Alternatives and tradeoff | Consequence if unresolved | Decision-support evidence and populated artifacts | Owner / status |\n"
+            "|---:|---|---|---|---|---|---|---|\n"
+            "| 1 | D1 | Which boundary? | Use the narrow boundary | Broader wording needs more evidence | Study cannot converge | [Related-work matrix](related-work-matrix.md) | Author / decision-ready |\n\n"
+            "## Current round\n\n"
             "Highest-consequence open area: closest-work boundary.\n\n"
             "Constructive opposition: current support is insufficient; research first, "
             "then narrow or run a decision-matched probe.",
@@ -316,6 +327,66 @@ class Phase1ReportTests(unittest.TestCase):
             "phase-1-collaboration-workboard.html",
             reports["artifact-index.html"],
         )
+
+    def test_progress_opens_with_decision_first_current_state(self):
+        document = self.generate()["phase-1-progress.html"]
+        self.assertIn("Current state and decisions", document)
+        self.assertIn("Current state — read this first", document)
+        self.assertIn("Decisions needed now (maximum three)", document)
+        self.assertLess(
+            document.index("Current state — read this first"),
+            document.index("Current round"),
+        )
+
+    def test_decision_support_link_targets_populated_artifact(self):
+        reports = self.generate()
+        expected = (
+            '<a class="artifact-link" '
+            'href="phase-1-progress.html#artifact-related-work-matrix-md">'
+            "Related-work matrix</a>"
+        )
+        self.assertIn(expected, reports["phase-1-progress.html"])
+        self.assertIn(expected, reports["phase-1-collaboration-workboard.html"])
+        self.assertIn(
+            'id="artifact-related-work-matrix-md"',
+            reports["phase-1-progress.html"],
+        )
+
+    def test_unsafe_markdown_link_is_not_activated(self):
+        rendered = MODULE.inline_format("[Unsafe](javascript:alert(1))")
+        self.assertNotIn("href=", rendered)
+        self.assertIn("[Unsafe](javascript:alert(1))", rendered)
+
+        traversal = MODULE.inline_format("[Escape](../outside.html)")
+        self.assertNotIn("href=", traversal)
+        self.assertIn("[Escape](../outside.html)", traversal)
+
+    def test_audit_rejects_workboard_without_current_state(self):
+        (self.root / "phase-1-collaboration-workboard.md").write_text(
+            "# Phase 1 collaboration workboard\n\n"
+            "## Current round\n\nOnly an activity history and artifact list.\n",
+            encoding="utf-8",
+        )
+        self.generate()
+        errors, _ = AUDIT_MODULE.audit(self.root, self.root / "reports")
+        self.assertTrue(
+            any("decision-first current-state field missing" in error for error in errors)
+        )
+
+    def test_audit_rejects_more_than_three_current_decisions(self):
+        self.generate()
+        workboard = self.root / "phase-1-collaboration-workboard.md"
+        source = workboard.read_text(encoding="utf-8")
+        source = source.replace(
+            "## Current round",
+            "| 2 | D2 | Second decision |\n"
+            "| 3 | D3 | Third decision |\n"
+            "| 4 | D4 | Fourth decision |\n\n"
+            "## Current round",
+        )
+        workboard.write_text(source, encoding="utf-8")
+        errors, _ = AUDIT_MODULE.audit(self.root, self.root / "reports")
+        self.assertTrue(any("maximum is 3" in error for error in errors))
 
     def test_progress_and_final_include_the_terminology_contract(self):
         reports = self.generate()

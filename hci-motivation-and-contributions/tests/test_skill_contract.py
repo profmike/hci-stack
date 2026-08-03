@@ -460,6 +460,8 @@ class SkillContractTests(unittest.TestCase):
             "one consequential question at a time",
             "Batch two to six tightly related, low-risk factual clarifications",
             "Ask one question at a time only for consequential choices",
+            "decision-first current-state snapshot",
+            "History and artifact inventories are supporting evidence",
         ):
             self.assertIn(phrase, flattened_skill)
         for phrase in (
@@ -471,9 +473,17 @@ class SkillContractTests(unittest.TestCase):
             "AUTHOR-DECLINED-EVIDENCE",
             "Fast factual clarification batches",
             "Do not turn reconstruction",
+            "Current state — read this first",
+            "No author decision is currently ready",
         ):
             self.assertIn(phrase, AUTHOR_COLLABORATION)
         for phrase in (
+            "Current state — read this first",
+            "Direction and readiness",
+            "Established now",
+            "Settled decisions and claim boundaries",
+            "Decisions needed now (maximum three)",
+            "Decision-support evidence and populated artifacts",
             "Current round",
             "Phase coverage",
             "Consequential decision queue",
@@ -488,7 +498,13 @@ class SkillContractTests(unittest.TestCase):
             "Author preference may choose among defensible paths",
             ACTIVE_AUTHOR_COLLABORATION,
         )
+        self.assertIn(
+            "Decision-first current-state communication",
+            ACTIVE_AUTHOR_COLLABORATION,
+        )
+        self.assertIn("Current state — read this first", DETAILED_WORKFLOW)
         self.assertIn("phase-1-collaboration-workboard.md", HTML_REPORTS)
+        self.assertIn("Its first substantive section", HTML_REPORTS)
 
     def test_phase_one_keeps_author_session_live_and_delegates_literature_work(self):
         openai_prompt = (

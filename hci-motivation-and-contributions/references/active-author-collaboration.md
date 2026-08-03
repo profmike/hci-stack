@@ -112,10 +112,32 @@ If the author declines evidence that is necessary for a defensible commitment:
 - propagate the limitation to downstream artifacts and the next-phase handoff; and
 - record the exact evidence and condition that would reopen the decision.
 
+## Decision-first current-state communication
+
+Every author-facing progress update, workboard, generated progress report, and handoff must open
+with a compact statement of the **current state**, not a chronology of work performed. Include:
+
+1. one sentence naming the current direction and readiness state;
+2. the few established facts, observed project behaviors, and planned elements that determine it;
+3. settled decisions and explicit claim boundaries;
+4. at most three unresolved decisions that are ready now, ordered by downstream consequence;
+5. for each decision, the exact question, recommendation, real alternatives and tradeoff,
+   consequence of leaving it unresolved, and the populated evidence/decision artifacts;
+6. active blockers or author-only access needs; and
+7. the immediate next action and owner.
+
+If no author decision is ready, say so and name the evidence action that must precede one. Do not
+use “what we did,” source counts, file lists, progress history, or a full coverage table as a
+substitute for “where the project stands.” Put those details after the snapshot as traceability.
+Link decision support to the populated comparison or decision artifact, not to an empty template
+with a promising filename. Keep the snapshot synchronized with the detailed queues; if they
+conflict, the update is not ready to deliver.
+
 ## Live phase workboard
 
-Every phase skill must provide and maintain an `assets/*collaboration-workboard.md` template. At
-the start and end of each working round, update:
+Every phase skill must provide and maintain an `assets/*collaboration-workboard.md` template. Its
+first substantive section must be `Current state — read this first`. At the start and end of each
+working round, update that snapshot and then the detailed history/coverage sections:
 
 - what was decided, reopened, researched, blocked, or deferred;
 - the highest-consequence open area that can currently move;

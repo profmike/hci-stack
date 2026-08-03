@@ -51,6 +51,18 @@ SOURCE_MIRROR_REPORTS = {
     "novelty-regression-sentinels.html": "novelty-regression-sentinels.yaml",
     "source-resolution.html": "source-resolution.csv",
 }
+CURRENT_STATE_HEADING = "## Current state — read this first"
+CURRENT_STATE_FIELDS = (
+    "Direction and readiness",
+    "Established now",
+    "Settled decisions and claim boundaries",
+    "Active blockers or access needs",
+    "Immediate next action and owner",
+    "Decisions needed now (maximum three)",
+    "Recommendation",
+    "Consequence if unresolved",
+    "Decision-support evidence and populated artifacts",
+)
 REFERENCE_FIELDS = (
     "citation_key",
     "author_year",
@@ -329,6 +341,44 @@ def file_digest(path: Path) -> str:
 def audit(project_dir: Path, report_dir: Path) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
+    workboard_path = project_dir / "phase-1-collaboration-workboard.md"
+    if not workboard_path.is_file():
+        errors.append(f"missing current-state workboard: {workboard_path}")
+    else:
+        workboard_source = workboard_path.read_text(
+            encoding="utf-8", errors="replace"
+        )
+        current_state_index = workboard_source.find(CURRENT_STATE_HEADING)
+        current_round_index = workboard_source.find("## Current round")
+        if current_state_index < 0:
+            errors.append(
+                "phase-1-collaboration-workboard.md: decision-first current-state "
+                f"field missing: {CURRENT_STATE_HEADING}"
+            )
+        elif (
+            current_round_index < 0 or current_state_index > current_round_index
+        ):
+            errors.append(
+                "phase-1-collaboration-workboard.md: current state must precede "
+                "current-round history"
+            )
+        else:
+            current_state = workboard_source[current_state_index:current_round_index]
+            for field in CURRENT_STATE_FIELDS:
+                if field not in current_state:
+                    errors.append(
+                        "phase-1-collaboration-workboard.md: decision-first "
+                        f"current-state field missing: {field}"
+                    )
+            decision_rows = sum(
+                bool(re.match(r"^\|\s*\d+\s*\|", line))
+                for line in current_state.splitlines()
+            )
+            if decision_rows > 3:
+                errors.append(
+                    "phase-1-collaboration-workboard.md: current-state snapshot "
+                    f"lists {decision_rows} decisions; maximum is 3"
+                )
     references, reference_issues = load_references(project_dir / "references.csv")
     errors.extend(reference_issues)
     expected_citations: dict[str, set[tuple[str, str]]] = {}
@@ -344,6 +394,17 @@ def audit(project_dir: Path, report_dir: Path) -> tuple[list[str], list[str]]:
             errors.append(f"missing report: {path}")
             continue
         source = path.read_text(encoding="utf-8", errors="replace")
+        if name == "phase-1-progress.html":
+            if "<h2>Current state and decisions</h2>" not in source:
+                errors.append(
+                    f"{name}: missing top-level current-state-and-decisions section"
+                )
+            state_heading = source.find("<h2>Current state — read this first</h2>")
+            history_heading = source.find("<h2>Current round</h2>")
+            if state_heading < 0:
+                errors.append(f"{name}: missing decision-first current-state snapshot")
+            elif history_heading < 0 or state_heading > history_heading:
+                errors.append(f"{name}: current state must precede progress history")
         source_artifact_name = SOURCE_MIRROR_REPORTS.get(name)
         if source_artifact_name:
             source_artifact = project_dir / source_artifact_name
@@ -411,6 +472,15 @@ def audit(project_dir: Path, report_dir: Path) -> tuple[list[str], list[str]]:
                     errors.append(
                         f"{name}: citation '{text}' metadata does not match full catalog record"
                     )
+
+    progress = parsed.get("phase-1-progress.html")
+    progress_ids = progress.ids if progress else set()
+    for name, parser in parsed.items():
+        for link in parser.links:
+            href = link.get("href", "")
+            prefix = "phase-1-progress.html#"
+            if href.startswith(prefix) and href[len(prefix) :] not in progress_ids:
+                errors.append(f"{name}: broken decision-support artifact link {href}")
 
     literature = parsed.get("literature-and-evidence.html")
     if literature is not None:

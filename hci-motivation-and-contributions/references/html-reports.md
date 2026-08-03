@@ -39,7 +39,13 @@ construct at first use.
 
 ### `phase-1-progress.html`
 
-A live collaboration dashboard. Include:
+A live collaboration dashboard. Its first substantive section must be `Current state — read this
+first`, before progress history, coverage tables, or artifact inventories. It must answer, without
+requiring inference: where the direction stands; what is established, observed, and planned; what
+is settled; which at most three decisions are ready now; the recommendation and real tradeoff for
+each; the consequence of delay; blockers; and the immediate next action/owner. If no author
+decision is ready, state that and identify the preceding evidence action. Link each decision to the
+populated comparison or decision artifact that supports it, not an empty template. Then include:
 
 - the live Phase 1 workboard, current coverage states, constructive-opposition entries, blockers,
   reopen triggers, and the next factual clarification batch or one consequential author question;
@@ -58,6 +64,9 @@ A live collaboration dashboard. Include:
   `FULL_TEXT_OBTAINED` row presented as end-of-round closure;
 - links to the other two reports; and
 - generation time plus an artifact hash inventory.
+
+Source counts, activity history, file lists, and detailed matrices remain useful traceability, but
+they must follow the snapshot and cannot substitute for it.
 
 Regenerate after any material research batch, decision packet, author choice, or review.
 
@@ -228,6 +237,8 @@ a headed browser at desktop and narrow widths. Review at least:
 - hover and keyboard-focus access to complete bibliographic metadata;
 - canonical citation destinations and internal reference anchors;
 - option portfolios and author-choice visibility;
+- decision-first current-state prominence, no more than three active author decisions, and direct
+  links or names for their populated decision-support artifacts;
 - terminology definitions, non-implications, reserved terms, propagation conflicts, and separate
   semantic-contract versus lexical-hierarchy status;
 - familiar-first definitions of scientific or technical terms, direct supported narrative, and no

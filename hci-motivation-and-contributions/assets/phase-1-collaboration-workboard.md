@@ -9,6 +9,27 @@ This is a live research-and-decision control surface, not a completion checklist
 each material evidence batch, author answer, decision, reopening, or constructive-opposition
 challenge.
 
+## Current state — read this first
+
+- **Direction and readiness:** [One sentence: where the research direction stands and the exact
+  completion state, if assigned.]
+- **Established now:** [The few facts or evidence boundaries that currently determine the
+  direction. Distinguish external evidence, observed project behavior, and plans.]
+- **Settled decisions and claim boundaries:** [What the author has selected; what the project will
+  and will not claim.]
+- **Active blockers or access needs:** [None, or the exact blocker, consequence, owner, and action.]
+- **Immediate next action and owner:** [The next evidence action or decision propagation step.]
+
+### Decisions needed now (maximum three)
+
+List only consequential decisions that are ready for author judgment, ordered by downstream
+consequence. If none is ready, write `No author decision is currently ready` and name the evidence
+action that comes first. Do not make the author infer a decision from the history or artifact list.
+
+| Priority | Decision ID | Exact question | Recommendation | Alternatives and tradeoff | Consequence if unresolved | Decision-support evidence and populated artifacts | Owner / status |
+|---:|---|---|---|---|---|---|---|
+| 1 | | | | | | | |
+
 ## Current round
 
 - What was just decided, researched, reopened, blocked, or deferred:

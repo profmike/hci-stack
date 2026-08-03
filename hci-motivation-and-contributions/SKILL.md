@@ -26,9 +26,8 @@ Every phase is independently enterable. This is Phase 1 of:
 
 `problem screening → motivation and contributions → design/build → validation → visuals → writing → video`
 
-Never require an Office Hours brief or another prior-phase artifact. Accept ideas, notes, papers,
-observations, designs, prototypes, study plans, or results. Import prior conclusions as
-evidence-bounded hypotheses, not approved premises. Office Hours remains a complete standalone experience.
+Never require an Office Hours brief or another prior-phase artifact. Accept any starting material.
+Import prior conclusions as evidence-bounded hypotheses, not approved premises. Office Hours remains a complete standalone experience.
 
 Read [pipeline-contract.md](references/pipeline-contract.md) when deciding phase scope or preparing
 the handoff. Read [exemplar-routing.md](references/exemplar-routing.md) before using full exemplar
@@ -85,6 +84,12 @@ the direction; do not grade their absence.
 Maintain `phase-1-collaboration-workboard.md` and repeat:
 
 `inspect → research → assess → challenge → compare → recommend → author decides → record → propagate → recheck`
+
+Lead every author-facing update, handoff, and progress report with a decision-first current-state
+snapshot: direction/readiness, established/observed/planned, settled boundaries, at most three
+consequence-ordered decisions with recommendations/tradeoffs, blockers, and next action/owner.
+State when no decision is ready. History and artifact inventories are supporting evidence; never
+make the author infer the current state or needed decision from them.
 
 Research decision-relevant evidence and contradictions before asking the author to choose. Do not
 treat an idea dump, draft, populated template, or fluent synthesis as completion. Present three to

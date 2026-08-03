@@ -293,8 +293,11 @@ Read all user-supplied materials before interviewing. Inventory:
 
 Begin `starting-state.md` and `phase-1-collaboration-workboard.md` in the session. Do not create
 durable copies until Step 3 resolves the project repository; then instantiate the asset templates
-there. Use the workboard to expose every Phase 1 area, the highest-consequence movable uncertainty,
-independent research in progress, and the next one author question. Use this starting-state table:
+there. Lead the workboard with `Current state — read this first`: direction/readiness, decisive
+evidence boundaries, settled decisions, at most three consequence-ordered decision-ready
+questions with recommendations and populated support artifacts, blockers, and next action/owner.
+State explicitly when no author decision is ready. Put the complete Phase 1 coverage, activity
+history, and artifact inventory after this snapshot. Use this starting-state table:
 
 | Element | Current statement | Evidence/status | Confidence | Open question |
 |---|---|---|---|---|
@@ -1039,6 +1042,13 @@ The reports must be self-contained, readable without the repository, and traceab
 artifacts. They must show missing inputs honestly. A final report never erases unselected
 variations, superseded choices, evidence gaps, or reviewer concerns.
 
+`phase-1-progress.html` must open with the decision-first current-state snapshot before research
+history, coverage tables, or the artifact shelf. It must tell the author where the project stands,
+what is settled, which decision is needed now and why, the recommendation, blockers, and the next
+action. When no decision is ready, it must say so and identify the preceding evidence action. The
+report must link to the populated related-work comparison and contribution/decision artifact when
+those support the active choice; an empty template or inventory index is not sufficient.
+
 Keep evidence tables complete, but apply the claim-local caveat test to narrative summaries. State
 supported claims directly, omit disclaimers about outcomes not claimed, and introduce familiar
 terms before defining their exact scientific or technical meaning.
@@ -1061,8 +1071,8 @@ conceptual-phrase alias.
 
 After the automated audit passes, inspect all three reports in a headed browser. Check desktop and
 narrow widths, citation links and hover tips, long tables, escaped characters, charts, decision
-history, and missing-artifact messages. Fix the underlying artifact or renderer, regenerate, and
-re-audit. Do not deliver unchecked generated HTML.
+history, current-state prominence, decision-support links, and missing-artifact messages. Fix the
+underlying artifact or renderer, regenerate, and re-audit. Do not deliver unchecked generated HTML.
 
 Before every commit, push, or terminal handoff that contains material Phase 1 changes, regenerate
 the complete HTML shelf, rerun the auditor, and verify that every report linked from the root

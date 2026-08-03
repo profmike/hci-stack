@@ -373,13 +373,54 @@ def load_citation_catalog(root: Path) -> CitationCatalog:
     return CitationCatalog([reference for reference in references if reference.citation_key])
 
 
+def artifact_anchor(relative: str) -> str:
+    slug = re.sub(r"[^a-z0-9]+", "-", relative.lower()).strip("-")
+    return f"artifact-{slug}"
+
+
+def safe_markdown_link(destination: str) -> tuple[str, bool] | None:
+    if destination.startswith(("http://", "https://")):
+        return destination, True
+    if destination.startswith("#") and re.fullmatch(r"#[A-Za-z0-9_-]+", destination):
+        return destination, False
+    if any(part in {".", ".."} for part in destination.split("/")):
+        return None
+    if not re.fullmatch(
+        r"(?:[A-Za-z0-9._-]+/)*[A-Za-z0-9._-]+\.(?:md|csv|ya?ml|html)",
+        destination,
+        flags=re.IGNORECASE,
+    ):
+        return None
+    if destination.lower().endswith(".html"):
+        return destination, False
+    return f"phase-1-progress.html#{artifact_anchor(destination)}", False
+
+
 def inline_format(value: str, catalog: CitationCatalog | None = None) -> str:
-    escaped = html.escape(value.strip())
+    links: list[tuple[str, str, bool, str]] = []
+
+    def stash_link(match: re.Match[str]) -> str:
+        safe = safe_markdown_link(match.group(2))
+        if safe is None:
+            return match.group(0)
+        token = f"HCIINLINELINKTOKEN{len(links)}X"
+        links.append((match.group(1), safe[0], safe[1], token))
+        return token
+
+    value = re.sub(r"\[([^\]\n]+)\]\(([^()\s]+)\)", stash_link, value.strip())
+    escaped = html.escape(value)
     escaped = re.sub(r"`([^`]+)`", r"<code>\1</code>", escaped)
     escaped = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", escaped)
     escaped = re.sub(r"\*([^*]+)\*", r"<em>\1</em>", escaped)
     if catalog is not None:
         escaped = catalog.enrich(escaped)
+    for label, href, external, token in links:
+        target = ' target="_blank" rel="noopener noreferrer"' if external else ""
+        anchor = (
+            f'<a class="artifact-link" href="{html.escape(href, quote=True)}"{target}>'
+            f"{html.escape(label)}</a>"
+        )
+        escaped = escaped.replace(token, anchor)
     return escaped
 
 
@@ -569,9 +610,10 @@ def artifact_card(
     open_by_default: bool = False,
 ) -> str:
     relative = path.relative_to(root).as_posix()
+    anchor = artifact_anchor(relative)
     if not path.is_file():
         return (
-            '<article class="artifact missing-card">'
+            f'<article class="artifact missing-card" id="{anchor}">'
             f"<h3>{html.escape(relative)}</h3>"
             '<p class="missing">Artifact not available yet.</p></article>'
         )
@@ -580,7 +622,7 @@ def artifact_card(
     )
     opened = " open" if open_by_default else ""
     return (
-        '<article class="artifact">'
+        f'<article class="artifact" id="{anchor}">'
         f"<details{opened}><summary><span>{html.escape(relative)}</span>"
         f'<small>SHA-256 {digest(path)[:12]}</small></summary>'
         f'<div class="artifact-content">{content}</div></details></article>'
@@ -950,9 +992,9 @@ def generate_reports(
     progress_paths: list[Path] = []
     for section_args in (
         (
-            "Live collaboration workboard",
+            "Current state and decisions",
             workboard,
-            "Current coverage, decision readiness, constructive opposition, blockers, and next author question.",
+            "Direction, settled boundaries, decision-ready questions, recommendations, blockers, and the immediate next action. Detailed history follows.",
             True,
         ),
         (

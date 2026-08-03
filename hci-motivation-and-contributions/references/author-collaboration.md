@@ -12,15 +12,24 @@ Create and maintain `phase-1-collaboration-workboard.md` from the asset template
 project repository is unknown, keep this state only in the current session or conversation; never
 write it into the reusable skill repository or an arbitrary workspace.
 
+Open the workboard and every author-facing status message with `Current state — read this first`.
+Give the direction/readiness state, established-versus-observed-versus-planned boundary, settled
+decisions, active blockers, and immediate next action before history or coverage inventories. Show
+at most three decision-ready questions, ordered by consequence; for each, give the recommendation,
+actual alternatives/tradeoff, consequence of delay, and direct links to the populated comparison
+or decision-support artifacts. Say `No author decision is currently ready` when research must come
+first. A source count, activity log, file list, or populated matrix is not a current-state summary.
+
 At the start of each working round:
 
-1. show what is resolved, researching, reopened, evidence-blocked, or deliberately deferred;
-2. identify the highest-consequence Phase 1 uncertainty that can currently move;
-3. inspect and research enough to make the next decision meaningful;
-4. state any constructive opposition before presenting options;
-5. batch related low-risk factual clarifications when no research is needed, but ask only one
+1. refresh the decision-first current-state snapshot;
+2. show what is resolved, researching, reopened, evidence-blocked, or deliberately deferred;
+3. identify the highest-consequence Phase 1 uncertainty that can currently move;
+4. inspect and research enough to make the next decision meaningful;
+5. state any constructive opposition before presenting options;
+6. batch related low-risk factual clarifications when no research is needed, but ask only one
    consequential author question when a decision row is ready; and
-6. after the answer, record and propagate the decision before advancing.
+7. after the answer, record and propagate the decision before advancing.
 
 The coverage board must include the starting-state/import boundary, people/activity/problem scope,
 authoritative and motivation evidence, consequence severity, current practice, related-work
