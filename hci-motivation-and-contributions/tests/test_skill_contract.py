@@ -505,6 +505,15 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn("Current state — read this first", DETAILED_WORKFLOW)
         self.assertIn("phase-1-collaboration-workboard.md", HTML_REPORTS)
         self.assertIn("Its first substantive section", HTML_REPORTS)
+        for phrase in (
+            "temporary loopback-only static server",
+            "127.0.0.1",
+            "A blocked `file:` URL is not a reason to omit visual",
+            "explicit viewport capability",
+            "stop the server immediately after inspection",
+            "review server to `0.0.0.0`",
+        ):
+            self.assertIn(phrase, HTML_REPORTS)
 
     def test_phase_one_keeps_author_session_live_and_delegates_literature_work(self):
         openai_prompt = (

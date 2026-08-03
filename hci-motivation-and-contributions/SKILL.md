@@ -471,8 +471,8 @@ after lawful routes are exhausted.
 
 Regenerate `phase-1-progress.html`, `literature-and-evidence.html`, `phase-1-final.html`,
 `artifact-index.html`, and reader-facing mirrors at their required checkpoints. Markdown/CSV are
-the editable sources. After the fail-closed audit passes, inspect desktop and narrow widths in a
-headed browser; do not deliver unchecked generated HTML.
+the editable sources. After the fail-closed audit passes, serve local files through temporary
+loopback-only HTTP at `127.0.0.1` when needed; inspect desktop/narrow widths in a headed browser, reset the viewport, stop the server, and do not deliver unchecked HTML.
 
 The report gate also applies before every repository commit, push, or terminal handoff containing
 material Phase 1 changes. Confirm the root `README.md` links to the four principal reports and that

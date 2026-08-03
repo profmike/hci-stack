@@ -227,6 +227,14 @@ After generation, run:
 python3 scripts/audit_phase1_reports.py PROJECT_DIR
 ```
 
+For local reports, prefer a temporary loopback-only static server instead of navigating directly
+to a `file:` URL. Bind only to `127.0.0.1`, serve from the project repository root, and open the
+report through `http://127.0.0.1:<port>/...`. A blocked `file:` URL is not a reason to omit visual
+review. Use the browser's explicit viewport capability for the narrow breakpoint rather than
+approximating it with page zoom. Check browser logs and page-level overflow; reset the temporary
+viewport, close the preview tab, and stop the server immediately after inspection. Never bind the
+review server to `0.0.0.0` or leave it running after the task.
+
 Then inspect all three core reports, the artifact index, and each generated reader-facing mirror in
 a headed browser at desktop and narrow widths. Review at least:
 
