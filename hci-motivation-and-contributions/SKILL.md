@@ -284,7 +284,11 @@ a decision-relevant full copy is human-blocked.
 
 ### 3. Create the project workspace
 
-After resolving the project repository, create `research-framing/` from the assets. It must include
+After resolving the project repository, run
+`python3 scripts/initialize_phase1_workspace.py PROJECT_REPOSITORY --project-name "PROJECT NAME"`.
+This creates missing templates without overwriting existing work, creates a root `README.md` that
+links the reader-facing reports, and renders and audits the initial HTML shelf. Do not hand-create
+only a subset of the workspace. It must include
 `agent-context.json`, the workboard, decision and source records, `references.csv`, evidence/claim
 registers, motivation and authority audits, `source-resolution.csv`,
 `prior-work-evidence-accounting.csv`, `idea-provenance-ledger.csv`,
@@ -292,6 +296,11 @@ registers, motivation and authority audits, `source-resolution.csv`,
 `novelty-regression-sentinels.yaml`, consequence ranking, ACM/SIGCHI and recall audits,
 related-work matrices and positioning, terminology, options, reviewer records,
 `research-framing-outline.md`, `phase-2-handoff.md`, and generated reports.
+
+Treat the root README and initial HTML as workspace invariants, not end-of-phase polish. Before any
+commit, push, terminal handoff, or claim that a durable work batch is complete, verify that the
+README links resolve, regenerate the reports after the latest material changes, and run the report
+auditor. Do not publish Markdown/CSV updates with absent or stale reader views.
 
 Populate the manifest's project name immediately, keep `phase.status` current, and update its
 canonical pointers whenever an artifact path changes. Additional GPT Pro repository access must be
@@ -459,6 +468,10 @@ Regenerate `phase-1-progress.html`, `literature-and-evidence.html`, `phase-1-fin
 `artifact-index.html`, and reader-facing mirrors at their required checkpoints. Markdown/CSV are
 the editable sources. After the fail-closed audit passes, inspect desktop and narrow widths in a
 headed browser; do not deliver unchecked generated HTML.
+
+The report gate also applies before every repository commit, push, or terminal handoff containing
+material Phase 1 changes. Confirm the root `README.md` links to the four principal reports and that
+all linked files exist in the committed tree.
 
 ## Completion states
 

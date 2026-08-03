@@ -4,6 +4,22 @@ Generate HTML as a view over durable research artifacts, never as a second sourc
 the Markdown/CSV artifacts first, then regenerate the reports with
 `scripts/render_phase1_reports.py`.
 
+## Project navigation invariant
+
+Create a project-root `README.md` during workspace initialization. It must identify the project,
+state that Markdown/CSV/JSON/YAML are the editable sources of truth, and link directly to:
+
+- `research-framing/reports/phase-1-progress.html`;
+- `research-framing/reports/literature-and-evidence.html`;
+- `research-framing/reports/phase-1-final.html`; and
+- `research-framing/reports/artifact-index.html`.
+
+Generate and audit the initial report shelf in the same operation that creates the durable project
+workspace. Regenerate it after every material evidence batch, decision packet, author choice, or
+review. Before a commit, push, or terminal handoff, verify that the README and every linked report
+exist in the exact tree being published. Missing or stale navigation/report files are blocking
+delivery defects even when the editable research artifacts are otherwise valid.
+
 ## Source and reader-view boundary
 
 Markdown and CSV are the authoritative, editable, diffable research record. Generate

@@ -134,6 +134,12 @@ RANKED_POSITIONING_TEMPLATE = (
 HTML_REPORTS = (ROOT / "references" / "html-reports.md").read_text(
     encoding="utf-8"
 )
+PROJECT_README = (ROOT / "assets" / "project-readme.md").read_text(
+    encoding="utf-8"
+)
+WORKSPACE_INITIALIZER = (
+    ROOT / "scripts" / "initialize_phase1_workspace.py"
+).read_text(encoding="utf-8")
 CITATION_INTEGRITY = (
     ROOT / "references" / "citation-integrity.md"
 ).read_text(encoding="utf-8")
@@ -788,6 +794,23 @@ class SkillContractTests(unittest.TestCase):
             "repository-wide contract test",
         ):
             self.assertIn(phrase, CITATION_INTEGRITY)
+
+    def test_workspace_creation_requires_readme_and_initial_audited_reports(self):
+        for text in (SKILL, DETAILED_WORKFLOW):
+            self.assertIn("initialize_phase1_workspace.py", text)
+            self.assertIn("README.md", text)
+            self.assertIn("before every", text.lower())
+            self.assertIn("push", text.lower())
+        for report in (
+            "phase-1-progress.html",
+            "literature-and-evidence.html",
+            "phase-1-final.html",
+            "artifact-index.html",
+        ):
+            self.assertIn(report, PROJECT_README)
+            self.assertIn(report, HTML_REPORTS)
+        self.assertIn("render_phase1_reports.py", WORKSPACE_INITIALIZER)
+        self.assertIn("audit_phase1_reports.py", WORKSPACE_INITIALIZER)
 
     def test_project_artifacts_never_fall_back_to_the_skill_repository(self):
         self.assertIn("[repository-boundaries.md]", SKILL)

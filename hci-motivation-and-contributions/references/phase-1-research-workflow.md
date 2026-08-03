@@ -336,7 +336,16 @@ project-specific repository before writing durable artifacts. Never create proje
 inside the reusable skill repository. If the project repository has not been created or provided,
 continue only read-only inspection, research, and interactive planning in the session; request the
 target when durable writing becomes necessary. Once resolved, create a durable project folder
-without overwriting existing material. Include:
+without overwriting existing material. Run:
+
+```bash
+python3 scripts/initialize_phase1_workspace.py PROJECT_REPOSITORY --project-name "PROJECT NAME"
+```
+
+The initializer must create every missing mandatory template, the source/full-text and working
+directories, a root `README.md`, and the initial rendered and audited HTML shelf without
+overwriting existing artifacts. Do not approximate this by copying only the files immediately
+needed for the current analysis. Include:
 
 ```text
 research-framing/
@@ -388,6 +397,11 @@ research-framing/
     ├── artifact-index.html
     └── [reader-facing HTML mirrors of the working audits, registers, matrices, and positioning]
 ```
+
+The project root must also contain `README.md` with direct relative links to
+`phase-1-progress.html`, `literature-and-evidence.html`, `phase-1-final.html`, and
+`artifact-index.html`. These navigation and reader-view files are workspace invariants from the
+first durable write onward.
 
 Copy the templates from `assets/` where useful. Record each full source's canonical repository path,
 NotebookLM notebook ID, and source ID, but never credentials, cookies, or raw participant data.
@@ -1049,6 +1063,11 @@ After the automated audit passes, inspect all three reports in a headed browser.
 narrow widths, citation links and hover tips, long tables, escaped characters, charts, decision
 history, and missing-artifact messages. Fix the underlying artifact or renderer, regenerate, and
 re-audit. Do not deliver unchecked generated HTML.
+
+Before every commit, push, or terminal handoff that contains material Phase 1 changes, regenerate
+the complete HTML shelf, rerun the auditor, and verify that every report linked from the root
+`README.md` exists in the staged or committed tree. A durable batch is not publishable when its
+README is absent, its links are broken, or its reader views are missing or stale.
 
 ## Completion states
 

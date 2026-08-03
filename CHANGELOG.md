@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.4.1] - 2026-08-03 — Durable Phase 1 Workspace
+
+### Added
+
+- **Idempotent workspace initializer.** The motivation-and-contributions skill now creates the
+  complete Phase 1 artifact set, a project-root navigation README, and an initially rendered and
+  audited HTML report shelf without overwriting existing project work.
+
+### Changed
+
+- **Publish-time reader-view gate.** Material Phase 1 commits, pushes, and handoffs must regenerate
+  and audit the report shelf and verify the root README links.
+- **Source-manifest template.** Fixed the Markdown column separator count so the provenance table
+  renders consistently.
+
 ## [0.4.0] - 2026-08-03 — Motivation and Contributions
 
 ### Added
