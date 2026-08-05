@@ -403,6 +403,13 @@ def check_identifier_broadcast_agreement(
         for number, line in enumerate(page_path.read_text(encoding="utf-8").splitlines(), 1):
             if "CORRECTION" in line:
                 continue
+            if line.lstrip().startswith("|"):
+                # A generated table row already agrees with the ledger by construction, and
+                # check_source_manifest_generated is what proves it. Such a row also carries
+                # long ledger prose that legitimately names OTHER works' identifiers — an
+                # upgrade search that cites the stronger source it compared against, for
+                # instance — which this line-scoped check would misread as the row's own.
+                continue
             printed = {normalize(doi) for doi in DOI_PATTERN.findall(line)}
             if not printed:
                 continue
