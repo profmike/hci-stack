@@ -30,14 +30,38 @@ Maintain two linked layers:
 Never make the reader-facing layer stronger than the internal record. Conversely, do not make it
 weaker or harder to read merely to display caution.
 
+## Lead with human value before mechanism
+
+For every reader-facing introduction of an approach, feature, design choice, control, or
+contribution, use this order:
+
+`human situation or tension → value people need → capability that supports it → necessary implementation detail`
+
+Explain why people would want a behavior or control before naming how the system implements it.
+A reader should not have to infer the benefit from a feature list. Ask: **Why should this person
+care?** If the answer appears only after the capability or implementation, reorder the passage.
+
+Prefer concrete people, actions, and consequences over compressed academic noun stacks. For
+example, introduce `players whose actions must work together` before a precise term such as
+`interdependent roles`, and `different teammates hear the next instruction they need` before
+`recipient-differentiated semantic guidance`. Keep the precise term when it is analytically
+necessary, but define it after the reader can picture the activity.
+
+Capability is not benefit. When the human value is a design rationale or outcome hypothesis,
+write `is designed to`, `aims to`, or `lets us investigate` rather than asserting that the system
+already improves learning, autonomy, coordination, workload, or performance. Record the intended
+value, evidence state, and later evidence need separately from the implemented mechanism.
+
 ## Separate capability collision, contribution attribution, and idea provenance
 
 For prior-work framing and scoping, use the six-field accounting in
 [prior-work-contribution-boundaries.md](prior-work-contribution-boundaries.md). A capability
-collision requires positive evidence that the smallest named operation ran. Contribution
-attribution separately requires an explicit author claim and matched demonstration. Describe a
-`DEMONSTRATED_UNCLAIMED` operation as an observed capability of the audited artifact, not as the
-authors' claimed contribution. Give a `CLAIMED_UNDEMONSTRATED` atom neither capability nor
+collision requires positive evidence that the smallest named operation ran and a match at the
+complete human-activity predicate or independently claimed sub-capability scope. A shared component
+or generic qualifier is an inheritance precedent, not a collision with the complete capability.
+Contribution attribution separately requires an explicit author claim and matched demonstration.
+Describe a `DEMONSTRATED_UNCLAIMED` operation as an observed capability of the audited artifact, not
+as the authors' claimed contribution. Give a `CLAIMED_UNDEMONSTRATED` atom neither capability nor
 contribution credit.
 
 Keep concrete proposals, future-work directions, interpretations, and hypothetical scenarios in

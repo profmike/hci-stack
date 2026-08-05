@@ -9,7 +9,7 @@ description: |
   researchers need to determine whether they are solving the right problem,
   strengthen an early or in-progress research direction, investigate full-text
   prior work, position an approach, or prepare a research framing outline or
-  HTML research reports before design, implementation, evaluation, or writing.
+  GitHub-previewable Markdown research records before design, implementation, evaluation, or writing.
   Accepts any starting materials; outputs from HCI Office Hours or another prior
   phase are helpful but never required.
 ---
@@ -45,37 +45,31 @@ the direction; do not grade their absence.
 ## Required reference routing
 
 - Read [active-author-collaboration.md](references/active-author-collaboration.md), then
-  [author-collaboration.md](references/author-collaboration.md), before the first consequential
-  question or decision.
-- Before executing Steps 1–13, read
-  [phase-1-research-workflow.md](references/phase-1-research-workflow.md) completely.
-- Before durable project writes, read
-  [repository-boundaries.md](references/repository-boundaries.md).
-- Before the first citation-bearing artifact, read
-  [citation-integrity.md](references/citation-integrity.md).
-- Before motivation research or claim assessment, read
-  [evidence-protocol.md](references/evidence-protocol.md),
+  [author-collaboration.md](references/author-collaboration.md), before the first consequential question or decision.
+- Before executing Steps 1–13, read [phase-1-research-workflow.md](references/phase-1-research-workflow.md)
+  completely.
+- Before durable project writes, read [repository-boundaries.md](references/repository-boundaries.md).
+- Before the first citation-bearing artifact, read [citation-integrity.md](references/citation-integrity.md).
+- Before motivation research or claim assessment, read [evidence-protocol.md](references/evidence-protocol.md),
   [authoritative-domain-sources.md](references/authoritative-domain-sources.md),
   [motivation-claim-strengthening.md](references/motivation-claim-strengthening.md), and
   [consequence-severity-research.md](references/consequence-severity-research.md).
-- Before translating evidence into author discussion, report narrative, outline language, or
-  downstream writing guidance, read
-  [claim-focused-writing.md](references/claim-focused-writing.md).
-- Before NotebookLM setup or ingestion, read
-  [notebooklm-research.md](references/notebooklm-research.md).
-- Before related-work search and comparison, read
-  [acm-sigchi-related-work.md](references/acm-sigchi-related-work.md),
+- Before translating evidence into author discussion, report narrative, outline language, or downstream writing
+  guidance, read [claim-focused-writing.md](references/claim-focused-writing.md).
+- Before NotebookLM setup or ingestion, read [notebooklm-research.md](references/notebooklm-research.md).
+- Before related-work search and comparison, read [acm-sigchi-related-work.md](references/acm-sigchi-related-work.md),
   [forward-citation-expansion.md](references/forward-citation-expansion.md), and
   [related-work-positioning.md](references/related-work-positioning.md), then read
-  [prior-work-contribution-boundaries.md](references/prior-work-contribution-boundaries.md)
-  before defining a prior-work boundary, gap, scope, or contribution comparison.
-- Before terminology, charts, and contribution packages, read
+  [prior-work-contribution-boundaries.md](references/prior-work-contribution-boundaries.md) before defining a
+  prior-work boundary, gap, scope, or contribution comparison.
+- Before terminology, charts, and type-specific contribution packages, read
   [terminology-contract.md](references/terminology-contract.md),
-  [related-work-quadrant.md](references/related-work-quadrant.md), and
+  [related-work-quadrant.md](references/related-work-quadrant.md),
+  [hci-contribution-types.md](references/hci-contribution-types.md), and
   [contribution-rubric.md](references/contribution-rubric.md).
-- Before constructive review and report generation, read
-  [reviewer-panel.md](references/reviewer-panel.md) and
-  [html-reports.md](references/html-reports.md).
+- Before constructive review and report generation, read [reviewer-panel.md](references/reviewer-panel.md) and
+  [markdown-reports.md](references/markdown-reports.md), then
+  [iso-24495-1-plain-language.md](references/iso-24495-1-plain-language.md).
 
 ## Non-negotiable operating rules
 
@@ -85,11 +79,8 @@ Maintain `phase-1-collaboration-workboard.md` and repeat:
 
 `inspect → research → assess → challenge → compare → recommend → author decides → record → propagate → recheck`
 
-Lead every author-facing update, handoff, and progress report with a decision-first current-state
-snapshot: direction/readiness, established/observed/planned, settled boundaries, at most three
-consequence-ordered decisions with recommendations/tradeoffs, blockers, and next action/owner.
-State when no decision is ready. History and artifact inventories are supporting evidence; never
-make the author infer the current state or needed decision from them.
+Lead every author-facing update, handoff, and progress report with a decision-first current-state snapshot:
+direction/readiness, established/observed/planned, settled boundaries, at most three consequence-ordered decisions with recommendations/tradeoffs, blockers, and next action/owner. State when no decision is ready. History and artifact inventories are supporting evidence; never make the author infer the current state or needed decision from them.
 
 Research decision-relevant evidence and contradictions before asking the author to choose. Do not
 treat an idea dump, draft, populated template, or fluent synthesis as completion. Present three to
@@ -138,12 +129,8 @@ it.
 
 Treat the project repository and its NotebookLM notebook as private, governed project stores.
 Copyright, license, and redistribution status must not block, delay, or require separate
-per-source author confirmation for any of these project-internal actions:
-
-- saving a full source in the project repository;
-- tracking that source in version control; or
-- uploading that source to the project's NotebookLM notebook.
-
+per-source author confirmation for saving a full source in the project repository, tracking it in
+version control, or uploading it to the project's NotebookLM notebook.
 Do not add ignore rules, omit NotebookLM sources, or keep only metadata because a source is
 copyrighted or lacks an open license. Store a canonical repository copy of every retained full
 source under `research-framing/sources/full-text/` and mirror it into NotebookLM by default. Record
@@ -159,9 +146,9 @@ NotebookLM unless a separate, explicit data-governance decision authorizes them.
 
 Every retained reference must have an obtained, saved, and opened full copy. Abstracts, snippets,
 AI summaries, and secondary paraphrases may discover candidates but cannot ground claims or
-comparisons. Maintain stable `references.csv` keys and explicit `[@CitationKey]` tokens. Unknown
-keys, duplicate keys, ambiguous aliases, unresolved shorthand, missing metadata, and broken
-destinations are blocking defects.
+comparisons. Maintain stable `references.csv` keys and follow `HCI-CITATIONS-2`: GitHub Markdown
+uses keyed links plus catalog-derived definitions and visible full references; resolve all draft
+tokens and hyperlink every citation shorthand. Unknown/duplicate identities, missing metadata, and broken links block delivery.
 
 Record each material claim's method, population/context, sample or coverage, result, uncertainty,
 limitation, and exact locator. Keep ingestion completeness separate from claim strength in
@@ -180,25 +167,36 @@ At every bounded audit closure, inventory all candidate source files in the gove
 source/import roots and reconcile each identity with `source-resolution.csv`; record the roots,
 counts, unresolved files, and `LOCAL_SOURCE_FILES_RECONCILED` marker in `source-manifest.md`.
 
+**Read every identity off the copy itself, and never store an identifier twice.** Read each
+retained source's authors, title, year, venue, and pages from the held copy's own front matter and
+record where, in `identity_verified_against`. Generate the ledger-derived columns of
+`source-manifest.md` with `render_source_manifest.py`; never retype them. See
+[citation-integrity.md](references/citation-integrity.md).
+
 For every material prior-work or focal-project atom, complete the six independent fields in
 `prior-work-evidence-accounting.csv`: `AUTHOR CLAIM`, `DEMONSTRATED ARTIFACT OR STUDY`,
 `OPERATED CAPABILITY`, `EVALUATED RESULT`, `CAPABILITY COLLISION`, and `CONTRIBUTION CREDIT`.
-No field inherits truth from another. Compare the smallest positively evidenced operation, channel,
-condition, or finding. A demonstrated but unclaimed operation can create a capability collision and
-bound firstness, but it receives no attributed contribution credit. Record it as
-`DEMONSTRATED_UNCLAIMED`. A claimed but undemonstrated atom is
+No field inherits truth from another. Compare the smallest positively evidenced operation against
+the focal capability's complete human-activity predicate, not against isolated adjectives. A
+demonstrated but unclaimed operation can create a capability collision only at the matched human
+capability or independently claimed sub-capability scope; it receives no attributed contribution
+credit. Record it as `DEMONSTRATED_UNCLAIMED`. A claimed but undemonstrated atom is
 `CLAIMED_UNDEMONSTRATED` and receives neither capability nor contribution credit.
 
+**An idea with no demonstration and no study collides with nothing.** Ask only whether an artifact
+ran the named operation and whether an evaluation measured the named result. If both answers are
+no, record `NONE` in both columns however closely the idea resembles the focal atom. Venue is the
+prompt to check, never the verdict; see
+[prior-work-contribution-boundaries.md](references/prior-work-contribution-boundaries.md).
+
 Route proposals, future work, interpretations, and hypothetical scenarios only to the idea
-provenance record in `idea-provenance-ledger.csv`; set both collision and credit to `NONE`. An
+provenance record in `idea-provenance-ledger.csv`, with both collision and credit `NONE`. An
 explicit author claim that a realized capability exists without matched evidence remains visible as
-a `CLAIMED_UNDEMONSTRATED` accounting row and may also be cross-referenced as an unverified
-implementation claim in idea provenance; it never gains collision or credit. Decompose mixed
-systems channel by channel and reject whole-system labels unless every required channel is
-demonstrated. Treat source silence only as `SEARCH_PRIORITY` or
+a `CLAIMED_UNDEMONSTRATED` accounting row and never gains either. Decompose mixed systems channel by channel and reject whole-system labels
+unless every required channel is demonstrated. Treat source silence only as `SEARCH_PRIORITY` or
 `REOPEN_QUERY`, never as capability, absence, collision, or credit. A platform, hardware, sensor,
-OS, app, or game port receives no credit by itself; credit survives only for a demonstrated
-nontrivial adaptation, demonstrated new use class, or directly validated empirical finding.
+OS, app, or game port earns credit only through a demonstrated nontrivial adaptation, demonstrated
+new use class, or directly validated empirical finding.
 
 Treat every author-provided citation, draft bibliography, and reading list as an **initial
 discovery seed**, never the final evidentiary choice. For each retained seed, independently search
@@ -208,12 +206,13 @@ retained with bounds, corroborated, or superseded. Venue prestige alone never up
 
 ### Escalate human-only source access
 
-Try lawful independent routes and continue non-dependent research before asking for help. For a
-decision-relevant blocked source, record the exact citation, DOI/canonical URL, attempted routes,
-obstacle, why it matters, and fallback boundary in `missing-full-copies.md`. Then ask for one
-concrete action: university IP/library access or a university VPN, a lawfully obtained PDF, a
-CAPTCHA or institutional sign-in completed by the author in their headed browser, or an authorized
-link.
+Exhaust the lawful acquisition routes in [evidence-protocol.md](references/evidence-protocol.md),
+and continue non-dependent research, before asking for help. A `403` from an automated fetcher is
+normally bot detection, not absent entitlement; drive the author's already-entitled headed browser
+rather than escalating on it. For a genuinely blocked source, record the exact citation, DOI/canonical
+URL, attempted routes, obstacle, why it matters, and fallback boundary in `missing-full-copies.md`.
+Then ask for one concrete action: university IP/library access or a VPN, a lawfully obtained PDF, a
+CAPTCHA or institutional sign-in completed by the author, or an authorized link.
 
 Never ask for passwords, cookies, session tokens, browser profiles, or copied authentication
 material. If access remains blocking, use `NEEDS_AUTHOR_SOURCE_ACCESS`; do not substitute an AI
@@ -252,18 +251,18 @@ would establish every important project claim.
 
 ### Separate complete evidence review from concise reader-facing claims
 
-Preserve uncertainty, contrary findings, limitations, non-claims, and reopen triggers in the
-internal evidence record and author discussion. In reader-facing narrative, state the strongest
-supportable active claim directly and include only claim-local qualifiers: those that change that
-claim's truth, scope, quantity, causal meaning, comparison, or likely interpretation. Do not append
-disclaimers about downstream outcomes the text does not claim, and do not hedge by reflex. This
-never permits hiding counterevidence that materially constrains an active claim.
-
-Cite established prior work for an inherited general mechanism or design fact; require
-project-specific verification only for claims about the exact artifact, parameter, delivered dose,
-coverage, fidelity, or downstream effect. For a general audience, lead with a familiar term, define
-the exact scientific construct or metric at first use, and do not treat neighboring constructs as
-synonyms.
+Preserve uncertainty, limitations, non-claims, counterevidence, and reopen triggers internally. In
+reader-facing approach, feature, design-choice, or contribution descriptions, lead with the human
+situation and desired value, then the capability and only necessary implementation detail. Use
+concrete popular-science language before precise terms, translating abstract relationships into
+actions a broad reader can picture. State the strongest supportable active claim with only
+claim-local qualifiers that change its truth, scope, quantity, causal meaning, comparison, or
+likely interpretation. Do not turn intended value into measured benefit, disclaim unclaimed
+outcomes, or hedge by reflex. Cite established prior work for an inherited general mechanism or
+design fact; require project-specific verification only for claims about the exact artifact,
+parameter, delivered dose, coverage, fidelity, or downstream effect. For a general audience, lead
+with a familiar term, define the exact scientific construct or metric at first use, and do not
+treat neighboring constructs as synonyms.
 
 ## Core workflow
 
@@ -289,10 +288,10 @@ a decision-relevant full copy is human-blocked.
 
 ### 3. Create the project workspace
 
-After resolving the project repository, run
-`python3 scripts/initialize_phase1_workspace.py PROJECT_REPOSITORY --project-name "PROJECT NAME"`.
-This creates missing templates without overwriting existing work, creates a root `README.md` that
-links the reader-facing reports, and renders and audits the initial HTML shelf. Do not hand-create
+After resolving both locations to absolute paths, run
+`python3 "ABSOLUTE_SKILL_DIR/scripts/initialize_phase1_workspace.py" "ABSOLUTE_PROJECT_REPO" --project-name "PROJECT NAME"`.
+This creates missing templates without overwriting existing work, creates a root `README.md` with
+framing and prospective contributions, and publishes/audits the GitHub Markdown shelf. Do not hand-create
 only a subset of the workspace. It must include
 `agent-context.json`, the workboard, decision and source records, `references.csv`, evidence/claim
 registers, motivation and authority audits, `source-resolution.csv`,
@@ -302,10 +301,10 @@ registers, motivation and authority audits, `source-resolution.csv`,
 related-work matrices and positioning, terminology, options, reviewer records,
 `research-framing-outline.md`, `phase-2-handoff.md`, and generated reports.
 
-Treat the root README and initial HTML as workspace invariants, not end-of-phase polish. Before any
+Treat the root README and linked Markdown shelf as workspace invariants, not end-of-phase polish. Before any
 commit, push, terminal handoff, or claim that a durable work batch is complete, verify that the
 README links resolve, regenerate the reports after the latest material changes, and run the report
-auditor. Do not publish Markdown/CSV updates with absent or stale reader views.
+auditor. Do not publish canonical updates with absent, stale, unlinked, or machine-local reader views.
 
 Populate the manifest's project name immediately, keep `phase.status` current, and update its
 canonical pointers whenever an artifact path changes. Additional GPT Pro repository access must be
@@ -372,8 +371,9 @@ scope, overrides, intention anchor, reset, and current-platform baseline. A cumu
 is not a clock/event transition; an after-activation ease-in is not a pre-transition taper. Rank
 up to approximately ten verified full works from the same/similar-problem bands and write one fair
 positioning paragraph for each. If fewer exist, include all and disclose the shortage; never pad
-the primary ranking with distant analogies. Preserve different-problem mechanism collisions
-separately because they may still narrow a mechanism- or capability-level novelty claim.
+the primary ranking with distant analogies. Preserve different-problem component or mechanism
+precedents separately; they narrow only the exact matched mechanism or independently claimed
+sub-capability, not the complete human-activity capability by qualifier subtraction.
 
 Normalize away hardware and platform labels. Reproducing the same demonstrated causal interaction
 on another device or platform has zero contribution weight. Credit an adaptation only when
@@ -408,10 +408,10 @@ each view reveals and hides; recommend one, then let the author choose.
 
 ### 9. Sharpen prospective contributions
 
-Generate three to five coherent contribution packages. Separate these layers, then rank them—do
-not impose a universal order: workflow relationship/significance, interaction or
-control-policy or information-distribution capability, setting/activity boundary,
-implementation/design rationale, and outcome hypothesis. Select the strongest defensible
+Identify atomic reusable outputs, frame their human and HCI value, classify a primary and any
+supporting contribution types, and align each type with an independent evidence gate. Then generate
+three to five coherent packages and rank their workflow significance, interaction or control-policy
+or information-distribution capability, setting/activity boundary, design rationale, and outcome hypothesis. Select the strongest defensible
 consequential difference from the closest comparator. A prototype, algorithm, interview set, or
 study is not automatically a contribution. Run the contribution-discovery gates in
 `related-work-positioning.md`: objective/equal-quantity, concept lineage/in-domain collision,
@@ -419,8 +419,8 @@ collision–delta, control-policy/residual state, anchor semantics/quality, temp
 ladder/fidelity, and null survival. Apply the full six-field accounting symmetrically to prior work
 and the focal project. Separate the prospective causal core, supporting implementation, realization
 evidence, and value evidence. Do not promote a planned focal capability into a demonstrated
-contribution; preserve a demonstrated-unclaimed prior operation as a capability collision without
-misattributing it as the authors' contribution.
+contribution; preserve a demonstrated-unclaimed operation at its matched scope without using an
+old component to erase a novel human-activity capability or misattribute prior contribution.
 Do not conflate untested human value with absence of capability novelty: assess capability
 realization and human-value evidence as separate atoms, then apply all six independent fields to
 each.
@@ -453,15 +453,15 @@ input; Phase 2 must remain independently enterable.
 Before declaring Phase 1 complete, reconcile `agent-context.json` with the final workboard, source
 manifest, NotebookLM maintenance record, and handoff, then set `phase.status` to `complete`.
 
-### 13. Generate and audit HTML reports
+### 13. Citation output profile: GitHub Markdown. Deterministic citation gate
 
 Run:
 
 ```bash
-python3 scripts/check_prior_work_accounting.py research-framing/ --end-of-round
-python3 scripts/check_source_resolution.py research-framing/ --end-of-round
-python3 scripts/render_phase1_reports.py research-framing/
-python3 scripts/audit_phase1_reports.py research-framing/
+python3 "ABSOLUTE_SKILL_DIR/scripts/check_prior_work_accounting.py" "ABSOLUTE_PROJECT_REPO/research-framing" --end-of-round
+python3 "ABSOLUTE_SKILL_DIR/scripts/check_source_resolution.py" "ABSOLUTE_PROJECT_REPO/research-framing" --end-of-round
+python3 "ABSOLUTE_SKILL_DIR/scripts/render_phase1_reports.py" "ABSOLUTE_PROJECT_REPO/research-framing"
+python3 "ABSOLUTE_SKILL_DIR/scripts/audit_phase1_reports.py" "ABSOLUTE_PROJECT_REPO/research-framing"
 ```
 
 Use `--end-of-round` for a declared bounded audit or research-round closure, not an ordinary
@@ -469,14 +469,14 @@ in-progress status update. A progress update may expose transient acquisition wo
 agent continues it; it must not become a terminal handoff or delay an exact author-access request
 after lawful routes are exhausted.
 
-Regenerate `phase-1-progress.html`, `literature-and-evidence.html`, `phase-1-final.html`,
-`artifact-index.html`, and reader-facing mirrors at their required checkpoints. Markdown/CSV are
-the editable sources. After the fail-closed audit passes, serve local files through temporary
-loopback-only HTTP at `127.0.0.1` when needed; inspect desktop/narrow widths in a headed browser, reset the viewport, stop the server, and do not deliver unchecked HTML.
+Regenerate the four core `.md` reports, report-shelf README, and ledger views at their checkpoints;
+canonical Markdown/CSV/JSON/YAML records remain editable sources. After audit, preview the README,
+core reports, citations, nested navigation, and wide ledgers in desktop/phone GitHub Markdown.
 
 The report gate also applies before every repository commit, push, or terminal handoff containing
-material Phase 1 changes. Confirm the root `README.md` links to the four principal reports and that
-all linked files exist in the committed tree.
+material Phase 1 changes. Confirm the root `README.md` carries evidence-status-aware framing and
+contribution statements, links to the canonical detailed records and four principal `.md` reports,
+and that every relative link exists in the committed tree. No generated `.html` file may remain.
 
 ## Completion states
 

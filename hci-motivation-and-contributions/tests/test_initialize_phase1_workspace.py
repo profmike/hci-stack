@@ -25,18 +25,33 @@ class InitializePhase1WorkspaceTests(unittest.TestCase):
             )
 
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-            self.assertEqual(existing.read_text(encoding="utf-8"), "# Preserve me\n")
+            self.assertIn("# Preserve me", existing.read_text(encoding="utf-8"))
+            self.assertIn("HCI-PHASE1-NAV", existing.read_text(encoding="utf-8"))
             readme = (repo / "README.md").read_text(encoding="utf-8")
             self.assertIn("# Example Project", readme)
-            self.assertIn("research-framing/reports/phase-1-progress.html", readme)
-            reports = repo / "research-framing" / "reports"
+            self.assertIn("research-framing/reports/phase-1-progress.md", readme)
+            framing = repo / "research-framing"
+            for relative in (
+                "starting-state.md",
+                "search-log.md",
+                "motivation-evidence-map.md",
+                "related-work-matrix.md",
+                "citation-chain-log.md",
+                "approach-options.md",
+                "contribution-options.md",
+                "reviewer-panel/README.md",
+            ):
+                self.assertTrue((framing / relative).is_file(), relative)
+            reports = framing / "reports"
             for name in (
-                "phase-1-progress.html",
-                "literature-and-evidence.html",
-                "phase-1-final.html",
-                "artifact-index.html",
+                "README.md",
+                "phase-1-progress.md",
+                "literature-and-evidence.md",
+                "phase-1-final.md",
+                "artifact-index.md",
             ):
                 self.assertTrue((reports / name).is_file(), name)
+            self.assertFalse(list(reports.glob("*.html")))
 
 
 if __name__ == "__main__":

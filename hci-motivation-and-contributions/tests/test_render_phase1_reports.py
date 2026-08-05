@@ -8,742 +8,516 @@ import unittest
 from pathlib import Path
 
 
-SCRIPT = Path(__file__).parents[1] / "scripts" / "render_phase1_reports.py"
-SPEC = importlib.util.spec_from_file_location("render_phase1_reports", SCRIPT)
-assert SPEC and SPEC.loader
-MODULE = importlib.util.module_from_spec(SPEC)
-sys.modules[SPEC.name] = MODULE
-SPEC.loader.exec_module(MODULE)
-AUDIT_SCRIPT = Path(__file__).parents[1] / "scripts" / "audit_phase1_reports.py"
-AUDIT_SPEC = importlib.util.spec_from_file_location("audit_phase1_reports", AUDIT_SCRIPT)
-assert AUDIT_SPEC and AUDIT_SPEC.loader
-AUDIT_MODULE = importlib.util.module_from_spec(AUDIT_SPEC)
-sys.modules[AUDIT_SPEC.name] = AUDIT_MODULE
-AUDIT_SPEC.loader.exec_module(AUDIT_MODULE)
+ROOT = Path(__file__).parents[1]
+SCRIPT_DIR = ROOT / "scripts"
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+
+RENDER_SPEC = importlib.util.spec_from_file_location(
+    "render_phase1_reports", SCRIPT_DIR / "render_phase1_reports.py"
+)
+RENDER = importlib.util.module_from_spec(RENDER_SPEC)
+assert RENDER_SPEC.loader
+sys.modules[RENDER_SPEC.name] = RENDER
+RENDER_SPEC.loader.exec_module(RENDER)
+
+AUDIT_SPEC = importlib.util.spec_from_file_location(
+    "audit_phase1_reports", SCRIPT_DIR / "audit_phase1_reports.py"
+)
+AUDIT = importlib.util.module_from_spec(AUDIT_SPEC)
+assert AUDIT_SPEC.loader
+sys.modules[AUDIT_SPEC.name] = AUDIT
+AUDIT_SPEC.loader.exec_module(AUDIT)
 
 
-class Phase1ReportTests(unittest.TestCase):
-    def setUp(self):
-        self.temporary = tempfile.TemporaryDirectory()
-        self.root = Path(self.temporary.name) / "research-framing"
-        self.root.mkdir()
-        (self.root / "decision-packets").mkdir()
-        (self.root / "reviewer-panel").mkdir()
-        (self.root / "reviews" / "2026-07-28").mkdir(parents=True)
+REFERENCE_HEADER = (
+    "citation_key,author_year,short_title,venue_abbrev,full_title,"
+    "full_authors,full_venue,url,aliases\n"
+)
 
-        (self.root / "starting-state.md").write_text(
-            "# Starting state\n\nA team project with <script>alert('x')</script>.",
-            encoding="utf-8",
+
+class Phase1MarkdownPublicationTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.temp = tempfile.TemporaryDirectory()
+        self.repo = Path(self.temp.name) / "Example"
+        self.root = self.repo / "research-framing"
+        self.output = self.root / "reports"
+        self.root.mkdir(parents=True)
+        self.output.mkdir()
+
+        readme = (ROOT / "assets" / "project-readme.md").read_text(encoding="utf-8")
+        (self.repo / "README.md").write_text(
+            readme.replace("{{PROJECT_NAME}}", "Example"), encoding="utf-8"
         )
-        (self.root / "phase-1-collaboration-workboard.md").write_text(
-            "# Phase 1 collaboration workboard\n\n"
-            "Status: `ACTIVE`\n\n"
-            "## Current state — read this first\n\n"
-            "- **Direction and readiness:** Landscape research is active.\n"
-            "- **Established now:** One closest-work boundary is supported.\n"
-            "- **Settled decisions and claim boundaries:** No firstness claim.\n"
-            "- **Active blockers or access needs:** None.\n"
-            "- **Immediate next action and owner:** Agent prepares the comparison.\n\n"
-            "### Decisions needed now (maximum three)\n\n"
-            "| Priority | Decision ID | Exact question | Recommendation | Alternatives and tradeoff | Consequence if unresolved | Decision-support evidence and populated artifacts | Owner / status |\n"
-            "|---:|---|---|---|---|---|---|---|\n"
-            "| 1 | D1 | Which boundary? | Use the narrow boundary | Broader wording needs more evidence | Study cannot converge | [Related-work matrix](related-work-matrix.md) | Author / decision-ready |\n\n"
-            "## Current round\n\n"
-            "Highest-consequence open area: closest-work boundary.\n\n"
-            "Constructive opposition: current support is insufficient; research first, "
-            "then narrow or run a decision-matched probe.",
-            encoding="utf-8",
-        )
-        (self.root / "author-decisions.md").write_text(
-            "# Author decisions\n\n| Checkpoint | Choice | Rationale |\n"
-            "|---|---|---|\n| Motivation | B — coordination | Stronger evidence |",
-            encoding="utf-8",
-        )
-        (self.root / "terminology-contract.md").write_text(
-            "# Terminology contract\n\n"
-            "Semantic contract: player-specific names the addressee; "
-            "recipient-differentiated names different content. "
-            "Personalized remains reserved pending evidence.",
-            encoding="utf-8",
-        )
-        (self.root / "prior-work-contribution-boundary.md").write_text(
-            "# Prior-work contribution-boundary audit\n\n"
-            "PWE-001: the shared channel is author-claimed, demonstrated, and operated. "
-            "Its capability collision is exact and its matched contribution credit is full. "
-            "Future-work proposals remain idea provenance with collision and credit both NONE.",
-            encoding="utf-8",
-        )
-        template_assets = Path(__file__).parents[1] / "assets"
-        for artifact_name in (
-            "prior-work-evidence-accounting.csv",
-            "idea-provenance-ledger.csv",
-            "imported-bibliography-accountability.csv",
-            "late-found-work-postmortem.csv",
-            "novelty-regression-sentinels.yaml",
-        ):
-            (self.root / artifact_name).write_text(
-                (template_assets / artifact_name).read_text(encoding="utf-8"),
-                encoding="utf-8",
+
+        for relative, text in {
+            "phase-1-collaboration-workboard.md": (
+                "# Workboard\n\n## Current state — read this first\n\n"
+                "Direction is `planned`; no author decision is currently ready. "
+                "Evidence comes from [@Example2024].\n"
+            ),
+            "starting-state.md": "# Starting state\n\nImported claims remain hypotheses.\n",
+            "author-decisions.md": "# Author decisions\n\nNo decision yet.\n",
+            "decision-packets/README.md": "# Decision packets\n\nNo packet yet.\n",
+            "contribution-options.md": "# Contribution options\n\nCandidate C1 is `hypothesis`.\n",
+            "terminology-contract.md": "# Terminology\n\nCandidate only.\n",
+            "motivation-claim-research-queue.md": "# Motivation queue\n\nNo active row.\n",
+            "missing-full-copies.md": "# Missing full copies\n\nNone.\n",
+            "reviewer-panel/README.md": "# Reviewer panel\n\nPending.\n",
+            "source-manifest.md": "# Source manifest\n\nLOCAL_SOURCE_FILES_RECONCILED\n",
+            "notebooklm-maintenance.md": "# NotebookLM maintenance\n\nReconciled.\n",
+            "authoritative-source-map.md": "# Authority map\n\nMapped.\n",
+            "evidence-strength-register.md": "# Evidence register\n\nExample is assessed.\n",
+            "current-practice-audit.md": "# Current practice\n\nAudited.\n",
+            "consequence-severity-ranking.md": "# Consequences\n\nRanked.\n",
+            "acm-sigchi-related-work-audit.md": "# ACM audit\n\nAudited.\n",
+            "related-work-search-recall-audit.md": "# Search recall\n\nAudited.\n",
+            "related-work-matrix.md": "# Related work matrix\n\nCompared.\n",
+            "related-work-contribution-tier-audit.md": "# Contribution audit\n\nAudited.\n",
+            "ranked-related-work-positioning.md": "# Ranked work\n\nExample [@Example2024].\n",
+            "prior-work-contribution-boundary.md": "# Prior-work boundary\n\nBounded.\n",
+            "citation-chain-log.md": "# Citation chain\n\nComplete.\n",
+            "research-framing-outline.md": "# Research framing outline\n\nDirection is planned.\n",
+            "phase-2-handoff.md": "# Phase 2 handoff\n\nOptional and incomplete.\n",
+        }.items():
+            path = self.root / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(text, encoding="utf-8")
+
+        self.write_catalog()
+        self.write_csv("source-resolution.csv", ["source_id", "citation_key", "acquisition_state"], [["S1", "Example2024", "FULL_TEXT_ASSESSED"]])
+        self.write_csv("claim-evidence-ledger.csv", ["claim_id", "claim", "evidence_state"], [["C1", "Example claim", "established-external"]])
+        self.write_csv("prior-work-evidence-accounting.csv", [f"field_{i}" for i in range(12)], [[str(i) for i in range(12)]])
+        self.write_csv("idea-provenance-ledger.csv", ["idea_id", "proposal"], [["I1", "Example"]])
+        self.write_csv("imported-bibliography-accountability.csv", ["source_id", "disposition"], [["S1", "retained"]])
+        self.write_csv("late-found-work-postmortem.csv", ["source_id", "repair"], [])
+        (self.root / "novelty-regression-sentinels.yaml").write_text("sentinels: []\n", encoding="utf-8")
+        (self.root / "agent-context.json").write_text('{"phase": {"status": "active"}}\n', encoding="utf-8")
+
+    def tearDown(self) -> None:
+        self.temp.cleanup()
+
+    def write_catalog(self, *, duplicate_casefold: bool = False) -> None:
+        rows = [
+            [
+                "Example2024",
+                "Example et al., 2024",
+                "Useful Example",
+                "CHI",
+                "A Useful Example for Testing",
+                "Alex Example; Bailey Example",
+                "Proceedings of CHI 2024",
+                "https://doi.org/10.1000/example",
+                "Example et al. 2024",
+            ]
+        ]
+        if duplicate_casefold:
+            rows.append(
+                [
+                    "example2024",
+                    "Other et al., 2024",
+                    "Other",
+                    "CHI",
+                    "Other Work",
+                    "Other Author",
+                    "Proceedings of CHI 2024",
+                    "https://doi.org/10.1000/other",
+                    "",
+                ]
             )
-        (self.root / "decision-packets" / "motivation.md").write_text(
-            "# Motivation variations\n\n- A — participation scale\n"
-            "- B — coordination consequence (Example et al.,\n"
-            "  2024)\n- C — access and equity\n\n"
-            "**Selected:** B — coordination consequence",
-            encoding="utf-8",
-        )
-        (self.root / "source-manifest.md").write_text(
-            "# Sources\n\n| Work | Full copy | DOI |\n|---|---|---|\n"
-            "| Example et al. | checked | 10.1000/example |",
-            encoding="utf-8",
-        )
-        (self.root / "source-resolution.csv").write_text(
-            "source_id,citation_key,acquisition_state,relevance,"
-            "request_surfaced_locator,affected_claims,"
-            "fallback_or_narrowing,reopen_trigger\n"
-            "S1,Example2024,NEEDS_AUTHOR_SOURCE_ACCESS,retain,"
-            "session:019f-example#2026-07-29,WD-C001,"
-            "Omit the blocked efficacy claim,"
-            "Complete PDF obtained and fully audited\n",
-            encoding="utf-8",
-        )
-        (self.root / "search-log.md").write_text(
-            "# Search log\n\nQuery: `team coordination guidance CHI`",
-            encoding="utf-8",
-        )
-        (self.root / "related-work-matrix.md").write_text(
-            "# Related work\n\n## Same problem, different approach\n\n"
-            "| Work | Effect | Interpretation |\n|---|---|---|\n"
-            "| Example et al. 2024 | d\\|=1.028 | One intact evidence cell |\n",
-            encoding="utf-8",
-        )
-        (self.root / "consequence-severity-ranking.md").write_text(
-            "# Consequence severity ranking\n\n"
-            "Status: `CONSEQUENCE_RANKING_COMPLETE`\n\n"
-            "Lost sleep opportunity ranks first with moderate confidence; "
-            "next-day impairment remains downstream.",
-            encoding="utf-8",
-        )
-        (self.root / "evidence-strength-register.md").write_text(
-            "# Evidence-strength register\n\n"
-            "Ingestion: `FULL`. Claim strength: `ES2 — BOUNDED SUPPORT`.\n\n"
-            "NotebookLM may propose a rating, but critical risk of bias can veto it. "
-            "Unmarked references are `UNASSESSED`.",
-            encoding="utf-8",
-        )
-        (self.root / "acm-sigchi-related-work-audit.md").write_text(
-            "# ACM DL and SIGCHI related-work audit\n\n"
-            "Status: `ACM_SIGCHI_LANDSCAPE_AUDITED`\n\n"
-            "Native ACM DL queries locate the closest CHI and SIGCHI lineage. "
-            "Venue priority does not upgrade evidence strength.",
-            encoding="utf-8",
-        )
-        (self.root / "related-work-search-recall-audit.md").write_text(
-            "# Related-work search-recall audit\n\n"
-            "Status: `RELATED_WORK_SEARCH_RECALL_AUDITED`\n\n"
-            "Mechanism sentinels pass after synonym and citation-title checks.",
-            encoding="utf-8",
-        )
-        (self.root / "authoritative-source-map.md").write_text(
-            "# Authoritative domain-source map\n\n"
-            "Status: `AUTHORITATIVE_DOMAIN_SOURCES_MAPPED`\n\n"
-            "Authority is mapped to remit, document type, and a cannot-support boundary.",
-            encoding="utf-8",
-        )
-        (self.root / "motivation-claim-research-queue.md").write_text(
-            "# Motivation-claim research queue\n\n"
-            "Status: `MOTIVATION_CLAIM_AUDIT_COMPLETE`\n\n"
-            "M7 used `B — official practice audit` and was narrowed after contradiction search.",
-            encoding="utf-8",
-        )
-        (self.root / "current-practice-audit.md").write_text(
-            "# Current-practice audit\n\n"
-            "Official controls mix reminders, grayscale, bypasses, and hard blocks.",
-            encoding="utf-8",
-        )
-        (self.root / "related-work-contribution-tier-audit.md").write_text(
-            "# Contribution-strength audit\n\n"
-            "Example et al. 2024 provides the closest capability comparison.\n\n"
-            "**Rank:** Tier 1 — capability.",
-            encoding="utf-8",
-        )
-        (self.root / "ranked-related-work-positioning.md").write_text(
-            "# Ranked related-work positioning\n\n"
-            "## 1. Example et al. (CHI 2024)\n\n"
-            "Example et al. establish a complete comparison. CoachCast credits that "
-            "capability before isolating one consequential interaction difference.",
-            encoding="utf-8",
-        )
-        (self.root / "citation-chain-log.md").write_text(
-            "# Citation chain\n\nA newer paper cites Example positively.",
-            encoding="utf-8",
-        )
-        (self.root / "research-framing-outline.md").write_text(
-            "# Research framing outline\n\nSelected direction: coordination support.",
-            encoding="utf-8",
-        )
-        (self.root / "phase-2-handoff.md").write_text(
-            "# Phase 2 handoff\n\nTest the core coordination premise.",
-            encoding="utf-8",
-        )
-        (self.root / "exemplar-analysis.md").write_text(
-            "# Exemplar analysis\n\nMRDrum informs the hourglass mechanism.",
-            encoding="utf-8",
-        )
-        (self.root / "exemplar-related-work-positioning-analysis.md").write_text(
-            "# Exemplar Related Work positioning\n\n"
-            "Credit a predecessor, then isolate one contribution-level contrast.",
-            encoding="utf-8",
-        )
-        (
-            self.root
-            / "reviews"
-            / "2026-07-28"
-            / "sol-pro-related-work-positioning.md"
-        ).write_text(
-            "# Sol Pro positioning correction\n\n"
-            "Guided Teams is the strongest near-counterexample.",
-            encoding="utf-8",
-        )
-        with (self.root / "references.csv").open(
-            "w", newline="", encoding="utf-8"
-        ) as handle:
-            writer = csv.DictWriter(
-                handle,
-                fieldnames=(
-                    "citation_key",
-                    "author_year",
-                    "short_title",
-                    "venue_abbrev",
-                    "full_title",
-                    "full_authors",
-                    "full_venue",
-                    "url",
-                    "aliases",
-                ),
-            )
-            writer.writeheader()
-            writer.writerow(
-                {
-                    "citation_key": "Example2024",
-                    "author_year": "Example et al., 2024",
-                    "short_title": "Guided Teams",
-                    "venue_abbrev": "CHI",
-                    "full_title": "Guided Teams: A Complete Example",
-                    "full_authors": "Alice Example, Bob Example, and Carol Example",
-                    "full_venue": "Proceedings of the ACM CHI Conference on Human Factors in Computing Systems",
-                    "url": "https://doi.org/10.1000/example",
-                    "aliases": "Example et al. 2024||Example-paper.pdf",
-                }
-            )
+        path = self.root / "references.csv"
+        with path.open("w", newline="", encoding="utf-8") as handle:
+            handle.write(REFERENCE_HEADER)
+            csv.writer(handle).writerows(rows)
 
-        ledger = self.root / "claim-evidence-ledger.csv"
-        with ledger.open("w", newline="", encoding="utf-8") as handle:
-            writer = csv.DictWriter(
-                handle,
-                fieldnames=(
-                    "claim_id",
-                    "framing_role",
-                    "proposed_claim",
-                    "evidence_state",
-                    "status",
-                ),
-            )
-            writer.writeheader()
-            writer.writerow(
-                {
-                    "claim_id": "M1",
-                    "framing_role": "motivation",
-                    "proposed_claim": "The problem affects coordination.",
-                    "evidence_state": "established-external",
-                    "status": "verified",
-                }
-            )
+    def write_csv(self, relative: str, fields: list[str], rows: list[list[str]]) -> None:
+        path = self.root / relative
+        with path.open("w", newline="", encoding="utf-8") as handle:
+            writer = csv.writer(handle)
+            writer.writerow(fields)
+            writer.writerows(rows)
 
-    def tearDown(self):
-        self.temporary.cleanup()
+    def publish(self) -> dict[str, str]:
+        return RENDER.generate_reports(self.root, project_title="Example")
 
-    def generate(self) -> dict[str, str]:
-        output = self.root / "reports"
-        paths = MODULE.generate_reports(
-            self.root,
-            output,
-            project_title="CoachCast",
-            generated_at="2026-07-26T12:00:00+08:00",
-        )
-        return {path.name: path.read_text(encoding="utf-8") for path in paths}
+    def test_publishes_markdown_only_and_all_required_views(self):
+        documents = self.publish()
+        self.assertEqual(set(documents), AUDIT.expected_report_names())
+        self.assertFalse(list(self.output.glob("*.html")))
+        for name in documents:
+            self.assertTrue(name.endswith(".md"), name)
+            self.assertTrue((self.output / name).is_file())
 
-    def test_generates_all_three_self_contained_reports(self):
-        reports = self.generate()
-        self.assertEqual(set(reports), set(MODULE.ALL_REPORT_NAMES))
-        for document in reports.values():
-            self.assertIn("<style>", document)
-            self.assertNotIn("<script", document.lower())
-            self.assertNotIn("fonts.googleapis.com", document)
-            self.assertIn("SHA-256", document)
-
-    def test_acm_sigchi_audit_is_visible_in_all_reports(self):
-        reports = self.generate()
-        for name in MODULE.REPORT_NAMES:
-            document = reports[name]
-            self.assertIn("ACM DL and SIGCHI related-work audit", document)
-
-    def test_incomplete_outline_is_not_labeled_final_or_decision_complete(self):
-        document = self.generate()["phase-1-final.html"]
-        self.assertIn("Phase 1 research direction — working draft", document)
-        self.assertIn("this is not a completion or readiness decision", document)
-        self.assertIn("Working research direction", document)
-        self.assertNotIn("Phase 1 final research direction", document)
-        self.assertNotIn("Decision-complete outline", document)
-
-    def test_explicit_readiness_decision_uses_final_label(self):
-        (self.root / "STATUS.md").write_text(
-            "# Status\n\nReadiness: `READY_WITH_RISKS`\n",
-            encoding="utf-8",
-        )
-        document = self.generate()["phase-1-final.html"]
-        self.assertIn("Phase 1 final research direction", document)
-        self.assertIn("Decision-complete outline", document)
-        self.assertIn("Selected research direction", document)
-
-    def test_progress_and_final_preserve_variations_and_choice(self):
-        reports = self.generate()
-        for name in ("phase-1-progress.html", "phase-1-final.html"):
-            document = reports[name]
-            self.assertIn("Motivation variations", document)
-            self.assertIn("participation scale", document)
-            self.assertIn("coordination consequence", document)
-            self.assertIn("Author decisions", document)
-            self.assertIn("Stronger evidence", document)
-
-    def test_progress_and_final_include_live_collaboration_workboard(self):
-        reports = self.generate()
-        for name in ("phase-1-progress.html", "phase-1-final.html"):
-            document = reports[name]
-            self.assertIn("Phase 1 collaboration workboard", document)
-            self.assertIn("Highest-consequence open area", document)
-            self.assertIn("Constructive opposition", document)
-        self.assertIn(
-            "phase-1-collaboration-workboard.html",
-            reports["artifact-index.html"],
-        )
-
-    def test_progress_opens_with_decision_first_current_state(self):
-        document = self.generate()["phase-1-progress.html"]
-        self.assertIn("Current state and decisions", document)
-        self.assertIn("Current state — read this first", document)
-        self.assertIn("Decisions needed now (maximum three)", document)
-        self.assertLess(
-            document.index("Current state — read this first"),
-            document.index("Current round"),
-        )
-
-    def test_decision_support_link_targets_populated_artifact(self):
-        reports = self.generate()
-        expected = (
-            '<a class="artifact-link" '
-            'href="phase-1-progress.html#artifact-related-work-matrix-md">'
-            "Related-work matrix</a>"
-        )
-        self.assertIn(expected, reports["phase-1-progress.html"])
-        self.assertIn(expected, reports["phase-1-collaboration-workboard.html"])
-        self.assertIn(
-            'id="artifact-related-work-matrix-md"',
-            reports["phase-1-progress.html"],
-        )
-
-    def test_unsafe_markdown_link_is_not_activated(self):
-        rendered = MODULE.inline_format("[Unsafe](javascript:alert(1))")
-        self.assertNotIn("href=", rendered)
-        self.assertIn("[Unsafe](javascript:alert(1))", rendered)
-
-        traversal = MODULE.inline_format("[Escape](../outside.html)")
-        self.assertNotIn("href=", traversal)
-        self.assertIn("[Escape](../outside.html)", traversal)
-
-    def test_audit_rejects_workboard_without_current_state(self):
-        (self.root / "phase-1-collaboration-workboard.md").write_text(
-            "# Phase 1 collaboration workboard\n\n"
-            "## Current round\n\nOnly an activity history and artifact list.\n",
-            encoding="utf-8",
-        )
-        self.generate()
-        errors, _ = AUDIT_MODULE.audit(self.root, self.root / "reports")
-        self.assertTrue(
-            any("decision-first current-state field missing" in error for error in errors)
-        )
-
-    def test_audit_rejects_more_than_three_current_decisions(self):
-        self.generate()
-        workboard = self.root / "phase-1-collaboration-workboard.md"
-        source = workboard.read_text(encoding="utf-8")
-        source = source.replace(
-            "## Current round",
-            "| 2 | D2 | Second decision |\n"
-            "| 3 | D3 | Third decision |\n"
-            "| 4 | D4 | Fourth decision |\n\n"
-            "## Current round",
-        )
-        workboard.write_text(source, encoding="utf-8")
-        errors, _ = AUDIT_MODULE.audit(self.root, self.root / "reports")
-        self.assertTrue(any("maximum is 3" in error for error in errors))
-
-    def test_progress_and_final_include_the_terminology_contract(self):
-        reports = self.generate()
-        for name in ("phase-1-progress.html", "phase-1-final.html"):
-            document = reports[name]
-            self.assertIn("Terminology contract", document)
-            self.assertIn("player-specific names the addressee", document)
-            self.assertIn("Personalized remains reserved", document)
-
-    def test_all_reports_preserve_prior_work_contribution_boundaries(self):
-        reports = self.generate()
-        for name in MODULE.REPORT_NAMES:
-            document = reports[name]
-            self.assertIn("Prior-work contribution-boundary audit", document)
-            self.assertIn("author-claimed, demonstrated, and operated", document)
-            self.assertIn("capability collision is exact", document)
-            self.assertIn("contribution credit is full", document)
-            self.assertIn("idea provenance with collision and credit both NONE", document)
-
-    def test_all_reports_include_claim_strengthening_and_current_practice(self):
-        reports = self.generate()
-        for name in MODULE.REPORT_NAMES:
-            document = reports[name]
-            self.assertIn("Motivation-claim research queue", document)
-            self.assertIn("MOTIVATION_CLAIM_AUDIT_COMPLETE", document)
-            self.assertIn("Current-practice audit", document)
-            self.assertIn("reminders, grayscale, bypasses, and hard blocks", document)
-
-    def test_dated_review_syntheses_are_visible_in_progress_and_final(self):
-        reports = self.generate()
-        for name in ("phase-1-progress.html", "phase-1-final.html"):
-            document = reports[name]
-            self.assertIn("Sol Pro positioning correction", document)
-            self.assertIn(
-                "Example et al. (2024 CHI): Guided Teams</a> is the strongest",
-                document,
-            )
-
-    def test_literature_report_contains_reference_and_evidence_records(self):
-        document = self.generate()["literature-and-evidence.html"]
-        self.assertIn("Example et al.", document)
-        self.assertIn("10.1000/example", document)
-        self.assertIn("team coordination guidance CHI", document)
-        self.assertIn("established-external", document)
-        self.assertIn("Citation chain", document)
-        self.assertIn("MRDrum", document)
-        self.assertIn("one contribution-level contrast", document)
-        self.assertIn("Contribution-strength audit", document)
-        self.assertIn("Tier 1 — capability", document)
-        self.assertIn("Example et al. (2024 CHI): Guided Teams", document)
-        self.assertIn("Guided Teams: A Complete Example", document)
-        self.assertIn('title="Alice Example, Bob Example, and Carol Example.', document)
-        self.assertIn("Consequence severity ranking", document)
-        self.assertIn("Lost sleep opportunity ranks first", document)
-        self.assertIn("Evidence-strength register", document)
-        self.assertIn("ES2 — BOUNDED SUPPORT", document)
-        self.assertIn("critical risk of bias can veto", document)
-        self.assertIn("source-resolution.csv", document)
-        self.assertIn("NEEDS_AUTHOR_SOURCE_ACCESS", document)
-        self.assertIn("session:019f-example#2026-07-29", document)
-        self.assertIn("WD-C001", document)
-        self.assertIn("Omit the blocked efficacy claim", document)
-        self.assertIn("Complete PDF obtained and fully audited", document)
-        self.assertIn("Reader-facing artifact pages", document)
-        self.assertIn("ranked-related-work-positioning.html", document)
-        self.assertIn("Ranked related-work positioning", document)
-
-    def test_venue_first_author_year_form_is_enriched(self):
-        document = self.generate()["ranked-related-work-positioning.html"]
-        self.assertIn(
-            'class="citation" href="https://doi.org/10.1000/example"',
-            document,
-        )
-        self.assertIn("Example et al. (2024 CHI): Guided Teams</a>", document)
-        self.assertNotIn("Example et al. (CHI 2024)</h2>", document)
-
-    def test_ranked_positioning_is_in_global_report_navigation(self):
-        for document in self.generate().values():
-            self.assertIn(
-                '<a href="ranked-related-work-positioning.html">Ranked related work</a>',
-                document,
-            )
-
-    def test_standalone_artifact_shelf_preserves_source_of_truth_boundary(self):
-        reports = self.generate()
-        index = reports["artifact-index.html"]
-        self.assertIn("Markdown and CSV remain the editable, diffable sources of truth", index)
-        self.assertIn("evidence-strength-register.html", index)
-        self.assertIn("authoritative-source-map.html", index)
-        self.assertIn("related-work-search-recall-audit.html", index)
-        self.assertIn("source-resolution.html", index)
-        positioning = reports["ranked-related-work-positioning.html"]
-        self.assertIn("<code>ranked-related-work-positioning.md</code>", positioning)
-        self.assertIn("SHA-256", positioning)
-
-    def test_source_resolution_has_a_reader_facing_mirror(self):
-        reports = self.generate()
-        mirror = reports["source-resolution.html"]
-        self.assertIn("<code>source-resolution.csv</code>", mirror)
-        self.assertIn("NEEDS_AUTHOR_SOURCE_ACCESS", mirror)
-        self.assertIn("Example et al. (2024 CHI): Guided Teams", mirror)
-
-    def test_artifact_html_is_escaped(self):
-        document = self.generate()["phase-1-progress.html"]
-        self.assertIn("&lt;script&gt;", document)
-        self.assertNotIn("<script>alert", document)
-
-    def test_escaped_pipe_stays_in_one_table_cell(self):
-        document = self.generate()["phase-1-progress.html"]
-        self.assertIn("<td>d|=1.028</td>", document)
-        self.assertNotIn("<td>d\\</td>", document)
-
-    def test_unescaped_pipe_fails_instead_of_silently_truncating_table(self):
-        malformed = (
-            "| Work | Effect |\n"
-            "|---|---|\n"
-            "| Example et al. 2024 | d|=1.028 |\n"
-        )
-        with self.assertRaisesRegex(ValueError, "Escape literal pipes"):
-            MODULE.markdown_to_html(malformed, MODULE.load_citation_catalog(self.root))
-
-    def test_legacy_ledger_does_not_claim_all_states_are_unspecified(self):
-        legacy_root = self.root / "legacy"
-        legacy_root.mkdir()
-        (legacy_root / "claim-evidence-ledger.csv").write_text(
-            "claim_id,status\nC1,verified\n",
-            encoding="utf-8",
-        )
-        metrics = MODULE.ledger_metrics(legacy_root)
-        self.assertIn("legacy claim ledger", metrics)
-        self.assertNotIn("<td>unspecified</td>", metrics)
-
-    def test_citation_split_across_list_lines_is_enriched(self):
-        document = self.generate()["phase-1-progress.html"]
-        self.assertIn(
-            "Example et al. (2024 CHI): Guided Teams</a>)</li>",
-            document,
-        )
-        self.assertNotIn("Example et al.,\n", document)
-
-    def test_explicit_citation_key_token_is_rendered(self):
-        rendered = MODULE.inline_format(
-            "The result is bounded [@Example2024].",
-            MODULE.load_citation_catalog(self.root),
-        )
-        self.assertIn(
-            'class="citation" href="https://doi.org/10.1000/example"',
-            rendered,
-        )
-        self.assertIn("Example et al. (2024 CHI): Guided Teams</a>", rendered)
-        complete_metadata = (
-            "Alice Example, Bob Example, and Carol Example. "
-            "Guided Teams: A Complete Example. "
-            "Proceedings of the ACM CHI Conference on Human Factors in Computing Systems."
-        )
-        self.assertIn(f'title="{complete_metadata}"', rendered)
-        self.assertIn(f'aria-label="{complete_metadata}"', rendered)
-        self.assertNotIn("[@Example2024]", rendered)
-
-    def test_unknown_explicit_citation_key_fails_closed(self):
-        with self.assertRaisesRegex(ValueError, "Unknown citation key 'Missing2024'"):
-            MODULE.inline_format(
-                "Unsupported [@Missing2024].",
-                MODULE.load_citation_catalog(self.root),
-            )
-
-    def test_unique_first_author_surname_is_enriched(self):
-        rendered = MODULE.inline_format(
-            "Example provides the comparison.",
-            MODULE.load_citation_catalog(self.root),
-        )
-        self.assertIn("Example et al. (2024 CHI): Guided Teams</a>", rendered)
-
-    def test_ambiguous_alias_fails_instead_of_selecting_first_row(self):
-        with (self.root / "references.csv").open(
-            "a", newline="", encoding="utf-8"
-        ) as handle:
-            writer = csv.DictWriter(
-                handle,
-                fieldnames=(
-                    "citation_key",
-                    "author_year",
-                    "short_title",
-                    "venue_abbrev",
-                    "full_title",
-                    "full_authors",
-                    "full_venue",
-                    "url",
-                    "aliases",
-                ),
-            )
-            writer.writerow(
-                {
-                    "citation_key": "Other2025",
-                    "author_year": "Other et al., 2025",
-                    "short_title": "A Different System",
-                    "venue_abbrev": "CHI",
-                    "full_title": "A Different System",
-                    "full_authors": "Olivia Other",
-                    "full_venue": "Proceedings of CHI",
-                    "url": "https://doi.org/10.1000/other",
-                    "aliases": "Example-paper.pdf",
-                }
-            )
-        with self.assertRaisesRegex(ValueError, "Ambiguous citation alias"):
-            MODULE.load_citation_catalog(self.root)
-
-    def test_duplicate_citation_key_fails_instead_of_overwriting(self):
-        with (self.root / "references.csv").open(
-            "a", newline="", encoding="utf-8"
-        ) as handle:
-            writer = csv.DictWriter(
-                handle,
-                fieldnames=(
-                    "citation_key",
-                    "author_year",
-                    "short_title",
-                    "venue_abbrev",
-                    "full_title",
-                    "full_authors",
-                    "full_venue",
-                    "url",
-                    "aliases",
-                ),
-            )
-            writer.writerow(
-                {
-                    "citation_key": "Example2024",
-                    "author_year": "Other et al., 2025",
-                    "short_title": "A Different System",
-                    "venue_abbrev": "CHI",
-                    "full_title": "A Different System",
-                    "full_authors": "Olivia Other",
-                    "full_venue": "Proceedings of CHI",
-                    "url": "https://doi.org/10.1000/other",
-                    "aliases": "",
-                }
-            )
-        with self.assertRaisesRegex(ValueError, "Duplicate citation key 'Example2024'"):
-            MODULE.load_citation_catalog(self.root)
-
-    def test_audit_rejects_ambiguous_parenthetical_surname_shorthand(self):
-        with (self.root / "references.csv").open(
-            "a", newline="", encoding="utf-8"
-        ) as handle:
-            writer = csv.DictWriter(
-                handle,
-                fieldnames=(
-                    "citation_key",
-                    "author_year",
-                    "short_title",
-                    "venue_abbrev",
-                    "full_title",
-                    "full_authors",
-                    "full_venue",
-                    "url",
-                    "aliases",
-                ),
-            )
-            writer.writerow(
-                {
-                    "citation_key": "Example2025",
-                    "author_year": "Example et al., 2025",
-                    "short_title": "Second Guided Study",
-                    "venue_abbrev": "CHI",
-                    "full_title": "A Second Guided Study",
-                    "full_authors": "Alice Example and Dana Different",
-                    "full_venue": "Proceedings of CHI",
-                    "url": "https://doi.org/10.1000/example2",
-                    "aliases": "Example et al. 2025",
-                }
-            )
-        (self.root / "research-framing-outline.md").write_text(
-            "# Research framing outline\n\nHCI lineage (Example).",
-            encoding="utf-8",
-        )
-        self.generate()
-        errors, _ = AUDIT_MODULE.audit(self.root, self.root / "reports")
-        self.assertTrue(
-            any(
-                "unresolved citation shorthand 'Example' could mean "
-                "Example2024, Example2025" in error
-                for error in errors
-            )
-        )
-
-    def test_citation_alias_inside_file_path_is_not_rewritten(self):
-        rendered = MODULE.inline_format(
-            "internal:/papers/Example-paper.pdf",
-            MODULE.load_citation_catalog(self.root),
-        )
-        self.assertEqual(rendered, "internal:/papers/Example-paper.pdf")
-
-    def test_audit_rejects_noncanonical_citation_destination(self):
-        self.generate()
-        path = self.root / "reports" / "ranked-related-work-positioning.html"
+    def test_resolves_tokens_to_keyed_links_definitions_and_visible_references(self):
+        self.publish()
+        path = self.root / "ranked-related-work-positioning.md"
         source = path.read_text(encoding="utf-8")
-        source = source.replace(
-            'class="citation" href="https://doi.org/10.1000/example"',
-            'class="citation" href="https://doi.org/10.1000/wrong"',
-            1,
+        self.assertIn("[Example et al. (2024 CHI): Useful Example][Example2024]", source)
+        self.assertIn(
+            '[Example2024]: <https://doi.org/10.1000/example> "Alex Example; Bailey Example.',
+            source,
         )
-        path.write_text(source, encoding="utf-8")
-        errors, _ = AUDIT_MODULE.audit(self.root, self.root / "reports")
-        self.assertTrue(
-            any("does not use its canonical destination" in error for error in errors)
-        )
+        self.assertIn("## References", source)
+        self.assertIn("Stable key: `Example2024`", source)
+        self.assertNotIn("[@Example2024]", RENDER.strip_code(RENDER.MANAGED_CITATION_RE.sub("", source)))
 
-    def test_audit_rejects_citation_metadata_not_matching_catalog(self):
-        self.generate()
-        path = self.root / "reports" / "ranked-related-work-positioning.html"
+    def test_unknown_draft_key_fails_closed(self):
+        path = self.root / "ranked-related-work-positioning.md"
+        path.write_text("# Ranked\n\nUnknown [@Missing2025].\n", encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "unknown citation key"):
+            self.publish()
+
+    def test_casefold_duplicate_catalog_key_fails_closed(self):
+        self.write_catalog(duplicate_casefold=True)
+        with self.assertRaisesRegex(ValueError, "case-folding"):
+            self.publish()
+
+    def test_managed_navigation_reaches_nested_documents(self):
+        nested = self.root / "decision-packets" / "README.md"
+        self.publish()
+        source = nested.read_text(encoding="utf-8")
+        self.assertIn("[Project overview](../../README.md)", source)
+        self.assertIn("[Phase 1 index](../reports/artifact-index.md)", source)
+        self.assertIn("[Live workboard](../phase-1-collaboration-workboard.md)", source)
+
+    def test_fenced_and_inline_code_tokens_remain_literal_and_are_not_citations(self):
+        path = self.root / "search-log.md"
+        path.write_text(
+            "# Search log\n\nUse `[@Example2024]` in migration examples.\n\n"
+            "```markdown\n[@Example2024]\n```\n",
+            encoding="utf-8",
+        )
+        self.publish()
         source = path.read_text(encoding="utf-8")
-        source = source.replace(
-            'title="Alice Example, Bob Example, and Carol Example.',
-            'title="Incomplete metadata.',
-            1,
-        ).replace(
-            'aria-label="Alice Example, Bob Example, and Carol Example.',
-            'aria-label="Incomplete metadata.',
-            1,
-        )
-        path.write_text(source, encoding="utf-8")
-        errors, _ = AUDIT_MODULE.audit(self.root, self.root / "reports")
-        self.assertTrue(
-            any("metadata does not match full catalog record" in error for error in errors)
-        )
-
-    def test_generated_reports_pass_automated_audit(self):
-        self.generate()
-        errors, warnings = AUDIT_MODULE.audit(self.root, self.root / "reports")
+        self.assertEqual(source.count("[@Example2024]"), 2)
+        errors, _ = AUDIT.audit(self.root)
         self.assertEqual(errors, [])
-        self.assertEqual(warnings, [])
 
-    def test_audit_fails_when_source_resolution_mirror_is_missing(self):
-        self.generate()
-        (self.root / "reports" / "source-resolution.html").unlink()
-        errors, _ = AUDIT_MODULE.audit(self.root, self.root / "reports")
-        self.assertTrue(
-            any(
-                "missing report" in error and "source-resolution.html" in error
-                for error in errors
+    def test_catalog_backed_author_or_title_year_shorthand_is_published_as_links(self):
+        path = self.root / "research-framing-outline.md"
+        path.write_text(
+            "# Outline\n\n"
+            "Closest idea work: Example et al. (CHI 2024).\n"
+            "Closest system work: Useful Example (CHI 2024).\n",
+            encoding="utf-8",
+        )
+        self.publish()
+        published = path.read_text(encoding="utf-8")
+        expected = "[Example et al. (2024 CHI): Useful Example][Example2024]"
+        self.assertEqual(published.count(expected), 2)
+        errors, _ = AUDIT.audit(self.root)
+        self.assertEqual(errors, [])
+
+    def test_unknown_author_year_shorthand_fails_closed(self):
+        path = self.root / "research-framing-outline.md"
+        path.write_text(
+            "# Outline\n\nClosest work: Unknown et al. (CHI 2025).\n",
+            encoding="utf-8",
+        )
+        self.publish()
+        errors, _ = AUDIT.audit(self.root)
+        shorthand_errors = [
+            error for error in errors if "unlinked scholarly citation shorthand" in error
+        ]
+        self.assertEqual(len(shorthand_errors), 1, shorthand_errors)
+        self.assertIn("Unknown et al. (CHI 2025)", shorthand_errors[0])
+
+    def test_ambiguous_catalog_shorthand_is_not_guessed(self):
+        with (self.root / "references.csv").open("a", newline="", encoding="utf-8") as handle:
+            csv.writer(handle).writerow(
+                [
+                    "ExampleOther2024",
+                    "Example et al., 2024",
+                    "A Different Example",
+                    "CHI",
+                    "A Different Example for Testing",
+                    "Casey Example; Drew Example",
+                    "Proceedings of CHI 2024",
+                    "https://doi.org/10.1000/example-other",
+                    "",
+                ]
             )
+        path = self.root / "research-framing-outline.md"
+        path.write_text(
+            "# Outline\n\nClosest work: Example et al. (CHI 2024).\n",
+            encoding="utf-8",
+        )
+        self.publish()
+        self.assertIn("Example et al. (CHI 2024)", path.read_text(encoding="utf-8"))
+        errors, _ = AUDIT.audit(self.root)
+        shorthand_errors = [
+            error for error in errors if "unlinked scholarly citation shorthand" in error
+        ]
+        self.assertEqual(len(shorthand_errors), 1, shorthand_errors)
+        self.assertNotIn("use [@", shorthand_errors[0])
+
+    def test_linked_citation_shorthand_and_code_examples_pass(self):
+        path = self.root / "research-framing-outline.md"
+        path.write_text(
+            "# Outline\n\n"
+            "Closest work [@Example2024].\n\n"
+            "`Example et al. (CHI 2024)` is a migration example.\n",
+            encoding="utf-8",
+        )
+        self.publish()
+        errors, _ = AUDIT.audit(self.root)
+        self.assertEqual(errors, [])
+
+    def test_readme_framing_citations_require_explanation_and_difference(self):
+        path = self.repo / "README.md"
+        source = path.read_text(encoding="utf-8")
+        source = source.replace(
+            "## Closest prior work\n\n"
+            "When the framing cites prior work, add one compact bullet per work using the exact structure\n"
+            "`citation — **What it did:** evidence-bounded description. **How this project differs:** literal\n"
+            "difference.` Do not leave citations as unexplained mechanism labels.\n",
+            "## Closest prior work\n\n- [@Example2024] — progressive cues.\n",
+        )
+        path.write_text(source, encoding="utf-8")
+        self.publish()
+        errors, _ = AUDIT.audit(self.root)
+        self.assertTrue(any("comparison lacks **What it did:**" in error for error in errors))
+        self.assertTrue(
+            any("comparison lacks **How this project differs:**" in error for error in errors)
         )
 
-    def test_audit_fails_when_source_resolution_mirror_is_stale(self):
-        self.generate()
-        with (self.root / "source-resolution.csv").open(
-            "a",
+        source = path.read_text(encoding="utf-8")
+        source = RENDER.MANAGED_CITATION_RE.sub("", source)
+        source = source.replace(
+            "- [Example et al. (2024 CHI): Useful Example][Example2024] — progressive cues.",
+            "- [@Example2024] — **What it did:** Tested a bounded intervention. "
+            "**How this project differs:** Uses a different activation policy.",
+        )
+        path.write_text(source, encoding="utf-8")
+        self.publish()
+        errors, _ = AUDIT.audit(self.root)
+        self.assertEqual(errors, [])
+
+    def test_readme_requires_iso_plain_language_profile_and_reader_tasks(self):
+        path = self.repo / "README.md"
+        source = path.read_text(encoding="utf-8")
+        path.write_text(
+            source.replace(
+                "<!-- HCI-PLAIN-LANGUAGE: ISO 24495-1:2023 | audience=HCI researchers and project collaborators | tasks=understand the direction; inspect evidence; review decisions; continue to Phase 2 -->\n\n",
+                "",
+            ),
             encoding="utf-8",
-        ) as handle:
-            handle.write("S2,,DISCOVERED,undecided\n")
-        errors, _ = AUDIT_MODULE.audit(self.root, self.root / "reports")
-        self.assertTrue(
-            any(
-                "source-resolution.html: does not match current SHA-256" in error
-                for error in errors
+        )
+        self.publish()
+        errors, _ = AUDIT.audit(self.root)
+        self.assertTrue(any("missing ISO 24495-1" in error for error in errors))
+
+        source = path.read_text(encoding="utf-8")
+        source = RENDER.MANAGED_CITATION_RE.sub("", source)
+        source = source.replace(
+            "# Example\n\n",
+            "# Example\n\n"
+            "<!-- HCI-PLAIN-LANGUAGE: ISO 24495-1:2023 | audience=reader | tasks=TBD -->\n\n",
+        )
+        path.write_text(source, encoding="utf-8")
+        self.publish()
+        errors, _ = AUDIT.audit(self.root)
+        self.assertTrue(any("must name intended readers" in error for error in errors))
+        self.assertTrue(any("at least two reader tasks" in error for error in errors))
+
+    def test_readme_requires_answer_first_and_task_grouped_structure(self):
+        path = self.repo / "README.md"
+        source = path.read_text(encoding="utf-8")
+        source = source.replace("## At a glance", "## Background")
+        source = source.replace(
+            "### Inspect evidence\n\n",
+            "",
+        ).replace(
+            "### Review decisions\n\n",
+            "",
+        ).replace(
+            "### Continue to Phase 2 or inspect the complete record\n\n",
+            "",
+        )
+        path.write_text(source, encoding="utf-8")
+        self.publish()
+        errors, _ = AUDIT.audit(self.root)
+        self.assertTrue(any("missing required section '## At a glance'" in error for error in errors))
+        self.assertTrue(any("at least two reader goals" in error for error in errors))
+
+    def test_external_standard_url_ending_in_html_is_not_a_legacy_report(self):
+        self.publish()
+        errors, _ = AUDIT.audit(self.root)
+        self.assertEqual(errors, [])
+
+    def test_legacy_token_wrapped_in_inline_link_becomes_one_keyed_citation(self):
+        path = self.root / "approach-options.md"
+        path.write_text(
+            "# Approach\n\n"
+            "The precedent is [GoalKeeper, `[@Example2024]`](https://doi.org/10.1000/example).\n",
+            encoding="utf-8",
+        )
+        self.publish()
+        source = path.read_text(encoding="utf-8")
+        self.assertIn("[Example et al. (2024 CHI): Useful Example][Example2024]", source)
+        self.assertNotIn("GoalKeeper,", source)
+        self.assertNotIn("[@Example2024]", source)
+
+    def test_wide_csv_uses_record_sections_instead_of_unreadable_table(self):
+        self.publish()
+        source = (self.output / "prior-work-evidence-accounting.md").read_text(encoding="utf-8")
+        self.assertIn("### Record 1", source)
+        self.assertIn("**field_11:** 11", source)
+        self.assertNotIn("| field_0 |", source)
+
+    def test_missing_optional_source_is_visible_without_broken_link(self):
+        (self.root / "citation-chain-log.md").unlink()
+        documents = self.publish()
+        self.assertIn("`citation-chain-log.md` — **MISSING**", documents["literature-and-evidence.md"])
+
+    def test_generated_publication_passes_audit(self):
+        self.publish()
+        errors, warnings = AUDIT.audit(self.root)
+        self.assertEqual(warnings, [])
+        self.assertEqual(errors, [])
+
+    def test_second_publication_is_byte_identical(self):
+        self.publish()
+        first = {
+            path.relative_to(self.repo): path.read_bytes()
+            for path in sorted(self.repo.rglob("*.md"))
+        }
+        self.publish()
+        second = {
+            path.relative_to(self.repo): path.read_bytes()
+            for path in sorted(self.repo.rglob("*.md"))
+        }
+        self.assertEqual(second, first)
+
+    def test_ordinary_reference_style_link_is_preserved_and_audited(self):
+        path = self.root / "approach-options.md"
+        path.write_text(
+            "# Approach\n\nSee [project documentation][project docs].\n\n"
+            "[project docs]: <starting-state.md>\n",
+            encoding="utf-8",
+        )
+        self.publish()
+        source = path.read_text(encoding="utf-8")
+        self.assertIn("[project documentation][project docs]", source)
+        errors, _ = AUDIT.audit(self.root)
+        self.assertEqual(errors, [])
+
+    def test_internal_catalog_citation_resolves_through_reference_mirror(self):
+        with (self.root / "references.csv").open("a", newline="", encoding="utf-8") as handle:
+            csv.writer(handle).writerow(
+                (
+                    "Internal2024",
+                    "Project team, 2024",
+                    "Evidence Register",
+                    "Project",
+                    "Project Evidence Strength Register",
+                    "Project team",
+                    "Project evidence",
+                    "internal:evidence-strength-register.md",
+                    "",
+                )
             )
+        path = self.root / "approach-options.md"
+        path.write_text("# Approach\n\nInternal evidence [@Internal2024].\n", encoding="utf-8")
+        self.publish()
+        mirror = (self.output / "references.md").read_text(encoding="utf-8")
+        self.assertIn("](<../evidence-strength-register.md>)", mirror)
+        errors, _ = AUDIT.audit(self.root)
+        self.assertEqual(errors, [])
+
+    def test_generated_links_encode_spaces_and_parentheses(self):
+        path = self.root / "decision-packets" / "choice (final).md"
+        path.write_text("# Final choice\n", encoding="utf-8")
+        self.publish()
+        index = (self.output / "artifact-index.md").read_text(encoding="utf-8")
+        self.assertIn("choice%20%28final%29.md", index)
+        errors, _ = AUDIT.audit(self.root)
+        self.assertEqual(errors, [])
+
+    def test_angle_wrapped_link_with_spaces_and_parentheses_is_valid(self):
+        target = self.root / "decision-packets" / "choice (final).md"
+        target.write_text("# Final choice\n", encoding="utf-8")
+        source = self.root / "approach-options.md"
+        source.write_text(
+            "# Approach\n\n[Choice](<decision-packets/choice (final).md>)\n",
+            encoding="utf-8",
+        )
+        self.publish()
+        errors, _ = AUDIT.audit(self.root)
+        self.assertEqual(errors, [])
+
+    def test_source_change_makes_generated_report_stale(self):
+        self.publish()
+        path = self.root / "evidence-strength-register.md"
+        path.write_text(path.read_text(encoding="utf-8") + "\nChanged.\n", encoding="utf-8")
+        errors, _ = AUDIT.audit(self.root)
+        self.assertTrue(any("stale source hash" in error for error in errors), errors)
+
+    def test_broken_relative_link_is_rejected(self):
+        self.publish()
+        path = self.root / "approach-options.md"
+        path.write_text("# Approach\n\n[Missing](not-here.md)\n", encoding="utf-8")
+        # Add the managed navigation block without republishing away the deliberate broken link.
+        catalog = RENDER.load_citation_catalog(self.root)
+        path.write_text(
+            RENDER.synchronize_markdown(
+                path, self.repo, self.root, self.output, catalog, add_navigation=True
+            ),
+            encoding="utf-8",
+        )
+        errors, _ = AUDIT.audit(self.root)
+        self.assertTrue(any("broken relative link" in error for error in errors), errors)
+
+    def test_machine_local_link_is_rejected(self):
+        self.publish()
+        path = self.root / "approach-options.md"
+        path.write_text(
+            "# Approach\n\n<!-- HCI-PHASE1-NAV:START -->\n"
+            "[Project overview](../README.md)\n<!-- HCI-PHASE1-NAV:END -->\n\n"
+            "[Local](/Users/example/private.pdf)\n",
+            encoding="utf-8",
+        )
+        errors, _ = AUDIT.audit(self.root)
+        self.assertTrue(any("machine-local absolute link" in error for error in errors), errors)
+
+    def test_stale_html_is_rejected(self):
+        self.publish()
+        (self.output / "phase-1-final.html").write_text("legacy", encoding="utf-8")
+        errors, _ = AUDIT.audit(self.root)
+        self.assertTrue(any("stale generated HTML" in error for error in errors), errors)
+
+    def test_nested_stale_html_is_rejected(self):
+        self.publish()
+        nested = self.output / "legacy" / "old.html"
+        nested.parent.mkdir()
+        nested.write_text("legacy", encoding="utf-8")
+        errors, _ = AUDIT.audit(self.root)
+        self.assertTrue(any(str(nested) in error for error in errors), errors)
+
+    def test_noncanonical_definition_is_rejected(self):
+        self.publish()
+        path = self.root / "ranked-related-work-positioning.md"
+        source = path.read_text(encoding="utf-8").replace(
+            "[Example2024]: <https://doi.org/10.1000/example>",
+            "[Example2024]: <https://doi.org/10.1000/wrong>",
+            1,
+        )
+        path.write_text(source, encoding="utf-8")
+        errors, _ = AUDIT.audit(self.root)
+        self.assertTrue(any("is not canonical" in error for error in errors), errors)
+
+    def test_artifact_index_links_directly_and_hashes_sources(self):
+        documents = self.publish()
+        index = documents["artifact-index.md"]
+        self.assertIn("[ranked-related-work-positioning.md](../ranked-related-work-positioning.md)", index)
+        self.assertIn(RENDER.sha256(self.root / "ranked-related-work-positioning.md"), index)
+
+    def test_progress_current_state_precedes_canonical_inventory(self):
+        documents = self.publish()
+        progress = documents["phase-1-progress.md"]
+        self.assertLess(
+            progress.index("## Current state — read this first"),
+            progress.index("## Canonical records"),
         )
 
 

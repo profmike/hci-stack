@@ -64,6 +64,17 @@ Use: `not-inspected`, `researching`, `needs-author-fact`, `decision-ready`, `aut
 | Phase-aware constructive review | | | | | | | |
 | Phase 2 handoff and return triggers | | | | | | | |
 
+## Contribution identification, framing, and classification
+
+Use stable IDs and one row per atomic reusable output. Classify the output, not the method, paper
+section, implementation effort, or evaluation activity. A supporting type requires its own claim
+and evidence gate. The variation log below records how these candidates are combined into three to
+five author-facing contribution packages.
+
+| Candidate ID | Benefit-first candidate: human value → reusable output → necessary mechanism | Reusable output | Primary type | Supporting type(s) | Classification rationale and strongest rejected alternative | Closest prior output and exact delta | Evidence state | Type-specific evidence gate | Null-result survivor | Status and reopen trigger |
+|---|---|---|---|---|---|---|---|---|---|---|
+| CP-01 | | | | | | | established / observed / planned / hypothesis / aspiration / needs evidence | | | candidate / decision-ready / selected-primary / selected-supporting / rejected / blocked / reopened |
+
 ## Consequential decision queue
 
 Do not mark a row `decision-ready` until decision-relevant research and contradiction checks make

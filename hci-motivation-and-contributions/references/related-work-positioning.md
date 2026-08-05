@@ -9,6 +9,7 @@ comparison options.
 - [Establish target-problem identity and separate portfolios](#establish-target-problem-identity-and-separate-portfolios)
 - [Map current human practice](#map-current-human-practice)
 - [Compare consequential interactions](#compare-consequential-interactions)
+- [Compare capability predicates before components](#compare-capability-predicates-before-components)
 - [Discover objective, state, and temporal contributions](#discover-objective-state-and-temporal-contributions)
 - [Apply six-field prior-work evidence accounting](#apply-six-field-prior-work-evidence-accounting)
 - [Separate activity from implementation](#separate-activity-from-implementation)
@@ -38,10 +39,11 @@ work through a mandatory **relationship-classification gate**:
 
 Only the first category is eligible by relationship for overall contribution-comparator rank.
 Attributed contribution credit still requires an explicit author claim and matched demonstration.
-A demonstrated operated capability from another relationship class—including an unclaimed
-operation—may create a narrow capability collision without becoming a closest overall comparator
-or an attributed contribution. A secondary practical alternative may receive a tier when the
-comparison is explicit and passes the same evidence accounting. Foundations, distant analogies,
+A demonstrated operation from another relationship class—including an unclaimed operation—may
+create a component, mechanism, or independently claimed sub-capability precedent without becoming
+a closest overall comparator or an attributed contribution. It narrows the complete capability
+only when the human-activity predicate matches under the protocol below. A secondary practical
+alternative may receive a tier when the comparison is explicit and passes the same evidence accounting. Foundations, distant analogies,
 theory, reviews, motivation sources, and under-described interactions normally receive `N/A`. A
 change of application domain is not itself a Tier 1 capability.
 Only `SAME-SPECIFIC-PROBLEM` or `SIMILAR-PROBLEM` work may be a closest overall contribution
@@ -84,10 +86,11 @@ Keep three portfolios:
 1. **Primary problem-space portfolio:** verified `SAME-SPECIFIC-PROBLEM` and `SIMILAR-PROBLEM`
    works. These alone compete for the closest-work ranking.
 2. **Mechanism/capability-collision portfolio:** work that addresses another problem but positive
-   evidence shows actually operated a causally similar mechanism or the exact capability being
-   considered. It may decisively narrow that capability claim, including when the operation was
-   not author-claimed, but it cannot displace a closer problem comparator. Keep contribution
-   attribution separate. Put proposals in idea provenance, not this collision portfolio.
+   evidence shows actually operated a causally similar mechanism, an independently claimed
+   sub-capability, or the complete capability being considered. Record which level matches. A
+   component or mechanism precedent does not narrow the complete capability; a full collision
+   requires the same human-activity predicate. It cannot displace a closer problem comparator.
+   Keep contribution attribution separate. Put proposals in idea provenance, not this portfolio.
 3. **Concept, theory, and foundation inventory:** abstract concepts, reviews, component evidence,
    theory, exemplars, current-practice lineage, and distant analogies. Give each a claim-specific
    role; do not assign an overall closeness rank.
@@ -179,6 +182,44 @@ Use implementation age, missing evaluation, latency, or other maturity boundarie
 are themselves central to the contribution. Do not substitute a limitation inventory for
 positioning. Generate three to five candidate comparison sentences, with evidence and tradeoffs,
 before asking the author to choose the emphasis.
+
+## Compare capability predicates before components
+
+Prevent the **component-subtraction fallacy**: finding generic attributes such as `live`,
+`multi-user`, `physical`, `different outputs`, or `audio` in unrelated systems does not make a
+meaningful human capability incremental. Before declaring a collision, write the focal capability
+as a **human-activity predicate**:
+
+`[people and roles] can [meaningful action or information relationship] during [focal activity]
+for [immediate human purpose], under [essential interdependence, semantics, timing, and control]`
+
+Rewrite the prior work's smallest positively operated capability in the same grammar. Mark a
+dimension as core only when removing it changes the human intention, coordination relationship, or
+activity—not merely the application noun, device, modality, or implementation. Then run two
+counterfactuals:
+
+1. **Removal:** would deleting this dimension change what people can meaningfully do together?
+2. **Drop-in port:** could the prior mechanism, unchanged, support the focal semantics,
+   interdependence, and purpose in the focal activity?
+
+Assign one collision level:
+
+- `FULL_CAPABILITY_COLLISION` → `EXACT`: the prior work supports the same meaningful action or
+  information relationship and every core predicate dimension.
+- `INDEPENDENT_SUBCAPABILITY_COLLISION` → `PARTIAL`: the prior work supports a named,
+  independently consequential sub-capability that the focal project separately claims. A loose
+  subset of adjectives is not a sub-capability.
+- `COMPONENT_OR_MECHANISM_PRECEDENT` → `NONE` for the complete capability: the work contributes a
+  device, modality, channel, routing pattern, timing property, topology, or low-level mechanism but
+  differs in the human activity, purpose, semantics, participant relationship, or interdependence.
+  Credit the inheritance; do not say it narrows the complete capability.
+- `NO_COLLISION` → `NONE`: no positively operated capability overlaps at a claimed level.
+
+A different-problem work defeats full-capability firstness only when the focal capability is
+intentionally domain-general and all core predicate dimensions match. Conversely, do not claim
+novelty from a domain label alone when the drop-in-port test shows the same prior capability works
+unchanged. Firstness is assessed at the predicate level: a complete capability can be novel even
+when every supporting component has precedent.
 
 ## Discover objective, state, and temporal contributions
 
@@ -314,13 +355,16 @@ Atomize every material proposition and assign six independent fields:
 - `CONTRIBUTION CREDIT`.
 
 No field inherits truth from another. Compare the smallest positively evidenced command, parameter,
-input channel, reward channel, configuration, study condition, or finding.
+input channel, reward channel, configuration, study condition, or finding, then locate that atom at
+the component, independently consequential sub-capability, or complete human-activity-predicate
+level.
 
 Use two separate boundaries:
 
-1. **Capability collision:** require positive evidence that the exact operation actually ran. An
-   operated but unclaimed atom is `DEMONSTRATED_UNCLAIMED`; it may narrow firstness, force a fair
-   comparator, or establish inheritance.
+1. **Capability collision:** require positive evidence that the exact operation actually ran and
+   classify its collision level. An operated but unclaimed atom is `DEMONSTRATED_UNCLAIMED`; it may
+   narrow firstness only at the matched predicate or independently claimed sub-capability, force a
+   fair comparator, or establish component inheritance.
 2. **Contribution attribution:** require an explicit author claim and matched demonstration. For an
    artifact-capability atom, also require demonstrated operation. Credit only the matched
    intersection and narrow it to the weakest supported scope.
@@ -371,11 +415,14 @@ real objects, movement, timing, agency, risk, or consequences—not merely where
 
 ## Test conjunctive claims and terminology
 
-Run a **conjunctive claim test**. Split the candidate contribution into its necessary qualifiers
-and identify which close work supplies each component. The claim survives only if no verified full
-copy documents the complete conjunction. Never promote one qualifier—such as “real-time,”
-“personalized,” “multi-user,” “audio,” or “physical”—into a standalone novelty claim when prior
-work already establishes it.
+Run a **conjunctive claim test**. First split the candidate into its complete human-activity
+predicate, independently consequential sub-capabilities, and supporting implementation components.
+Then identify which close work supplies each positively evidenced element. The complete capability
+survives when no verified full copy realizes the complete predicate, even if separate works contain
+every generic qualifier or component. Never perform novelty by aggregation or anti-novelty by
+component subtraction. Likewise, never promote one qualifier—such as “real-time,” “personalized,”
+“multi-user,” “audio,” or “physical”—into a standalone novelty claim when prior work already
+establishes it.
 
 Apply the same test **symmetrically to the proposed project**. For every qualifier in the surviving
 conjunction, complete all six fields independently. Keep planned or future work outside capability
@@ -449,11 +496,14 @@ For every surviving conjunctive claim, separate:
 - **value evidence:** what would establish behavioral, experiential, accessibility, safety, or
   outcome significance.
 
-Reject a brittle “first” assembled from incidental qualifiers. A conjunction can remain a
-prospective capability hypothesis when removing one core element changes the encoded human
-intention or control policy—for example from an event-transition policy to a usage quota, from
-automatic progression to explicit mode selection, or from usable attenuation to denial. It enters
-the focal project's contribution boundary only after it is explicitly claimed and demonstrated.
+Reject both a brittle “first” assembled from incidental qualifiers and a brittle anti-novelty
+argument assembled by finding those qualifiers separately in unrelated systems. A conjunction can
+remain a prospective capability hypothesis when removing one core element changes the encoded
+human intention, coordination relationship, activity, or control policy—for example from an
+event-transition policy to a usage quota, from automatic progression to explicit mode selection,
+from usable attenuation to denial, or from practising an interdependent tactic to avoiding another
+participant's path. It enters the focal project's contribution boundary only after it is explicitly
+claimed and demonstrated.
 
 Treat semantic control signals as interaction structure, not mere threshold values. Session
 duration, cumulative daily budget, intended clock/event transition, sensed receptivity, and
@@ -463,8 +513,9 @@ responding to and what state it makes possible.
 Distinguish prior-work realization status:
 
 - a claimed-and-demonstrated operated atom can receive attributed contribution credit;
-- a `DEMONSTRATED_UNCLAIMED` operation can create a capability collision but receives no attributed
-  contribution credit;
+- a `DEMONSTRATED_UNCLAIMED` operation can create a collision at its matched predicate or
+  independently claimed sub-capability level, or establish a component precedent, but receives no
+  attributed contribution credit;
 - a `CLAIMED_UNDEMONSTRATED` atom receives no capability or contribution credit;
 - a Discussion or future-work proposal belongs only to idea provenance, with collision and credit
   both `NONE`; and
@@ -569,9 +620,11 @@ imply the planned project already works. These paragraphs are research artifacts
 support a Related Work section; they are not final manuscript prose.
 
 Write a separate claim-specific note for each material item in the
-mechanism/capability-collision portfolio: state the different problem, exact mechanism/capability
-collision supported by demonstrated operation, whether it was author-claimed, its contribution-
-credit disposition, the claim narrowed or retired, and what remains project-specific. Retain
+mechanism/capability-collision portfolio: state the different problem, the prior human-activity
+predicate, whether the overlap is `FULL_CAPABILITY_COLLISION`,
+`INDEPENDENT_SUBCAPABILITY_COLLISION`, or `COMPONENT_OR_MECHANISM_PRECEDENT`, the positive operation
+evidence, whether it was author-claimed, its contribution-credit disposition, the exact claim
+narrowed or inherited, and what remains project-specific. Retain
 ideas, proposals,
 theory, foundations, reviews, secondary comparators, and rank-sensitive alternatives in their
 named inventories. Re-rank when the target-problem identity, population, activity, mechanism,
@@ -588,6 +641,9 @@ applicable work:
 - atomize each material proposition into the six independent accounting fields;
 - use positively operated capability for collision and claimed-plus-demonstrated evidence for
   contribution attribution;
+- write the focal and prior human-activity predicates, apply the removal and drop-in-port
+  counterfactuals, and classify full-capability, independent-sub-capability, and component/mechanism
+  overlap without qualifier subtraction;
 - record `DEMONSTRATED_UNCLAIMED` operations as collisions/risks with contribution credit `NONE`;
 - record `CLAIMED_UNDEMONSTRATED` atoms with both collision and credit `NONE`;
 - assign operated capability `NO` only from positive artifact evidence; route silence only to

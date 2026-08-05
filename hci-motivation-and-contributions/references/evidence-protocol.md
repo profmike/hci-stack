@@ -202,6 +202,44 @@ classified `internal:` project evidence is exempt. A supersession must resolve t
 retained, fully assessed source with a stable citation key. A human-access state must preserve the
 actual surfaced-request date/locator, affected claims, fallback or narrowing, and reopen trigger.
 
+### Lawful acquisition routes to exhaust before declaring a source blocked
+
+A `403` from an automated fetcher usually means bot detection, not absent entitlement. Cloudflare's
+"Just a moment…" interstitial and similar challenges block the tool, not the reader. Do not record
+`NEEDS_AUTHOR_SOURCE_ACCESS` on that signal alone. Drive the author's already-authenticated,
+already-entitled headed browser instead, and try these routes in order:
+
+1. **Direct fetch** with normal headers. Works for open-access and repository-hosted copies.
+2. **The author's headed browser, using the attachment-disposition parameter.** For ACM Digital
+   Library, appending `?download=true` to the PDF path makes the server respond with
+   `Content-Disposition: attachment`, so the browser writes the file to its default download
+   directory instead of opening the built-in PDF viewer:
+
+   ```
+   https://dl.acm.org/doi/pdf/<DOI>?download=true
+   ```
+
+   This changes only the response disposition. It asserts no entitlement the session does not
+   already have: an unentitled session still receives the paywall page. Navigating one URL per
+   request works without any scripting bridge, so it does not need Chrome's
+   "Allow JavaScript from Apple Events" setting, and several such navigations may be issued
+   concurrently.
+3. **Preflight the browser's download settings before the batch**, so no dialog interrupts an
+   unattended run and every file lands in a known directory. For Chrome, read (never write)
+   `~/Library/Application Support/Google/Chrome/<Profile>/Preferences` and confirm
+   `download.prompt_for_download` is `false` and `savefile.default_directory` is the expected
+   folder. If a prompt is configured, ask the author to change it; do not change it yourself.
+4. **Publisher-neutral fallbacks**: Unpaywall, the institutional repository, the author's page.
+
+Downloaded filenames are publisher-assigned (ACM uses `<prefix>.<suffix>.pdf`). Rename each file to
+the repository convention on the copy into `research-framing/sources/full-text/`, and keep the
+original identifier in the resolution row so the mapping stays auditable.
+
+Never ask for, read, copy, or reuse passwords, cookies, session tokens, or browser profiles. Driving
+a browser the author already controls is permitted; extracting its authentication material is not.
+This route serves entitled access; it is not a paywall, CAPTCHA, or sign-in bypass. When a source is
+genuinely unentitled, return to the `NEEDS_AUTHOR_SOURCE_ACCESS` path.
+
 Record every supplied draft, bibliography, and reading-list entry in
 `imported-bibliography-accountability.csv`. Their presence does not make them author decisions or
 evidence. Every materially relevant entry must resolve to a terminal `source-resolution.csv` row
@@ -281,18 +319,21 @@ For every material prior-work or focal-project atom, record these independently:
 No field inherits truth from another. The familiar `Claimed`, `Demonstrated`, and `Capability`
 tags are shorthand views only.
 
-Capability collision requires positive evidence that the smallest named operation actually ran.
-It can exist for `DEMONSTRATED_UNCLAIMED` operation and therefore narrow a firstness claim without
-granting contribution credit. Contribution credit requires an explicit author claim and matched
+Capability collision requires positive evidence that the smallest named operation actually ran and
+comparison of its complete human-activity predicate. A `DEMONSTRATED_UNCLAIMED` operation can narrow
+firstness only at the matched full-predicate or independently claimed sub-capability scope; a
+component/mechanism precedent establishes inheritance without narrowing the complete capability.
+Contribution credit requires an explicit author claim and matched
 demonstration; artifact-capability credit additionally requires demonstrated operation. Bound both
 to the weakest supported command, parameter, channel, condition, people, activity, artifact
 version, data, comparator, outcome, causal rung, and timeframe.
 
 Treat the asymmetric states explicitly:
 
-- `DEMONSTRATED_UNCLAIMED`: may create a capability collision and false-firstness,
-  implementation-novelty, inheritance, or fair-comparator risk; contribution credit is `NONE` and
-  the operation is not attributed as the authors' claimed contribution.
+- `DEMONSTRATED_UNCLAIMED`: may create a matched-scope capability collision or a component precedent,
+  and therefore a false-firstness, implementation-novelty, inheritance, or fair-comparator risk at
+  that exact scope; contribution credit is `NONE` and the operation is not attributed as the
+  authors' claimed contribution.
 - `CLAIMED_UNDEMONSTRATED`: receives neither capability collision nor contribution credit unless
   separate positive execution evidence exists.
 - A package comparison supports package-level results only. It cannot identify one operator or

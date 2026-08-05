@@ -14,6 +14,20 @@ Save this artifact as `ranked-related-work-positioning.md`.
 - **Hypothesized mechanism(s), kept outside the problem identity:**
 - **Evidence/status and reopen trigger for each element:**
 
+## Focal capability predicate and collision rule
+
+- **Complete human-activity predicate:** people/roles → meaningful action or information
+  relationship → focal activity → immediate purpose → essential interdependence, semantics, timing,
+  and control.
+- **Core dimensions that survive the removal test:**
+- **Supporting implementation components and generic qualifiers:**
+- **Drop-in-port test:** could a prior mechanism unchanged support the focal semantics,
+  interdependence, and purpose?
+- **Allowed collision levels:** `FULL_CAPABILITY_COLLISION`,
+  `INDEPENDENT_SUBCAPABILITY_COLLISION`, `COMPONENT_OR_MECHANISM_PRECEDENT`, `NO_COLLISION`.
+- **Component-subtraction check:** separately familiar components do not erase a novel complete
+  capability.
+
 ## Primary problem-space portfolio
 
 Assign the problem-proximity band before considering mechanism similarity:
@@ -39,14 +53,16 @@ eligible works exist, include all, state the shortage and residual search risk, 
 
 ## Mechanism/capability-collision portfolio
 
-Use this for a different-problem work whose artifact positively operated an exact or causally
-similar mechanism/capability. It may retire or narrow the named capability claim, including when
-the operation was unclaimed, but cannot displace a primary problem-space comparator. Keep
-contribution attribution separate and proposals in idea provenance.
+Use this for a different-problem work whose artifact positively operated a relevant mechanism,
+independently consequential sub-capability, or complete human-activity predicate. Only the latter
+two may retire or narrow a named capability claim at their matched scope. A component/mechanism
+precedent establishes inheritance without weakening the complete capability. No item can displace a
+primary problem-space comparator. Keep contribution attribution separate and proposals in idea
+provenance.
 
-| Work | Different problem/objective | Exact operated mechanism/capability collision | Author-claim status | Contribution-credit disposition | Claim narrowed or retired | What remains project-specific | Evidence boundary |
-|---|---|---|---|---|---|---|---|
-| | | | | | | | |
+| Work | Different problem/objective | Prior human-activity predicate | Collision level and positively operated overlap | Author-claim status | Contribution-credit disposition | Exact claim narrowed or component inherited | What remains project-specific | Evidence boundary |
+|---|---|---|---|---|---|---|---|---|
+| | | | | | | | | |
 
 ## Prior-work contribution-boundary audit
 
@@ -57,9 +73,11 @@ Canonical rows: `prior-work-evidence-accounting.csv`. Human-readable synthesis:
 |---|---|---|---|---|---|---|---|---|---|
 | | | | | | | | | | |
 
-Assign all six fields independently. An operated but unclaimed atom can collide and must be marked
-`DEMONSTRATED_UNCLAIMED`, but receives contribution credit `NONE`. Operated capability `NO`
-requires positive boundary evidence; silence creates only search priority or a reopen query.
+Assign all six fields independently. An operated but unclaimed atom can collide only at its matched
+complete-predicate or independently claimed sub-capability scope and must be marked
+`DEMONSTRATED_UNCLAIMED`; a component/mechanism precedent does not narrow the complete capability.
+Both receive contribution credit `NONE`. Operated capability `NO` requires positive boundary
+evidence; silence creates only search priority or a reopen query.
 
 ### Mixed-channel, package, and port checks
 
@@ -83,8 +101,9 @@ Do not assign these works an overall proximity rank. Give each a claim-specific 
 
 [State the strongest difference relative to the audited corpus. Use positively operated units to
 bound capability novelty and claimed-plus-demonstrated evidence to attribute prior contributions.
-Keep demonstrated-unclaimed operations as collisions without false attribution, and do not turn
-artifact operation into an effectiveness claim.]
+Compare complete human-activity predicates before components. Keep demonstrated-unclaimed
+operations at their matched scope without false attribution, and do not turn artifact operation
+into an effectiveness claim.]
 
 ### Novelty-bearing causal core versus supporting implementation
 
@@ -129,9 +148,10 @@ For each work in the primary problem-space ranking, write one complete working p
 
 ## Claim-specific collision notes
 
-For each material mechanism/capability collision, state the different problem, exact collision,
-claim affected, and surviving project-specific distinction. Do not present it as equally close
-overall.
+For each material mechanism/capability item, state the different problem, prior human-activity
+predicate, collision level, exact claim affected or component inherited, and surviving project-
+specific distinction. Do not present it as equally close overall or use component overlap to erase
+the complete capability.
 
 ## Corpus-level positioning paragraph
 

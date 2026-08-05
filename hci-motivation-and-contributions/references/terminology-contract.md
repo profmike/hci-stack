@@ -22,6 +22,13 @@ For a general HCI or public-facing audience, use an accessible entry term before
 scientific or technical construct. Define the exact construct or metric at first use, then choose
 an approved short form for later sentences.
 
+Start with a concrete scene, action, or user tension that an intelligent non-specialist can picture.
+Do not lead with an abstract relational label or a stack of technical modifiers. Translate the
+relationship into ordinary language first—for example, `people whose actions must work together`
+before `interdependent participants`—and introduce the precise label only when it helps later
+comparison or evidence discipline. A broad reader should be able to restate the people, activity,
+and value without repeating the technical term.
+
 The accessible and scientific terms do different work. The accessible term provides orientation;
 the precise term fixes the operational meaning. For example, introduce `blue light` before
 defining the cited study's `short-wavelength spectral output` or melanopic metric. Do not treat
@@ -85,6 +92,7 @@ Offer three to five coherent systems rather than five isolated synonyms. Each sy
 
 - its concrete default term;
 - its structural or comparative term;
+- its benefit-first entry sentence: human situation, desired value, then capability;
 - any familiar entry term, the precise construct it introduces, and their first-use definition;
 - the approved short form after that definition;
 - any narrowly scoped tailoring, user-control, timing, or access term;
@@ -127,10 +135,12 @@ Before a Phase 1 readiness decision:
    term;
 2. inspect each loaded occurrence in context;
 3. confirm that the first use supplies the operational definition;
-4. check that figures, captions, study conditions, and contribution wording use the same meanings;
-5. mark intentional quotations or descriptions of prior work so they are not mistaken for project
+4. confirm that paper-facing approach and contribution descriptions explain the human value before
+   capability or implementation, without upgrading that value beyond its evidence state;
+5. check that figures, captions, study conditions, and contribution wording use the same meanings;
+6. mark intentional quotations or descriptions of prior work so they are not mistaken for project
    claims; and
-6. record unresolved conflicts and propagation status in `terminology-contract.md`.
+7. record unresolved conflicts and propagation status in `terminology-contract.md`.
 
 Reopen the contract when a system trace changes what is implemented, formative work changes the
 domain language, a study operationalizes a term differently, a closer work narrows the distinction,

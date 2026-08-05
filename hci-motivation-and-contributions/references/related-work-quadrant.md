@@ -40,8 +40,9 @@ by dropping an inconvenient neighbor. Include works from:
 This deliberately broad chart corpus is not the closest-work ranking. Carry each work's
 problem-proximity band and portfolio assignment into the chart rationale, and visually or textually
 distinguish the primary same/similar-problem portfolio from different-problem
-mechanism/capability collisions. Euclidean chart proximity, one shared axis, or a visually nearby
-point cannot upgrade problem proximity or reorder the primary ranking.
+component/mechanism precedents and genuine capability collisions. Euclidean chart proximity, one
+shared axis, or a visually nearby point cannot upgrade problem proximity, turn component overlap
+into a full-capability collision, or reorder the primary ranking.
 
 Plot comparable implementations or evaluated configurations. A heterogeneous review, theory
 paper, or contextual authority can shape the corpus and motivation without becoming one point;
@@ -148,9 +149,12 @@ configuration, or omit the point with a recorded reason when the full work genui
 support an estimate. A plotted operation must be the smallest named unit established by positive
 evidence in `prior-work-evidence-accounting.csv`.
 
-Keep capability collision separate from contribution attribution. A
-`DEMONSTRATED_UNCLAIMED` operated capability may support a separate capability-collision
-coordinate, but label it as unclaimed and give it `CONTRIBUTION CREDIT=NONE`. A
+Keep capability collision separate from contribution attribution and from component inheritance.
+A `DEMONSTRATED_UNCLAIMED` operated capability may support a separate collision coordinate only at
+the matched complete human-activity predicate or independently claimed sub-capability scope. A
+component or mechanism precedent may support its literal axis coordinate but must not be described
+as weakening the complete capability. Label unclaimed operations and give them
+`CONTRIBUTION CREDIT=NONE`. A
 `CLAIMED_UNDEMONSTRATED` atom supports neither a capability coordinate nor contribution credit.
 Never place an absent capability from source silence.
 
@@ -212,6 +216,7 @@ Before presenting a chart, check:
 - all plotted research works have saved, checked full copies;
 - the closest predecessor is not omitted;
 - primary same/similar-problem comparators and different-problem collisions are distinguishable;
+- full-capability, independent-sub-capability, and component/mechanism overlap are not conflated;
 - chart proximity has not been substituted for the problem-first related-work ranking;
 - the axes use neutral capability language;
 - each point has a concise placement rationale;

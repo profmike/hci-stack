@@ -302,6 +302,12 @@ construct at first use. Preserve the source's operationalization: for example, i
 light` before defining `short-wavelength output` or the specific melanopic metric actually used.
 Do not collapse those constructs into synonyms merely to simplify the language.
 
+For paper-facing approach and contribution descriptions, lead first with the human situation and
+the value people need, then state the capability and only the implementation detail needed to
+understand it. Translate abstract relationships into concrete actions a broad reader can picture.
+Keep the value at its evidence state: a rationale or hypothesis does not become a measured benefit
+because it makes the explanation more compelling.
+
 Ask the author to approve the semantic contract before selecting the lexical spine. Until then,
 keep every terminology system and dependent contribution phrase `candidate`.
 

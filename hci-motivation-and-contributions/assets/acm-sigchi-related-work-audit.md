@@ -27,7 +27,8 @@ directness, or `ES1`–`ES3` claim strength.
 - **Hypothesized mechanism(s), kept separate:**
 
 Same/similar-problem work competes in the primary ranking. Different-problem
-mechanism/capability collisions and concept/theory/foundations remain in separate portfolios.
+full/sub-capability collisions, component/mechanism precedents, and concept/theory/foundations
+remain in separate portfolios.
 
 ## Native ACM Digital Library query log
 
@@ -112,6 +113,9 @@ dispositions, and zero-yield stopping decision live in `related-work-search-reca
 - [ ] All six fields were assigned independently in `prior-work-evidence-accounting.csv`;
       capability collision uses positively operated units and contribution attribution uses
       claimed-and-demonstrated evidence.
+- [ ] Focal and prior capabilities were written as complete human-activity predicates; removal and
+      drop-in-port tests distinguish full-capability, independent-sub-capability, and
+      component/mechanism overlap without component subtraction.
 - [ ] Demonstrated-unclaimed operations retain collision weight and contribution credit `NONE`;
       claimed-undemonstrated atoms receive neither.
 - [ ] Proposals/future work are in `idea-provenance-ledger.csv` with collision and credit `NONE`;

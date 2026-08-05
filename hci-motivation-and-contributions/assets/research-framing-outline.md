@@ -56,7 +56,11 @@ Status: candidate / author-selected / ready-with-risks / ready-for-phase-2
 - Current official SIGCHI roster check date and relevant venues:
 - Positive-control sentinels, large-result-set stopping rule, and residual recall risks:
 - Closest CHI/SIGCHI lineage:
+- Focal complete human-activity predicate:
+- Collision-level rule: full capability / independent sub-capability / component or mechanism /
+  none.
 - Positively operated capability collisions:
+- Component/mechanism precedents credited without narrowing the complete capability:
 - Claimed-and-demonstrated attributed contribution credit:
 - Demonstrated-unclaimed and claimed-undemonstrated states:
 - Mixed-channel, package-level, and port/adaptation boundaries:
@@ -93,7 +97,9 @@ change/outcome`. Hypothesized mechanism(s), kept separate:
 
 ### Different problem, similar approaches
 
-- Mechanism/capability claim-specific collisions supported by positive operation evidence:
+- Prior human-activity predicates and positive operation evidence:
+- Full-capability and independent-sub-capability claim-specific collisions:
+- Component/mechanism precedents that transfer without narrowing the complete capability:
 - Which collisions are demonstrated-unclaimed and therefore receive contribution credit `NONE`:
 - Exact claims narrowed or retired:
 - What transfers and what does not; why these are not closest overall problem comparators:
@@ -125,8 +131,11 @@ change/outcome`. Hypothesized mechanism(s), kept separate:
 
 ### Conjunctive claim test
 
-- Candidate capability and necessary qualifiers:
-- Qualifiers already established separately by prior work:
+- Candidate complete human-activity predicate and core dimensions:
+- Supporting implementation components and generic qualifiers:
+- Removal-test and drop-in-port results:
+- Components/qualifiers already established separately by prior work:
+- Component-subtraction check:
 - Closest work that could invalidate the conjunction:
 - Prior-work evidence-accounting IDs:
 - Six independent fields and evidence locators:
@@ -138,7 +147,7 @@ change/outcome`. Hypothesized mechanism(s), kept separate:
 - Package-only and equivalence/non-inferiority result:
 - Port/adaptation credit gate:
 - Exact unresolved source question:
-- Strongest conjunction not documented in the verified corpus:
+- Strongest complete human-activity predicate not documented in the verified corpus:
 - Unsafe standalone novelty claims:
 
 ## 5. Selected gap interpretation
@@ -151,6 +160,9 @@ change/outcome`. Hypothesized mechanism(s), kept separate:
 
 ## 6. Selected approach hypothesis
 
+- Human situation or tension:
+- Desired user value and evidence state:
+- Plain-language, benefit-first explanation:
 - Intended user experience:
 - Existing workflow retained:
 - Workflow stage replaced, complemented, extended, or bridged:
@@ -194,9 +206,18 @@ change/outcome`. Hypothesized mechanism(s), kept separate:
 
 ## 9. Prospective contribution package
 
+- Plain-language contribution lead: human value → capability → necessary mechanism:
+- Selected contribution portfolio and author rationale:
+
+| Candidate ID | Benefit-first candidate | Reusable output | Primary type | Supporting type(s) | Classification rationale and strongest rejected alternative | Closest prior output and exact delta | Evidence state | Type-specific evidence gate | Null-result survivor | Status and reopen trigger |
+|---|---|---|---|---|---|---|---|---|---|---|
+| CP-01 | | | | | | | established / observed / planned / hypothesis / aspiration / needs evidence | | | selected-primary / selected-supporting / rejected / blocked / reopened |
+
 - Primary contribution layer and ranking rationale:
 - Workflow relationship/significance:
 - Interaction, control-policy, or information-distribution capability:
+- Complete human-activity predicate and core dimensions:
+- Full-capability / independent-sub-capability / component-mechanism collision results:
 - Intervention objective and equal-quantity construct:
 - General concept lineage / in-domain HCI collision / exact remaining construct:
 - Prior-work operated-capability collision boundary:

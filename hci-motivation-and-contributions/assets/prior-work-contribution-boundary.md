@@ -49,7 +49,17 @@ settles the audited version; source silence remains `unresolved`.
 
 - **Attribution status:** `CLAIMED_AND_DEMONSTRATED` / `DEMONSTRATED_UNCLAIMED` /
   `CLAIMED_UNDEMONSTRATED` / `NEITHER` / `UNRESOLVED`.
+- **Focal complete human-activity predicate:**
+- **Prior positively operated human-activity predicate:**
+- **Collision level:** `FULL_CAPABILITY_COLLISION` / `INDEPENDENT_SUBCAPABILITY_COLLISION` /
+  `COMPONENT_OR_MECHANISM_PRECEDENT` / `NO_COLLISION`.
+- **Removal-test result:** which dimensions change the meaningful human activity or relationship?
+- **Drop-in-port result:** could the prior mechanism unchanged support the focal semantics,
+  interdependence, and purpose?
+- **Component-subtraction check:** confirm that a loose subset of generic qualifiers was not treated
+  as an independent sub-capability or full collision.
 - **Exact capability collision and focal claim affected:**
+- **Component or mechanism inherited without narrowing the complete capability:**
 - **Exact contribution fairly attributable to the authors:**
 - **False-firstness, fair-comparator, inheritance, or implementation-novelty consequence:**
 - **Claimed atom excluded for lack of matched evidence:**
@@ -108,9 +118,12 @@ settles the audited version; source silence remains `unresolved`.
 ## Corpus-level conclusion
 
 - **Attributed claimed-and-demonstrated prior contributions:**
-- **Demonstrated-unclaimed capabilities that still narrow firstness:**
+- **Demonstrated-unclaimed capabilities that narrow firstness at a matched predicate or independent
+  sub-capability scope:**
 - **Claimed-undemonstrated atoms excluded:**
 - **Exact and partial capability collisions:**
+- **Component/mechanism precedents that establish inheritance without narrowing the complete
+  capability:**
 - **Zero-credit ports and any adaptation gates that passed:**
 - **Package-level results that cannot support operator-specific causality:**
 - **Mixed systems that cannot receive whole-system labels:**
@@ -126,6 +139,8 @@ requires checked markers at bounded-round closure and phase readiness.
 - [ ] `IMPORTED_BIBLIOGRAPHY_ACCOUNTED`
 - [ ] `CLAIM_DEMONSTRATION_OPERATION_EVALUATION_DECOMPOSED`
 - [ ] `CAPABILITY_COLLISION_AND_CREDIT_SEPARATED`
+- [ ] `HUMAN_ACTIVITY_PREDICATES_AND_COLLISION_LEVELS_CHECKED`
+- [ ] `NO_COMPONENT_SUBTRACTION_FALLACY`
 - [ ] `DEMONSTRATED_UNCLAIMED_OPERATIONS_REVIEWED`
 - [ ] `MIXED_CHANNELS_DECOMPOSED`
 - [ ] `PORT_CREDIT_GATES_APPLIED`

@@ -6,6 +6,9 @@
 - Full-copy rule:
 - Included works:
 - Contextual but not point-comparable works:
+- Full-capability collisions:
+- Independent-sub-capability collisions:
+- Component/mechanism precedents shown without implying a full-capability collision:
 
 ## View comparison
 
@@ -29,6 +32,8 @@ Generated chart: `quadrants/01-variant.svg`
 - **Takeaway:**
 - **Caveat:**
 - **Current-work boundary:**
+- **Predicate/collision caveat:** chart proximity or one shared component does not establish a
+  collision with the complete human-activity predicate.
 - **Recommendation:**
 
 ## View 02 — [axis pair]

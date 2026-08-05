@@ -83,9 +83,11 @@ prospective contribution → broader HCI value`
 
 Test whether a non-specialist can restate the direction accurately and remember its central idea.
 Check that familiar terms lead and exact scientific or technical constructs are defined at first
-use. Distinguish a material claim-local qualifier from a nonresponsive disclaimer about an outcome
-the project does not claim. Recommend clearer concepts, examples, and terminology—not final
-paragraphs or rhetorical polish.
+use. Check that every approach, feature, control, and contribution is introduced through the human
+situation and value it serves before the mechanism or implementation, and that an intended value
+is not presented as a measured benefit. Distinguish a material claim-local qualifier from a
+nonresponsive disclaimer about an outcome the project does not claim. Recommend clearer concepts,
+examples, and terminology—not final paragraphs or rhetorical polish.
 
 ## Required reviewer output
 

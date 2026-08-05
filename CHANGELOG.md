@@ -1,5 +1,40 @@
 # Changelog
 
+## [0.4.4] - 2026-08-05 — Source Identity Is Read, Not Retyped
+
+Wrong DOIs and wrong author names reached an author. Both defects had the same shape: an
+identifier that existed in two places, or an identity that was never read off the paper itself.
+
+### Added
+
+- **`scripts/render_source_manifest.py`.** The manifest's eight ledger-derived columns are now
+  generated from `source-resolution.csv`. Manifest-only judgements — tier, directness, discovery
+  route, ingestion status, provenance, notes — survive regeneration untouched.
+- **`identity_verified_against` column in `source-resolution.csv`.** A row that holds a full copy
+  must record where in that copy the authors, title, year, venue, and pages were read. A scan that
+  will not extract is read visually and its page recorded. This is the only check that reaches the
+  paper; every other identity check compares copies of a value against each other, so one bad
+  transcription out of somebody else's bibliography passes all of them.
+- **Two fail-closed checks in `check_source_resolution.py`:** `check_identity_verification` and
+  `check_source_manifest_generated`.
+- **`tests/test_render_source_manifest.py`**, plus identity-verification cases in
+  `tests/test_check_source_resolution.py`.
+
+### Changed
+
+- `references/citation-integrity.md` gains "Read every identity off the copy itself" and "Never
+  store an identifier twice", including which axes to verify against the copy.
+- `references/prior-work-contribution-boundaries.md` gains "The idea gate", moved out of SKILL.md
+  in full: an idea with no demonstration and no study collides with nothing, and venue is the
+  prompt to check rather than the verdict in either direction.
+- Step 13 of the workflow runs the manifest renderer before the checkers.
+
+### Migration
+
+Existing projects fail with a named missing column until `identity_verified_against` is added and
+populated for every row holding a full copy. That is the intended behaviour: an unverified identity
+was always unverified, and the column makes it visible.
+
 ## [0.4.1] - 2026-08-03 — Durable Phase 1 Workspace
 
 ### Added

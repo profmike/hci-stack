@@ -1,549 +1,545 @@
 #!/usr/bin/env python3
-"""Audit generated Phase 1 HTML reports for structural and citation defects."""
+"""Fail-closed audit for the Phase 1 GitHub Markdown publication shelf."""
 
 from __future__ import annotations
 
 import argparse
-import csv
-import hashlib
 import re
 import sys
-from html.parser import HTMLParser
 from pathlib import Path
+from urllib.parse import unquote, urlsplit
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+
+import render_phase1_reports as publisher
 
 
-CORE_REPORT_NAMES = (
-    "phase-1-progress.html",
-    "literature-and-evidence.html",
-    "phase-1-final.html",
+INLINE_LINK_RE = re.compile(
+    r"(?<!!)\[[^\]\n]+\]\((<[^>\n]+>|[^)\s\n]+)"
+    r"(?:\s+(?:\"[^\"\n]*\"|'[^'\n]*'|\([^\)\n]*\)))?\)"
 )
-ARTIFACT_INDEX_NAME = "artifact-index.html"
-ARTIFACT_REPORT_NAMES = (
-    "phase-1-collaboration-workboard.html",
-    "ranked-related-work-positioning.html",
-    "acm-sigchi-related-work-audit.html",
-    "related-work-search-recall-audit.html",
-    "related-work-matrix.html",
-    "related-work-contribution-tier-audit.html",
-    "prior-work-contribution-boundary.html",
-    "prior-work-evidence-accounting.html",
-    "idea-provenance-ledger.html",
-    "imported-bibliography-accountability.html",
-    "late-found-work-postmortem.html",
-    "novelty-regression-sentinels.html",
-    "evidence-strength-register.html",
-    "authoritative-source-map.html",
-    "consequence-severity-ranking.html",
-    "current-practice-audit.html",
-    "motivation-claim-research-queue.html",
-    "source-manifest.html",
-    "source-resolution.html",
-    "missing-full-copies.html",
+GENERAL_REFERENCE_LINK_RE = re.compile(r"\[([^\]\n]+)\]\[([^\]\n]+)\]")
+REFERENCE_DEF_RE = re.compile(
+    rf"^\[({publisher.KEY_PATTERN})\]:\s+<([^>]+)>\s+\"([^\"]*)\"\s*$",
+    re.MULTILINE,
 )
-REPORT_NAMES = CORE_REPORT_NAMES + (ARTIFACT_INDEX_NAME,) + ARTIFACT_REPORT_NAMES
-NAVIGATION_NAMES = CORE_REPORT_NAMES + (ARTIFACT_INDEX_NAME,)
-SOURCE_MIRROR_REPORTS = {
-    "prior-work-contribution-boundary.html": "prior-work-contribution-boundary.md",
-    "prior-work-evidence-accounting.html": "prior-work-evidence-accounting.csv",
-    "idea-provenance-ledger.html": "idea-provenance-ledger.csv",
-    "imported-bibliography-accountability.html": "imported-bibliography-accountability.csv",
-    "late-found-work-postmortem.html": "late-found-work-postmortem.csv",
-    "novelty-regression-sentinels.html": "novelty-regression-sentinels.yaml",
-    "source-resolution.html": "source-resolution.csv",
-}
-CURRENT_STATE_HEADING = "## Current state — read this first"
-CURRENT_STATE_FIELDS = (
-    "Direction and readiness",
-    "Established now",
-    "Settled decisions and claim boundaries",
-    "Active blockers or access needs",
-    "Immediate next action and owner",
-    "Decisions needed now (maximum three)",
-    "Recommendation",
-    "Consequence if unresolved",
-    "Decision-support evidence and populated artifacts",
+GENERIC_REFERENCE_DEF_RE = re.compile(
+    r'^\[([^\]\n]+)\]:\s*(<[^>\n]+>|[^\s\n]+)'
+    r'(?:\s+(?:"[^"\n]*"|\'[^\'\n]*\'|\([^\)\n]*\)))?\s*$',
+    re.MULTILINE,
 )
-REFERENCE_FIELDS = (
-    "citation_key",
-    "author_year",
-    "short_title",
-    "venue_abbrev",
-    "full_title",
-    "full_authors",
-    "full_venue",
-    "url",
+HASH_BLOCK_RE = re.compile(
+    rf"{re.escape(publisher.HASH_START)}\n(.*?){re.escape(publisher.HASH_END)}",
+    re.DOTALL,
+)
+GENERIC_AUTHOR_YEAR_RE = re.compile(
+    r"\b[A-ZÀ-ÖØ-Þ][A-Za-zÀ-ÖØ-öø-ÿ'’\-]+\s+et\s+al\.\s*"
+    r"\([^()\n]*\b(?:19|20)\d{2}[a-z]?\b[^()\n]*\)"
+)
+
+REQUIRED_ROOT_LINKS = (
+    "research-framing/phase-1-collaboration-workboard.md",
+    "research-framing/research-framing-outline.md",
+    "research-framing/ranked-related-work-positioning.md",
+    "research-framing/evidence-strength-register.md",
+    "research-framing/author-decisions.md",
+    "research-framing/decision-packets/README.md",
+    "research-framing/phase-2-handoff.md",
+    "research-framing/reports/README.md",
+    "research-framing/reports/phase-1-progress.md",
+    "research-framing/reports/literature-and-evidence.md",
+    "research-framing/reports/phase-1-final.md",
+    "research-framing/reports/artifact-index.md",
 )
 
 
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Audit Phase 1 report HTML and citation metadata."
-    )
-    parser.add_argument("project_dir", type=Path, help="Research-framing directory")
-    parser.add_argument(
-        "--report-dir",
-        type=Path,
-        help="Report directory (default: PROJECT_DIR/reports)",
-    )
-    return parser.parse_args()
-
-
-class ReportParser(HTMLParser):
-    def __init__(self):
-        super().__init__(convert_charrefs=True)
-        self.ids: set[str] = set()
-        self.links: list[dict[str, str]] = []
-        self.citations: list[dict[str, str]] = []
-        self.remote_resources: list[str] = []
-        self.table_rows: list[list[str]] = []
-        self.current_row: list[str] | None = None
-        self.current_cell: list[str] | None = None
-        self.citation_depth = 0
-        self.reference_depth = 0
-        self.code_depth = 0
-        self.unlinked_text: list[str] = []
-
-    def handle_starttag(self, tag: str, attrs_list: list[tuple[str, str | None]]):
-        attrs = {key: value or "" for key, value in attrs_list}
-        if attrs.get("id"):
-            self.ids.add(attrs["id"])
-        classes = set(attrs.get("class", "").split())
-        if tag == "a":
-            self.links.append(attrs)
-            if "citation" in classes:
-                self.citations.append({**attrs, "_text": ""})
-                self.citation_depth += 1
-        if tag == "article" and "reference-card" in classes:
-            self.reference_depth += 1
-        if tag in {"code", "pre"}:
-            self.code_depth += 1
-        if tag in {"script", "img", "link", "iframe", "source", "video", "audio"}:
-            location = attrs.get("src") or attrs.get("href") or ""
-            if location.startswith(("http://", "https://", "//")):
-                self.remote_resources.append(f"{tag}: {location}")
-        if tag == "tr":
-            self.current_row = []
-        if tag in {"th", "td"} and self.current_row is not None:
-            self.current_cell = []
-
-    def handle_endtag(self, tag: str):
-        if tag == "a" and self.citation_depth:
-            self.citation_depth -= 1
-        if tag in {"code", "pre"} and self.code_depth:
-            self.code_depth -= 1
-        if tag in {"th", "td"} and self.current_cell is not None:
-            assert self.current_row is not None
-            self.current_row.append("".join(self.current_cell).strip())
-            self.current_cell = None
-        if tag == "tr" and self.current_row is not None:
-            self.table_rows.append(self.current_row)
-            self.current_row = None
-        if tag == "article" and self.reference_depth:
-            self.reference_depth -= 1
-
-    def handle_data(self, data: str):
-        if self.current_cell is not None:
-            self.current_cell.append(data)
-        if self.citation_depth and self.citations:
-            self.citations[-1]["_text"] += data
-        elif not self.reference_depth and not self.code_depth:
-            self.unlinked_text.append(data)
-
-
-def load_references(path: Path) -> tuple[list[dict[str, str]], list[str]]:
-    issues: list[str] = []
-    if not path.is_file():
-        return [], [f"missing citation catalog: {path}"]
-    with path.open(newline="", encoding="utf-8-sig") as handle:
-        reader = csv.DictReader(handle)
-        columns = reader.fieldnames or []
-        missing_columns = [field for field in (*REFERENCE_FIELDS, "aliases") if field not in columns]
-        if missing_columns:
-            issues.append(
-                "references.csv missing columns: " + ", ".join(missing_columns)
-            )
-            return [], issues
-        references = [
-            {key: (value or "").strip() for key, value in row.items()}
-            for row in reader
-        ]
-    seen: set[str] = set()
-    for row_number, reference in enumerate(references, start=2):
-        for field in REFERENCE_FIELDS:
-            if not reference[field]:
-                issues.append(f"references.csv row {row_number}: empty {field}")
-        key = reference["citation_key"]
-        if key in seen:
-            issues.append(f"references.csv row {row_number}: duplicate citation_key {key}")
-        seen.add(key)
-        if reference["author_year"] and not re.fullmatch(
-            r".+,\s*\d{4}[a-z]?", reference["author_year"]
-        ):
-            issues.append(
-                f"references.csv row {row_number}: author_year must end with ', YYYY'"
-            )
-        url = reference["url"]
-        if url and not url.startswith(("http://", "https://", "internal:")):
-            issues.append(
-                f"references.csv row {row_number}: url must be HTTP(S) or internal:"
-            )
-    alias_owners: dict[str, set[str]] = {}
-    for reference in references:
-        for alias in alias_set(reference):
-            alias_owners.setdefault(alias, set()).add(reference["citation_key"])
-    for alias, keys in sorted(alias_owners.items()):
-        if len(keys) > 1:
-            issues.append(
-                "references.csv ambiguous alias "
-                f"'{alias}' maps to {', '.join(sorted(keys))}; "
-                "use explicit [@CitationKey] tokens"
-            )
-    return references, issues
-
-
-def alias_set(reference: dict[str, str]) -> set[str]:
-    author_year = reference["author_year"]
-    aliases = {
-        reference["citation_key"],
-        author_year,
-        author_year.replace(",", ""),
-        author_year.replace(", ", " "),
-        reference["short_title"],
-    }
-    aliases.update(
-        alias.strip()
-        for alias in reference.get("aliases", "").split("||")
-        if alias.strip()
-    )
-    match = re.fullmatch(r"(.+),\s*(\d{4}[a-z]?)", author_year)
-    if match:
-        author, year = match.groups()
-        venue = reference["venue_abbrev"]
-        aliases.update(
-            {
-                f"{author} ({year})",
-                f"{author} ({venue} {year})",
-                f"{author} ({year} {venue})",
-                f"{author} ({venue}, {year})",
-                f"{author}, {venue} {year}",
-                f"{author} {venue} {year}",
-            }
-        )
-    return {re.sub(r"\s+", " ", alias).strip() for alias in aliases if alias.strip()}
-
-
-def first_author_surname(reference: dict[str, str]) -> str | None:
-    match = re.fullmatch(r"(.+),\s*(\d{4}[a-z]?)", reference["author_year"])
-    if not match:
-        return None
-    multiple_authors = re.fullmatch(r"(.+?)\s+et al\.", match.group(1))
-    if not multiple_authors:
-        return None
-    return multiple_authors.group(1).split()[-1]
-
-
-def unique_surname_aliases(
-    references: list[dict[str, str]],
-) -> dict[str, set[str]]:
-    owners: dict[str, set[str]] = {}
-    for reference in references:
-        surname = first_author_surname(reference)
-        if surname:
-            owners.setdefault(surname, set()).add(reference["citation_key"])
+def expected_report_names() -> set[str]:
     return {
-        key: {surname}
-        for surname, keys in owners.items()
-        if len(keys) == 1
-        for key in keys
+        *publisher.CORE_REPORTS,
+        *publisher.DATA_MIRRORS.values(),
+        "artifact-index.md",
+        "README.md",
     }
 
 
-def normalize_shorthand(value: str) -> str:
-    words = re.findall(r"[^\W_]+(?:[’'-][^\W_]+)*", value, flags=re.UNICODE)
-    return " ".join(words).casefold()
+def strip_managed_citations(text: str) -> str:
+    return publisher.MANAGED_CITATION_RE.sub("\n", text)
 
 
-def unresolved_parenthetical_shorthands(
-    references: list[dict[str, str]], segments: list[str]
-) -> set[str]:
-    candidates: dict[str, set[str]] = {}
-    for reference in references:
-        surname = first_author_surname(reference)
-        if surname:
-            candidates.setdefault(normalize_shorthand(surname), set()).add(
-                reference["citation_key"]
+def mask_match(match: re.Match[str]) -> str:
+    """Hide Markdown syntax while preserving line numbers for diagnostics."""
+    return "".join("\n" if character == "\n" else " " for character in match.group(0))
+
+
+def unlinked_citation_shorthands(
+    text: str,
+    catalog: dict[str, publisher.Citation],
+) -> list[tuple[int, str, str | None]]:
+    """Find catalog-backed or author-year scholarly shorthand outside actual links."""
+    visible = publisher.strip_code(strip_managed_citations(text))
+    visible = GENERIC_REFERENCE_DEF_RE.sub(mask_match, visible)
+    visible = INLINE_LINK_RE.sub(mask_match, visible)
+    visible = GENERAL_REFERENCE_LINK_RE.sub(mask_match, visible)
+    matches: dict[tuple[int, int], tuple[str, set[str]]] = {}
+    for key, citation in catalog.items():
+        author_match = re.fullmatch(
+            r"(.+?),\s*((?:19|20)\d{2}[a-z]?)", citation.author_year.strip()
+        )
+        candidates: list[tuple[str, str]] = []
+        if author_match:
+            author, year = author_match.groups()
+            candidates.append((author, year))
+        candidates.extend((title, "") for title in (citation.short_title, citation.full_title))
+        for phrase, required_year in candidates:
+            if not phrase or len(phrase) < 4:
+                continue
+            year_pattern = re.escape(required_year) if required_year else r"(?:19|20)\d{2}[a-z]?"
+            pattern = re.compile(
+                rf"(?<![\w]){re.escape(phrase)}\s*"
+                rf"\([^()\n]*\b{year_pattern}\b[^()\n]*\)",
+                re.IGNORECASE,
             )
-        title_words = re.findall(
-            r"[^\W_]+(?:[’'-][^\W_]+)*",
-            reference["short_title"],
-            flags=re.UNICODE,
+            for match in pattern.finditer(visible):
+                span = (match.start(), match.end())
+                if span not in matches:
+                    matches[span] = (match.group(0), set())
+                matches[span][1].add(key)
+    for match in GENERIC_AUTHOR_YEAR_RE.finditer(visible):
+        matches.setdefault((match.start(), match.end()), (match.group(0), set()))
+    return [
+        (
+            visible.count("\n", 0, start) + 1,
+            mention,
+            next(iter(keys)) if len(keys) == 1 else None,
         )
-        for length in range(2, len(title_words)):
-            prefix = normalize_shorthand(" ".join(title_words[:length]))
-            if len(prefix) >= 8:
-                candidates.setdefault(prefix, set()).add(reference["citation_key"])
-
-    issues: set[str] = set()
-    for segment in segments:
-        for parenthetical in re.findall(r"\(([^()]*)\)", segment):
-            parts = re.split(r"\s*(?:/|;|\band\b)\s*", parenthetical)
-            for part in parts:
-                normalized = normalize_shorthand(part)
-                keys = candidates.get(normalized)
-                if keys:
-                    issues.add(
-                        f"'{part.strip()}' could mean {', '.join(sorted(keys))}; "
-                        "use one explicit [@CitationKey] token per work"
-                    )
-    return issues
+        for (start, _), (mention, keys) in sorted(matches.items())
+    ]
 
 
-def citation_label(reference: dict[str, str]) -> str:
-    match = re.fullmatch(r"(.+),\s*(\d{4}[a-z]?)", reference["author_year"])
-    if not match:
-        return (
-            f"{reference['author_year']} ({reference['venue_abbrev']}): "
-            f"{reference['short_title']}"
+def markdown_anchors(path: Path) -> set[str]:
+    text = path.read_text(encoding="utf-8")
+    anchors = set(re.findall(r'<a\s+id="([^"]+)"\s*></a>', text, re.IGNORECASE))
+    seen: dict[str, int] = {}
+    for heading in re.findall(r"^#{1,6}\s+(.+?)\s*$", publisher.strip_code(text), re.MULTILINE):
+        heading = re.sub(r"<[^>]+>", "", heading)
+        heading = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", heading)
+        slug = heading.strip().lower()
+        slug = re.sub(r"[^\w\- ]", "", slug, flags=re.UNICODE)
+        slug = re.sub(r"\s+", "-", slug)
+        count = seen.get(slug, 0)
+        seen[slug] = count + 1
+        anchors.add(slug if count == 0 else f"{slug}-{count}")
+    return anchors
+
+
+def parse_inline_target(raw: str) -> str:
+    raw = raw.strip()
+    if raw.startswith("<"):
+        end = raw.find(">")
+        return raw[1:end] if end >= 0 else raw
+    # A quoted title may follow a destination. Local repository paths may contain spaces, so only
+    # strip a title when it is clearly introduced by whitespace plus a quote.
+    match = re.match(r"(.+?)\s+[\"'].*[\"']\s*$", raw)
+    return (match.group(1) if match else raw).strip()
+
+
+def normalize_reference_label(label: str) -> str:
+    return " ".join(label.split()).casefold()
+
+
+def parse_reference_target(raw: str) -> str:
+    raw = raw.strip()
+    return raw[1:-1] if raw.startswith("<") and raw.endswith(">") else raw
+
+
+def audit_link(
+    source: Path,
+    target: str,
+    repo_root: Path,
+    errors: list[str],
+) -> None:
+    target = unquote(target.strip())
+    if not target or target.startswith("#"):
+        if target.startswith("#") and target[1:] not in markdown_anchors(source):
+            errors.append(f"{source}: broken local fragment {target!r}")
+        return
+    split = urlsplit(target)
+    if split.scheme:
+        if split.scheme in {"http", "https", "mailto"}:
+            return
+        errors.append(f"{source}: disallowed link scheme in {target!r}")
+        return
+    if target.startswith("/") or re.match(r"^[A-Za-z]:[\\/]", target):
+        errors.append(f"{source}: machine-local absolute link {target!r}")
+        return
+    relative_path = split.path
+    destination = (source.parent / relative_path).resolve() if relative_path else source.resolve()
+    try:
+        destination.relative_to(repo_root)
+    except ValueError:
+        errors.append(f"{source}: link escapes project repository: {target!r}")
+        return
+    if not destination.exists():
+        errors.append(f"{source}: broken relative link {target!r}")
+        return
+    if split.fragment and destination.is_file() and destination.suffix.lower() == ".md":
+        if split.fragment not in markdown_anchors(destination):
+            errors.append(f"{source}: broken fragment {split.fragment!r} in {target!r}")
+
+
+def audit_citations(
+    path: Path,
+    text: str,
+    catalog: dict[str, publisher.Citation],
+    output_dir: Path,
+    repo_root: Path,
+    errors: list[str],
+) -> None:
+    outside_block = publisher.strip_code(strip_managed_citations(text))
+    raw_tokens = sorted(set(publisher.RAW_TOKEN_RE.findall(outside_block)))
+    if raw_tokens:
+        errors.append(f"{path}: unresolved raw citation token(s): {', '.join(raw_tokens)}")
+    if output_dir not in path.parents:
+        for line_number, mention, key in unlinked_citation_shorthands(text, catalog):
+            resolution = f"; use [@{key}]" if key else ""
+            errors.append(
+                f"{path}:{line_number}: unlinked scholarly citation shorthand {mention!r}{resolution}"
+            )
+
+    all_uses = list(GENERAL_REFERENCE_LINK_RE.finditer(outside_block))
+    uses: list[re.Match[str]] = []
+    ordinary_uses: list[re.Match[str]] = []
+    for match in all_uses:
+        label, key = match.groups()
+        if key in catalog or re.search(r"\(\d{4}[a-z]?(?:\s+[^)]*)?\):", label):
+            uses.append(match)
+        else:
+            ordinary_uses.append(match)
+
+    generic_definitions: dict[str, list[str]] = {}
+    for match in GENERIC_REFERENCE_DEF_RE.finditer(text):
+        label, destination = match.groups()
+        generic_definitions.setdefault(normalize_reference_label(label), []).append(
+            parse_reference_target(destination)
         )
-    author, year = match.groups()
-    return f"{author} ({year} {reference['venue_abbrev']}): {reference['short_title']}"
+    for match in ordinary_uses:
+        label, key = match.groups()
+        values = generic_definitions.get(normalize_reference_label(key), [])
+        if len(values) != 1:
+            errors.append(
+                f"{path}: ordinary reference link {label!r} / {key!r} must have exactly one definition"
+            )
+            continue
+        audit_link(path, values[0], repo_root, errors)
+
+    used_keys: list[str] = []
+    for match in uses:
+        label, key = match.groups()
+        citation = catalog.get(key)
+        if citation is None:
+            errors.append(f"{path}: unknown citation key {key!r}")
+            continue
+        used_keys.append(key)
+        if label != citation.label:
+            errors.append(
+                f"{path}: citation {key!r} label {label!r} does not match {citation.label!r}"
+            )
+
+    citation_key_folds = {match.group(2).casefold() for match in uses}
+    definitions = [
+        match
+        for match in REFERENCE_DEF_RE.finditer(text)
+        if match.group(1).casefold() in citation_key_folds
+    ]
+    definition_map: dict[str, list[tuple[str, str]]] = {}
+    for match in definitions:
+        key, destination, metadata = match.groups()
+        definition_map.setdefault(key, []).append((destination, metadata))
+    if len({key.casefold() for key in definition_map}) != len(definition_map):
+        errors.append(f"{path}: case-folded duplicate citation definitions")
+
+    used_set = set(used_keys)
+    if not used_set and definition_map:
+        errors.append(f"{path}: unused citation definitions are not allowed")
+    for key in sorted(used_set, key=str.casefold):
+        citation = catalog[key]
+        values = definition_map.get(key, [])
+        if len(values) != 1:
+            errors.append(f"{path}: citation {key!r} must have exactly one definition")
+            continue
+        destination, metadata = values[0]
+        expected_destination = publisher.citation_destination(citation, path, output_dir)
+        expected_metadata = " ".join(citation.metadata.split()).replace('"', "'")
+        if destination != expected_destination:
+            errors.append(
+                f"{path}: citation {key!r} destination {destination!r} is not canonical"
+            )
+        if metadata != expected_metadata:
+            errors.append(f"{path}: citation {key!r} metadata does not match references.csv")
+        managed_match = publisher.MANAGED_CITATION_RE.search(text)
+        managed = managed_match.group(0) if managed_match else ""
+        for required in (
+            f"Stable key: `{key}`",
+            citation.full_authors,
+            citation.full_title,
+            citation.full_venue,
+        ):
+            if required not in managed:
+                errors.append(f"{path}: citation {key!r} lacks visible full-reference metadata")
+                break
+    extras = set(definition_map) - used_set
+    if extras:
+        errors.append(f"{path}: unused citation definition(s): {', '.join(sorted(extras))}")
 
 
-def citation_tooltip(reference: dict[str, str]) -> str:
-    return " ".join(
-        part.strip().rstrip(".") + "."
-        for part in (
-            reference["full_authors"],
-            reference["full_title"],
-            reference["full_venue"],
-        )
-        if part.strip()
+def audit_hashes(path: Path, text: str, root: Path, errors: list[str]) -> None:
+    for match in HASH_BLOCK_RE.finditer(text):
+        for line in match.group(1).splitlines():
+            if not line.strip():
+                continue
+            try:
+                relative, expected = line.split("\t", 1)
+            except ValueError:
+                errors.append(f"{path}: malformed source-hash row {line!r}")
+                continue
+            source = root / relative
+            actual = publisher.sha256(source) if source.is_file() else "MISSING"
+            if actual != expected:
+                errors.append(
+                    f"{path}: stale source hash for {relative}: expected {expected}, current {actual}"
+                )
+
+
+def audit_root_readme(repo_root: Path, errors: list[str]) -> None:
+    path = repo_root / "README.md"
+    if not path.is_file():
+        errors.append("project root README.md is missing")
+        return
+    source = path.read_text(encoding="utf-8")
+    for heading in (
+        "## At a glance",
+        "## Closest prior work",
+        "## Planned approach",
+        "## Prospective contributions",
+        "## Current status",
+        "## Continue by task",
+        "## Record boundary",
+    ):
+        if heading not in source:
+            errors.append(f"README.md: missing required section {heading!r}")
+
+    profile = re.search(
+        r"^<!-- HCI-PLAIN-LANGUAGE: ISO 24495-1:2023 \| "
+        r"audience=(?P<audience>[^|\n]+) \| tasks=(?P<tasks>[^>\n]+) -->$",
+        source,
+        re.MULTILINE,
     )
+    if not profile:
+        errors.append(
+            "README.md: missing ISO 24495-1 HCI-PLAIN-LANGUAGE audience/task profile"
+        )
+    else:
+        audience = profile.group("audience").strip()
+        tasks = [task.strip() for task in profile.group("tasks").split(";") if task.strip()]
+        placeholders = {"audience", "everyone", "reader", "readers", "tbd", "todo", "unknown"}
+        if audience.casefold() in placeholders:
+            errors.append("README.md: plain-language audience must name intended readers")
+        if len(tasks) < 2 or any(task.casefold() in placeholders for task in tasks):
+            errors.append("README.md: plain-language profile must name at least two reader tasks")
+
+    glance = re.search(
+        r"^## At a glance\s*$\n(.*?)(?=^##\s+|\Z)",
+        source,
+        re.MULTILINE | re.DOTALL,
+    )
+    if glance and not re.search(
+        r"\b(established-external|observed-project|planned|hypothesis|aspiration|unsupported)\b",
+        glance.group(1),
+    ):
+        errors.append("README.md: At a glance lacks an explicit evidence-state label")
+
+    onward = re.search(
+        r"^## Continue by task\s*$\n(.*?)(?=^##\s+|\Z)",
+        source,
+        re.MULTILINE | re.DOTALL,
+    )
+    if onward:
+        goals = re.findall(r"^###\s+\S.*$", onward.group(1), re.MULTILINE)
+        if len(goals) < 2:
+            errors.append("README.md: Continue by task must group links under at least two reader goals")
+    if not re.search(
+        r"\b(established-external|observed-project|planned|hypothesis|aspiration|unsupported)\b",
+        source,
+    ):
+        errors.append("README.md: high-level framing lacks an explicit evidence-state label")
+    for target in REQUIRED_ROOT_LINKS:
+        if f"]({target})" not in source:
+            errors.append(f"README.md: missing required reader link {target!r}")
 
 
-def citation_destination(reference: dict[str, str]) -> str:
-    if reference["url"].startswith(("http://", "https://")):
-        return reference["url"]
-    anchor = "ref-" + re.sub(
-        r"[^a-z0-9]+", "-", reference["citation_key"].lower()
-    ).strip("-")
-    return f"literature-and-evidence.html#{anchor}"
+def audit_readme_prior_work_context(
+    repo_root: Path,
+    catalog: dict[str, publisher.Citation],
+    errors: list[str],
+) -> None:
+    path = repo_root / "README.md"
+    if not path.is_file():
+        return
+    source = strip_managed_citations(path.read_text(encoding="utf-8"))
+    framing_match = re.search(
+        r"^## At a glance\s*$\n(.*?)(?=^##\s+|\Z)", source, re.MULTILINE | re.DOTALL
+    )
+    if not framing_match:
+        return
+    closest_match = re.search(
+        r"^## Closest prior work\s*$\n(.*?)(?=^##\s+|\Z)",
+        source,
+        re.MULTILINE | re.DOTALL,
+    )
+    framing = framing_match.group(1)
+    closest = closest_match.group(1) if closest_match else ""
+    uses = [
+        match.group(2)
+        for match in GENERAL_REFERENCE_LINK_RE.finditer(framing + "\n" + closest)
+        if match.group(2) in catalog
+    ]
+    if not uses:
+        return
+    if not closest_match:
+        errors.append(
+            "README.md: framing citations require a '## Closest prior work' comparison section"
+        )
+        return
+    entries = [
+        match.group(1)
+        for match in re.finditer(
+            r"(?ms)^-\s+(.*?)(?=^-\s+|^##\s+|\Z)", closest_match.group(1)
+        )
+    ]
+    for key in sorted(set(uses), key=str.casefold):
+        matching = [entry for entry in entries if f"][{key}]" in entry]
+        if len(matching) != 1:
+            errors.append(
+                f"README.md: citation {key!r} must have exactly one closest-work comparison bullet"
+            )
+            continue
+        entry = matching[0]
+        for marker in ("**What it did:**", "**How this project differs:**"):
+            if marker not in entry:
+                errors.append(
+                    f"README.md: citation {key!r} comparison lacks {marker}"
+                )
 
 
-def file_digest(path: Path) -> str:
-    hasher = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(65536), b""):
-            hasher.update(chunk)
-    return hasher.hexdigest()
-
-
-def audit(project_dir: Path, report_dir: Path) -> tuple[list[str], list[str]]:
+def audit(
+    root: Path,
+    output_dir: Path | None = None,
+) -> tuple[list[str], list[str]]:
+    root = root.resolve()
+    repo_root = root.parent
+    output_dir = (output_dir or root / "reports").resolve()
     errors: list[str] = []
     warnings: list[str] = []
-    workboard_path = project_dir / "phase-1-collaboration-workboard.md"
-    if not workboard_path.is_file():
-        errors.append(f"missing current-state workboard: {workboard_path}")
-    else:
-        workboard_source = workboard_path.read_text(
-            encoding="utf-8", errors="replace"
-        )
-        current_state_index = workboard_source.find(CURRENT_STATE_HEADING)
-        current_round_index = workboard_source.find("## Current round")
-        if current_state_index < 0:
-            errors.append(
-                "phase-1-collaboration-workboard.md: decision-first current-state "
-                f"field missing: {CURRENT_STATE_HEADING}"
-            )
-        elif (
-            current_round_index < 0 or current_state_index > current_round_index
-        ):
-            errors.append(
-                "phase-1-collaboration-workboard.md: current state must precede "
-                "current-round history"
-            )
-        else:
-            current_state = workboard_source[current_state_index:current_round_index]
-            for field in CURRENT_STATE_FIELDS:
-                if field not in current_state:
-                    errors.append(
-                        "phase-1-collaboration-workboard.md: decision-first "
-                        f"current-state field missing: {field}"
-                    )
-            decision_rows = sum(
-                bool(re.match(r"^\|\s*\d+\s*\|", line))
-                for line in current_state.splitlines()
-            )
-            if decision_rows > 3:
-                errors.append(
-                    "phase-1-collaboration-workboard.md: current-state snapshot "
-                    f"lists {decision_rows} decisions; maximum is 3"
-                )
-    references, reference_issues = load_references(project_dir / "references.csv")
-    errors.extend(reference_issues)
-    expected_citations: dict[str, set[tuple[str, str]]] = {}
-    for reference in references:
-        expected_citations.setdefault(citation_label(reference), set()).add(
-            (citation_destination(reference), citation_tooltip(reference))
-        )
-    parsed: dict[str, ReportParser] = {}
+    try:
+        catalog = publisher.load_citation_catalog(root)
+    except ValueError as exc:
+        return [str(exc)], warnings
 
-    for name in REPORT_NAMES:
-        path = report_dir / name
+    audit_root_readme(repo_root, errors)
+    audit_readme_prior_work_context(repo_root, catalog, errors)
+
+    legacy_html = sorted(output_dir.rglob("*.html")) if output_dir.is_dir() else []
+    for path in legacy_html:
+        errors.append(f"stale generated HTML must be removed: {path}")
+
+    for name in sorted(expected_report_names()):
+        path = output_dir / name
         if not path.is_file():
-            errors.append(f"missing report: {path}")
-            continue
-        source = path.read_text(encoding="utf-8", errors="replace")
-        if name == "phase-1-progress.html":
-            if "<h2>Current state and decisions</h2>" not in source:
-                errors.append(
-                    f"{name}: missing top-level current-state-and-decisions section"
-                )
-            state_heading = source.find("<h2>Current state — read this first</h2>")
-            history_heading = source.find("<h2>Current round</h2>")
-            if state_heading < 0:
-                errors.append(f"{name}: missing decision-first current-state snapshot")
-            elif history_heading < 0 or state_heading > history_heading:
-                errors.append(f"{name}: current state must precede progress history")
-        source_artifact_name = SOURCE_MIRROR_REPORTS.get(name)
-        if source_artifact_name:
-            source_artifact = project_dir / source_artifact_name
-            if not source_artifact.is_file():
-                errors.append(
-                    f"{name}: missing required source artifact {source_artifact}"
-                )
-            else:
-                if f"<code>{source_artifact_name}</code>" not in source:
-                    errors.append(
-                        f"{name}: does not identify source artifact {source_artifact_name}"
-                    )
-                expected_digest = file_digest(source_artifact)
-                if expected_digest not in source:
-                    errors.append(
-                        f"{name}: does not match current SHA-256 for "
-                        f"{source_artifact_name}; regenerate reports"
-                    )
-        if "<script" in source.lower():
-            errors.append(f"{name}: script element found")
-        parser = ReportParser()
-        parser.feed(source)
-        parser.close()
-        parsed[name] = parser
+            errors.append(f"missing required Markdown report: {path}")
+        elif publisher.GENERATED_MARKER not in path.read_text(encoding="utf-8"):
+            errors.append(f"{path}: missing generated-publication marker")
 
-        for resource in parser.remote_resources:
-            errors.append(f"{name}: remote embedded resource {resource}")
-        hrefs = {link.get("href", "") for link in parser.links}
-        for required in NAVIGATION_NAMES:
-            if required not in hrefs:
-                errors.append(f"{name}: report navigation missing {required}")
-
-        for row_index, row in enumerate(parser.table_rows, start=1):
-            if not row:
-                continue
-            if any(cell == "\\" or cell.endswith("\\") for cell in row):
-                errors.append(
-                    f"{name}: table row {row_index} contains visible escape debris: {row}"
-                )
-            if len(row) == 1 and row[0]:
-                warnings.append(f"{name}: table row {row_index} has only one cell")
-
-        for citation in parser.citations:
-            text = citation.get("_text", "").strip()
-            candidates = expected_citations.get(text)
-            if not candidates:
-                errors.append(f"{name}: citation label does not match catalog format: {text}")
-            for attribute in ("href", "title", "aria-label"):
-                if not citation.get(attribute):
-                    errors.append(f"{name}: citation '{text}' missing {attribute}")
-            if citation.get("title") != citation.get("aria-label"):
-                errors.append(f"{name}: citation '{text}' hover and accessible labels differ")
-            if candidates:
-                href = citation.get("href", "")
-                destination_matches = {
-                    tooltip
-                    for destination, tooltip in candidates
-                    if destination == href
-                }
-                if not destination_matches:
-                    errors.append(
-                        f"{name}: citation '{text}' does not use its canonical destination"
-                    )
-                elif citation.get("title", "") not in destination_matches:
-                    errors.append(
-                        f"{name}: citation '{text}' metadata does not match full catalog record"
-                    )
-
-    progress = parsed.get("phase-1-progress.html")
-    progress_ids = progress.ids if progress else set()
-    for name, parser in parsed.items():
-        for link in parser.links:
-            href = link.get("href", "")
-            prefix = "phase-1-progress.html#"
-            if href.startswith(prefix) and href[len(prefix) :] not in progress_ids:
-                errors.append(f"{name}: broken decision-support artifact link {href}")
-
-    literature = parsed.get("literature-and-evidence.html")
-    if literature is not None:
-        for reference in references:
-            anchor = "ref-" + re.sub(
-                r"[^a-z0-9]+", "-", reference["citation_key"].lower()
-            ).strip("-")
-            if anchor not in literature.ids:
-                errors.append(
-                    f"literature-and-evidence.html: missing reference anchor #{anchor}"
-                )
-
-    all_ids = literature.ids if literature else set()
-    surname_aliases = unique_surname_aliases(references)
-    for name, parser in parsed.items():
-        for link in parser.links:
-            href = link.get("href", "")
-            prefix = "literature-and-evidence.html#"
-            if href.startswith(prefix) and href[len(prefix) :] not in all_ids:
-                errors.append(f"{name}: broken internal citation link {href}")
-
-        unlinked_segments = [
-            re.sub(r"\s+", " ", segment).strip()
-            for segment in parser.unlinked_text
-            if segment.strip()
-        ]
-        for segment in unlinked_segments:
-            for token in re.findall(r"\[@[^\[\]]+\]", segment):
-                errors.append(f"{name}: unresolved explicit citation token '{token}'")
-        for shorthand in sorted(
-            unresolved_parenthetical_shorthands(references, unlinked_segments)
+    markdown_paths = []
+    root_readme = repo_root / "README.md"
+    if root_readme.is_file():
+        markdown_paths.append(root_readme)
+    markdown_paths.extend(sorted(root.rglob("*.md")))
+    for path in markdown_paths:
+        text = path.read_text(encoding="utf-8")
+        if path != root_readme and not (
+            publisher.NAV_START in text and publisher.NAV_END in text
         ):
-            errors.append(f"{name}: unresolved citation shorthand {shorthand}")
-        for reference in references:
-            aliases = alias_set(reference) | surname_aliases.get(
-                reference["citation_key"], set()
-            )
-            for alias in aliases:
-                if len(alias) < 5:
-                    continue
-                pattern = r"(?<![\w/:])" + re.escape(alias) + r"(?![\w/])"
-                if any(re.search(pattern, segment) for segment in unlinked_segments):
-                    errors.append(f"{name}: unlinked citation alias '{alias}'")
-                    break
+            errors.append(f"{path}: missing managed Phase 1 navigation block")
+        html_scan = re.sub(
+            r"https?://[^\s)>]+",
+            "",
+            publisher.strip_code(text),
+            flags=re.IGNORECASE,
+        )
+        if re.search(r"\.html(?:[#?)\s]|$)", html_scan, re.IGNORECASE):
+            errors.append(f"{path}: contains a legacy HTML report reference")
+        audit_citations(path, text, catalog, output_dir, repo_root, errors)
+        audit_hashes(path, text, root, errors)
+        for match in INLINE_LINK_RE.finditer(publisher.strip_code(text)):
+            audit_link(path, parse_inline_target(match.group(1)), repo_root, errors)
+
+    progress = output_dir / "phase-1-progress.md"
+    if progress.is_file():
+        source = progress.read_text(encoding="utf-8")
+        first = source.find("## Current state — read this first")
+        later = source.find("## Canonical records")
+        if first < 0 or later < 0 or first > later:
+            errors.append("phase-1-progress.md: current-state section is not first")
+        for required in (
+            "phase-1-collaboration-workboard.md",
+            "author-decisions.md",
+            "missing-full-copies.md",
+        ):
+            if required not in source:
+                errors.append(f"phase-1-progress.md: missing decision-state link {required}")
+
+    literature = output_dir / "literature-and-evidence.md"
+    if literature.is_file():
+        source = literature.read_text(encoding="utf-8")
+        for required in (
+            "source-resolution.md",
+            "evidence-strength-register.md",
+            "ranked-related-work-positioning.md",
+            "prior-work-evidence-accounting.csv",
+            "idea-provenance-ledger.csv",
+            "missing-full-copies.md",
+        ):
+            if required not in source:
+                errors.append(f"literature-and-evidence.md: missing evidence link {required}")
 
     return errors, warnings
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Audit Phase 1 GitHub Markdown publication files.")
+    parser.add_argument("project_dir", type=Path, help="research-framing directory")
+    parser.add_argument("--output-dir", type=Path, help="output directory (default: PROJECT/reports)")
+    return parser.parse_args()
+
+
 def main() -> int:
     args = parse_args()
-    project_dir = args.project_dir.resolve()
-    report_dir = (args.report_dir or project_dir / "reports").resolve()
-    errors, warnings = audit(project_dir, report_dir)
-    for issue in warnings:
-        print(f"WARNING: {issue}")
-    for issue in errors:
-        print(f"ERROR: {issue}")
+    root = args.project_dir.expanduser().resolve()
+    errors, warnings = audit(
+        root,
+        args.output_dir.expanduser().resolve() if args.output_dir else None,
+    )
+    for warning in warnings:
+        print(f"WARNING: {warning}", file=sys.stderr)
     if errors:
-        print(f"FAIL: {len(errors)} error(s), {len(warnings)} warning(s)")
+        for error in errors:
+            print(f"ERROR: {error}", file=sys.stderr)
         return 1
-    print(f"PASS: {len(REPORT_NAMES)} reports, {len(warnings)} warning(s)")
+    print(f"PASS: audited Phase 1 Markdown publication in {root / 'reports'}")
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    raise SystemExit(main())

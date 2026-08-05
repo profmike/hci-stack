@@ -16,7 +16,7 @@ lean core skill.
 8. [Establish terminology, gaps, and approach](#6-establish-the-terminology-contract)
 9. [Position and sharpen contributions](#8-explore-positioning-views)
 10. [Review, outline, and hand off](#10-run-a-phase-aware-constructive-review)
-11. [Generate and audit HTML reports](#13-generate-the-html-reports)
+11. [Publish and audit GitHub Markdown](#13-publish-the-github-markdown-record)
 12. [Completion states](#completion-states)
 
 Help researchers solve the **right problem** before the expensive parts of an HCI project become
@@ -127,10 +127,11 @@ Every retained research reference must have an obtained, saved, and opened full 
 snippets, AI summaries, or another paper's paraphrase may discover candidates but cannot ground
 claims or comparisons.
 
-Read [citation-integrity.md](citation-integrity.md) before writing the first
-citation-bearing artifact. Maintain stable `references.csv` keys across phases and use explicit
-`[@CitationKey]` tokens in reader-facing prose. Treat an unknown key, duplicate key, alias
-collision, or unresolved citation shorthand as a blocking defect rather than guessing a link.
+Read [citation-integrity.md](citation-integrity.md) before writing the first citation-bearing
+artifact. Maintain stable `references.csv` keys across phases. In GitHub-facing Markdown use
+catalog-derived `[Author (Year Venue): Short Title][CitationKey]` links, definitions, and visible
+full references; draft `[@CitationKey]` tokens must be resolved before delivery. Unknown or
+duplicate identities/definitions, alias collisions, shorthand, and broken destinations block delivery.
 
 For every material claim, record the source, method, population/context, sample or coverage,
 result, uncertainty, limitation, and exact locator. Read
@@ -342,11 +343,11 @@ target when durable writing becomes necessary. Once resolved, create a durable p
 without overwriting existing material. Run:
 
 ```bash
-python3 scripts/initialize_phase1_workspace.py PROJECT_REPOSITORY --project-name "PROJECT NAME"
+python3 "ABSOLUTE_SKILL_DIR/scripts/initialize_phase1_workspace.py" "ABSOLUTE_PROJECT_REPO" --project-name "PROJECT NAME"
 ```
 
 The initializer must create every missing mandatory template, the source/full-text and working
-directories, a root `README.md`, and the initial rendered and audited HTML shelf without
+directories, a root `README.md`, and the initial published and audited GitHub Markdown shelf without
 overwriting existing artifacts. Do not approximate this by copying only the files immediately
 needed for the current analysis. Include:
 
@@ -394,17 +395,19 @@ research-framing/
 ├── research-framing-outline.md
 ├── phase-2-handoff.md
 └── reports/
-    ├── phase-1-progress.html
-    ├── literature-and-evidence.html
-    ├── phase-1-final.html
-    ├── artifact-index.html
-    └── [reader-facing HTML mirrors of the working audits, registers, matrices, and positioning]
+    ├── README.md
+    ├── phase-1-progress.md
+    ├── literature-and-evidence.md
+    ├── phase-1-final.md
+    ├── artifact-index.md
+    └── [GitHub Markdown views of machine-readable ledgers]
 ```
 
-The project root must also contain `README.md` with direct relative links to
-`phase-1-progress.html`, `literature-and-evidence.html`, `phase-1-final.html`, and
-`artifact-index.html`. These navigation and reader-view files are workspace invariants from the
-first durable write onward.
+The project root must also contain `README.md` with high-level, evidence-status-aware framing and
+prospective contributions plus direct relative links to the canonical workboard, outline, ranked
+positioning, evidence register, author decisions, Phase 2 handoff, report shelf, and four core `.md`
+reports. These navigation and reader-view files are workspace invariants from the first durable
+write onward. The README is a bounded overview, never the sole evidence or decision record.
 
 Copy the templates from `assets/` where useful. Record each full source's canonical repository path,
 NotebookLM notebook ID, and source ID, but never credentials, cookies, or raw participant data.
@@ -572,9 +575,12 @@ Also include same-problem/similar-approach work whenever it exists; these are of
 predecessors. Keep the categories as separate portfolios. The primary problem-space ranking draws
 only from same-specific-problem and similar-problem work. Different-problem/similar-approach work
 belongs in a mechanism/capability-collision portfolio only when positive evidence shows the
-relevant operation actually ran. A `DEMONSTRATED_UNCLAIMED` operation may therefore retire or
-narrow a capability claim while receiving no attributed contribution credit. It cannot displace a
-closer problem comparator. Route proposals to idea provenance instead.
+relevant operation actually ran. Classify that operation against the complete human-activity
+predicate: it retires or narrows the full capability only when that predicate matches, or narrows an
+independently claimed sub-capability when that named scope matches. A shared component, mechanism,
+or loose subset of qualifiers establishes inheritance but does not narrow the complete capability.
+A `DEMONSTRATED_UNCLAIMED` operation still receives no attributed contribution credit. It cannot
+displace a closer problem comparator. Route proposals to idea provenance instead.
 
 “Similar approach” means a genuinely similar **causal interaction approach**: the intervention
 acts on people, activity, or coordination through substantially the same mechanism. A shared
@@ -699,9 +705,11 @@ For each reference, track:
 Read [related-work-positioning.md](related-work-positioning.md) completely before
 classifying or comparing retained work. Apply its relationship gate, existing-workflow map,
 current-practice collision check, communication-topology analysis, activity-versus-implementation
-counterfactual, conjunctive claim test, terminology contract, shared-awareness check, contribution
-strength ladder, target-problem identity contract, problem-proximity bands, separate-portfolio
-rules, and proximity ordering.
+counterfactual, complete human-activity-predicate comparison, full/sub-capability/component collision
+levels, conjunctive claim test, terminology contract, shared-awareness check, contribution-strength
+ladder, target-problem identity contract, problem-proximity bands, separate-portfolio rules, and
+proximity ordering. Never infer anti-novelty by subtracting generic qualifiers found separately in
+unrelated systems.
 
 The required audit must cover every catalogued reference. Read
 [prior-work-contribution-boundaries.md](prior-work-contribution-boundaries.md) and maintain
@@ -732,12 +740,14 @@ than padding with adjacent or conceptual work. Venue priority affects search cov
 ranking. State ties and rank sensitivity instead of inventing precision.
 
 Maintain separate **mechanism/capability-collision** and **concept/theory/foundation** portfolios.
-A different-problem work may be a decisive claim-specific collision for an exact mechanism or
-capability when positive evidence shows that operation ran, including a
-`DEMONSTRATED_UNCLAIMED` operation, and should be discussed there; it is not a closest overall
-problem comparator. Keep contribution attribution separate. Proposals remain idea provenance with
-collision and credit `NONE`. Evidence strength, venue, recency, and citation count remain separate
-from problem proximity.
+A different-problem work may be a decisive claim-specific collision when positive evidence shows
+that the same complete human-activity predicate or an independently claimed consequential
+sub-capability ran, including as a `DEMONSTRATED_UNCLAIMED` operation. A similar device, modality,
+channel, routing pattern, timing property, or low-level mechanism is instead a
+`COMPONENT_OR_MECHANISM_PRECEDENT`: credit what transfers without claiming that it weakens the full
+capability. None of these works is a closest overall problem comparator. Keep contribution
+attribution separate. Proposals remain idea provenance with collision and credit `NONE`. Evidence
+strength, venue, recency, and citation count remain separate from problem proximity.
 
 For every work in the primary ranked set, write one complete **working positioning paragraph** that
 credits its claimed-and-demonstrated contribution, separately states any demonstrated-unclaimed
@@ -820,6 +830,8 @@ falsify it.
 
 Then generate three to five approach hypotheses. For each:
 
+- begin with the human situation or tension, the desired user value and its evidence state, then
+  explain the capability and only the implementation needed to understand it;
 - describe the intended user experience, not only the technology;
 - state the enabling insight;
 - identify what is inherited from prior work;
@@ -865,8 +877,18 @@ Read [related-work-quadrant.md](related-work-quadrant.md) before preparing chart
 
 ### 9. Sharpen prospective contributions
 
+Before generating packages, identify atomic reusable outputs, frame their human and HCI value,
+classify each using the seven knowledge-oriented types, and align every type with its own evidence
+gate. Read [hci-contribution-types.md](hci-contribution-types.md) and maintain the same stable-ID
+contribution-candidate register in the workboard, decision packet, research outline, reports, and
+handoff. Do not ask the author to select a package while any included candidate lacks a reusable
+output, primary type, classification rationale, closest-output delta, or type-specific evidence
+path.
+
 Generate three to five coherent contribution packages, not synonym lists. Each package must specify:
 
+- a plain-language, benefit-first lead that moves from human situation and desired value to
+  capability and necessary mechanism;
 - the larger problem and target people;
 - the existing workflow and the precise stage being replaced, complemented, extended, or bridged;
 - the current human intervention at that stage and the result of the current-practice collision
@@ -878,10 +900,13 @@ Generate three to five coherent contribution packages, not synonym lists. Each p
 - the implementation choices and design rationales, including whether any independently enables a
   consequential capability rather than merely instantiating the interaction;
 - the proposed reusable HCI capability or knowledge;
+- every atomic candidate’s primary and optional supporting contribution types, why each type fits,
+  and why the strongest tempting alternative was rejected;
 - the empirical waist or planned instantiation;
 - what is established now;
 - what Phase 2 must build or learn;
 - what Phase 3 must validate;
+- the type-specific evidence gate and null-result survivor for every claimed type;
 - the plausible broader HCI implication;
 - what remains explicitly unclaimed;
 - the fair future comparator that preserves valued current practice; and
@@ -890,15 +915,19 @@ Generate three to five coherent contribution packages, not synonym lists. Each p
 A prototype, algorithm, interview set, or user study is usually a means, not automatically a
 contribution. Use contribution language prospectively until evidence exists. Read
 [terminology-contract.md](terminology-contract.md) and
+[hci-contribution-types.md](hci-contribution-types.md) and
 [contribution-rubric.md](contribution-rubric.md) before presenting packages. If the
 terminology gate is pending, show contribution packages as candidates and preserve their
 terminology dependencies instead of silently resolving them.
 
 Build every package against the six-field prior-work accounting and apply the same fields to the
-focal project. Use positively operated capability for collision and claimed-plus-demonstrated
-evidence for attribution. A `DEMONSTRATED_UNCLAIMED` operation can narrow firstness but receives no
-contribution credit; a `CLAIMED_UNDEMONSTRATED` atom receives neither. Keep ideas and proposals
-only for broader Discussion provenance, never capability or contribution novelty.
+focal project. Use positively operated capability plus a matched human-activity predicate to decide
+collision, and claimed-plus-demonstrated evidence for attribution. A `DEMONSTRATED_UNCLAIMED`
+operation can narrow firstness only at the matched complete-predicate or independently claimed
+sub-capability scope; a component precedent shows inheritance without narrowing the complete
+capability. It receives no contribution credit; a `CLAIMED_UNDEMONSTRATED` atom receives neither.
+Keep ideas and proposals only for broader Discussion provenance, never capability or contribution
+novelty.
 
 Separate these layers, then rank them—do not impose a universal order:
 
@@ -1016,38 +1045,39 @@ NotebookLM maintenance record, and handoff. Set `phase.status` to `complete` onl
 reconciliation; the manifest then lets either Codex or Claude Code rehydrate the bounded handoff
 without silently reactivating Phase 1.
 
-### 13. Generate the HTML reports
+### 13. Publish the GitHub Markdown record
 
-Read [html-reports.md](html-reports.md), then run:
+Read [markdown-reports.md](markdown-reports.md) and
+[iso-24495-1-plain-language.md](iso-24495-1-plain-language.md), then run:
 
 ```bash
-python3 scripts/check_prior_work_accounting.py research-framing/ --end-of-round
-python3 scripts/check_source_resolution.py research-framing/ --end-of-round
-python3 scripts/render_phase1_reports.py research-framing/
-python3 scripts/audit_phase1_reports.py research-framing/
+python3 "ABSOLUTE_SKILL_DIR/scripts/render_source_manifest.py" "ABSOLUTE_PROJECT_REPO/research-framing"
+python3 "ABSOLUTE_SKILL_DIR/scripts/check_prior_work_accounting.py" "ABSOLUTE_PROJECT_REPO/research-framing" --end-of-round
+python3 "ABSOLUTE_SKILL_DIR/scripts/check_source_resolution.py" "ABSOLUTE_PROJECT_REPO/research-framing" --end-of-round
+python3 "ABSOLUTE_SKILL_DIR/scripts/render_phase1_reports.py" "ABSOLUTE_PROJECT_REPO/research-framing"
+python3 "ABSOLUTE_SKILL_DIR/scripts/audit_phase1_reports.py" "ABSOLUTE_PROJECT_REPO/research-framing"
 ```
 
-Regenerate:
+Regenerate `phase-1-progress.md` after each material evidence batch, option portfolio, author
+decision, or review; regenerate `literature-and-evidence.md` after each material search pass; and
+regenerate the three core reports, `artifact-index.md`, report-shelf README, and required Markdown
+ledger views before a completion decision. Canonical Markdown/CSV/JSON/YAML records remain the
+editable sources of truth. Generated views contain navigation, source hashes, and previews—not
+independent claims or decisions.
 
-- `phase-1-progress.html` after each evidence batch, option portfolio, author decision, or review;
-- `literature-and-evidence.html` after every material literature-search pass; and
-- all three reports before the Phase 1 completion decision.
+The root README must directly state the current high-level framing, planned/demonstrated approach,
+prospective contribution candidates, evidence status, readiness, and next action, then link to the
+exact workboard, outline, ranked positioning, evidence register, decisions/variations, Phase 2
+handoff, and report shelf. It is a bounded overview. Never erase unresolved evidence, access blocks,
+rejected variants, return conditions, or reopen triggers from canonical records to simplify it.
+Declare its intended readers and tasks, start with an answer-first `At a glance`, and group onward
+links by reader task. Apply ISO 24495-1's relevant, findable, understandable, and usable outcomes;
+do not use a readability formula or checklist completion as proof that intended readers can use it.
 
-Also regenerate `artifact-index.html` and the standalone reader-facing HTML mirrors for the working
-audits, registers, matrices, and ranked positioning dossier. Markdown and CSV remain the editable,
-diffable sources of truth; the HTML files are generated views. Link the shelf prominently from
-`literature-and-evidence.html` so a reader does not have to locate or render source artifacts.
-
-The reports must be self-contained, readable without the repository, and traceable to their source
-artifacts. They must show missing inputs honestly. A final report never erases unselected
-variations, superseded choices, evidence gaps, or reviewer concerns.
-
-`phase-1-progress.html` must open with the decision-first current-state snapshot before research
-history, coverage tables, or the artifact shelf. It must tell the author where the project stands,
-what is settled, which decision is needed now and why, the recommendation, blockers, and the next
-action. When no decision is ready, it must say so and identify the preceding evidence action. The
-report must link to the populated related-work comparison and contribution/decision artifact when
-those support the active choice; an empty template or inventory index is not sufficient.
+`phase-1-progress.md` must make the decision-first current state its first substantive destination.
+It must link to the populated workboard, author decisions, active access record, and supporting
+comparison or decision packet. When no decision is ready, the workboard must say so and identify the
+preceding evidence action. An empty template or inventory index is not sufficient.
 
 Keep evidence tables complete, but apply the claim-local caveat test to narrative summaries. State
 supported claims directly, omit disclaimers about outcomes not claimed, and introduce familiar
@@ -1057,27 +1087,31 @@ An end-of-round report may show `NEEDS_AUTHOR_SOURCE_ACCESS` only when the exact
 URL, failed routes, and author action have already been surfaced. It may not call the source audit
 complete while retaining `UNASSESSED`, `DISCOVERED`, `ACQUIRING`, or `FULL_TEXT_OBTAINED`. Before
 `READY_FOR_PHASE_2` or `READY_WITH_RISKS`, rerun the source-resolution checker with
-`--phase-ready` and run `scripts/check_prior_work_accounting.py research-framing/ --phase-ready`.
-The latter must verify the eleven checked completion markers in
+`--phase-ready` and run the same absolute prior-work command with `--phase-ready`.
+The latter must verify the thirteen checked completion markers in
 `prior-work-contribution-boundary.md`; prose assertions do not substitute for valid ledgers,
 terminal imported-source rows, completed late-find repairs, passing sentinels, and a complete
 zero-yield promotion wave.
 
-Use the explicit citation-key contract in
-[citation-integrity.md](citation-integrity.md). The renderer and audit must fail closed
-on unknown tokens, duplicate keys, alias collisions, unresolved citation-like shorthand, missing
-metadata, or broken destinations. Never repair a citation by adding an ambiguous bare-surname or
-conceptual-phrase alias.
+Use [citation-integrity.md](citation-integrity.md). The publisher resolves draft tokens to
+catalog-derived keyed Markdown links and adds file-local definitions plus visible full references.
+The audit fails closed on unknown or case-folded duplicate keys, duplicate definitions, alias
+collisions, unresolved shorthand/tokens, label/destination/metadata mismatch, broken internal
+targets, machine-local paths, or citation-bearing files without visible references. It validates
+canonical external identity without requiring automated publisher-site reachability.
 
-After the automated audit passes, inspect all three reports in a headed browser. Check desktop and
-narrow widths, citation links and hover tips, long tables, escaped characters, charts, decision
-history, current-state prominence, decision-support links, and missing-artifact messages. Fix the
-underlying artifact or renderer, regenerate, and re-audit. Do not deliver unchecked generated HTML.
+Every Markdown file under `research-framing/` must link back to the project README, artifact index,
+live workboard, and Phase 2 handoff through computed relative paths. No generated `.html` file or
+live HTML report link may remain. After audit, preview the root README, core reports, citation-dense
+files, nested navigation, wide ledger views, and phone/desktop reading order using GitHub or a local
+GitHub-Flavored Markdown renderer. Fix canonical content when the record is wrong; fix the publisher
+when the same presentation defect could recur.
 
-Before every commit, push, or terminal handoff that contains material Phase 1 changes, regenerate
-the complete HTML shelf, rerun the auditor, and verify that every report linked from the root
-`README.md` exists in the staged or committed tree. A durable batch is not publishable when its
-README is absent, its links are broken, or its reader views are missing or stale.
+Before every commit, push, or terminal handoff containing material Phase 1 changes, republish and
+rerun the auditor. Verify that README links, source hashes, data mirrors, citation definitions,
+visible references, and canonical paths match the exact staged or committed tree. A durable batch
+is not publishable when navigation is absent/broken, a generated view is stale, or prospective
+claims are presented as completed results.
 
 ## Completion states
 

@@ -30,13 +30,13 @@ which approved terms will carry recurring rhetorical jobs.
 
 Each option is a coherent hierarchy, not a synonym list.
 
-| Option | Concrete default | Structural contrast | Scoped tailoring/control term | Familiar entry term → precise construct + first-use definition | Approved later short form | Reserved terms | Reader inference | Evidence/tradeoff | Recommendation |
-|---|---|---|---|---|---|---|---|---|---|
-| A — Domain-natural | | | | | | | | | |
-| B — Broad-CHI clear | | | | | | | | | |
-| C — System-precise | | | | | | | | | |
-| D — [optional] | | | | | | | | | |
-| E — [optional] | | | | | | | | | |
+| Option | Benefit-first entry sentence | Concrete default | Structural contrast | Scoped tailoring/control term | Familiar entry term → precise construct + first-use definition | Approved later short form | Reserved terms | Reader inference | Evidence/tradeoff | Recommendation |
+|---|---|---|---|---|---|---|---|---|---|---|
+| A — Domain-natural | | | | | | | | | | |
+| B — Broad-CHI clear | | | | | | | | | | |
+| C — System-precise | | | | | | | | | | |
+| D — [optional] | | | | | | | | | | |
+| E — [optional] | | | | | | | | | | |
 
 ## Author-approved semantic contract
 
@@ -66,6 +66,7 @@ Status: **pending until the semantic contract is approved**
 - Selected or combined option:
 - Rationale:
 - Exact definitions approved:
+- Benefit-first entry sentence approved:
 - Rejected implications:
 - Terms reserved pending evidence:
 - Evidence that would reopen the decision:

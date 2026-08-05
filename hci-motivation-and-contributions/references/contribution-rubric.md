@@ -35,11 +35,44 @@ Use only types the proposed research could plausibly support:
 A prototype, algorithm, interview set, user study, or “insights” is usually a means. State the
 reusable capability or knowledge it is intended to produce.
 
+### Contribution-type discipline
+
+Use the seven knowledge-oriented types in [hci-contribution-types.md](hci-contribution-types.md)
+when classifying a candidate. The paper’s type is the reusable output, not the technique or paper
+section that happens to contain it:
+
+| Paper type | Required Phase 1 question |
+| --- | --- |
+| Empirical knowledge | What important finding is produced, and why are the observation and analysis sound? |
+| Artifact | What meaningful possibility does the system, tool, technique, or design expression open, and which artifact-specific standard applies? |
+| Methodological knowledge | What reusable way of discovering, measuring, analyzing, creating, or evaluating is improved, and how will utility, reproducibility, reliability, or validity be established? |
+| Theoretical knowledge | What concept, model, principle, or framework explains what to expect and why, and what would test or falsify it? |
+| Dataset | What useful and representative corpus or benchmark becomes available, with what provenance, documentation, access, and reuse boundary? |
+| Survey/meta-analysis | What mature body of work is synthesized into trends, gaps, or opportunities beyond a literature list? |
+| Opinion/argument | What position is being advanced, what credible evidence supports it, and which opposing view is represented fairly? |
+
+CHI 2016 split empirical work into “system use” and “people”; preserve that distinction when it
+helps identify the empirical object, but map both to empirical knowledge in the seven-type record.
+Keep the skill’s design-knowledge and open-resource labels as explicit packaging mappings rather
+than silently collapsing dataset, survey, or argument work into them. A single package may have a
+primary type and supporting types, but each type must carry a separate claim and evidence gate.
+
+Before scoring a package, run the complete identify → frame → classify → align-evidence protocol in
+[hci-contribution-types.md](hci-contribution-types.md). A package is not decision-ready unless every
+atomic candidate records its benefit-first reusable output, primary and optional supporting types,
+classification rationale and strongest rejected alternative, closest prior output and exact delta,
+current evidence state, type-specific evidence gate, null-result survivor, status, and reopen
+trigger. Classification does not strengthen the underlying evidence and cannot turn an outcome
+hypothesis, study method, implementation choice, or collected dataset into a contribution.
+
 ## Phase 1 tests
 
 ### Significance
 
 - Who experiences the problem, how often, and with what consequence?
+- What user tension or desired value motivates each proposed capability or control?
+- Does the paper-facing explanation state that value before listing capability or implementation?
+- If the value is not yet measured, is it clearly a rationale or hypothesis rather than a benefit claim?
 - What does the existing workflow already do well before, during, and after the focal activity?
 - Is the claimed “missing” stage already served by people through speech, gesture, demonstration,
   coordination, or another workaround?
@@ -72,6 +105,14 @@ reusable capability or knowledge it is intended to produce.
 - If timing differs, are onset, trajectory, target intensity, cumulative dose, and transition
   semantics separately identified or honestly labeled a policy-package comparison?
 - Has every retained work been classified before it is used as a novelty comparator?
+- Is the focal capability written as a complete human-activity predicate—people/roles, meaningful
+  action or information relationship, activity, purpose, and essential interdependence, semantics,
+  timing, and control—and is each prior capability rewritten in the same grammar?
+- Is every overlap classified as `FULL_CAPABILITY_COLLISION`,
+  `INDEPENDENT_SUBCAPABILITY_COLLISION`, `COMPONENT_OR_MECHANISM_PRECEDENT`, or `NO_COLLISION`?
+- Does the removal test show that each purportedly core dimension changes what people can
+  meaningfully do, and does the drop-in-port test show whether the prior mechanism could support the
+  focal semantics and interdependence unchanged?
 - Does a “similar approach” share the causal interaction mechanism, or merely a modality, device,
   sensing method, multi-user topology, or personalization label?
 - If the closest systems used identical hardware, interfaces, and output modalities, would the
@@ -86,7 +127,9 @@ reusable capability or knowledge it is intended to produce.
 - Does the proposed claim survive a conjunctive comparison across problem, people, activity,
   setting, sender, recipient/content topology, concurrency, visibility, selection or adaptation
   provenance, intervention semantics, timing, agency, and evidence?
-- Which individual qualifiers are already established by different prior works?
+- Which individual qualifiers are already established by different prior works, and have they been
+  credited as component precedents without committing the component-subtraction fallacy against a
+  novel complete capability?
 - Does “recipient-differentiated” accurately describe different content by intended recipient, or
   does “individualized” incorrectly imply inferred or adaptive personalization?
 - Does “player-specific” identify only the addressee, while any different-content, tailoring,
@@ -101,9 +144,16 @@ reusable capability or knowledge it is intended to produce.
   `CAPABILITY COLLISION`, and `CONTRIBUTION CREDIT`?
 - Does capability collision require positive evidence that the smallest named operation ran, while
   contribution attribution separately requires an explicit claim and matched demonstration?
-- Is every `DEMONSTRATED_UNCLAIMED` operation allowed to narrow firstness while receiving
-  contribution credit `NONE` and no false attribution?
+- Is every `DEMONSTRATED_UNCLAIMED` operation allowed to narrow firstness only at its matched
+  complete-predicate or independently claimed sub-capability scope, while a component precedent
+  leaves full-capability firstness intact and receives contribution credit `NONE`?
 - Does every `CLAIMED_UNDEMONSTRATED` atom receive collision and contribution credit `NONE`?
+- For each short-format or non-archival work in the corpus — poster, extended abstract,
+  late-breaking work, work-in-progress, demo abstract, position paper, vision paper, preprint,
+  tech report, patent — does the row record which of the two idea-gate questions was answered
+  positively? A work where nothing ran and nothing was measured takes `NONE` in both columns. A work
+  that did run and measure something is audited at the scope of what it ran, without a page-count
+  discount.
 - Is operated capability `NO` supported by positive artifact evidence, while source silence creates
   only `SEARCH_PRIORITY` or `REOPEN_QUERY`?
 - Are future work, ideas, interpretations, and hypothetical scenarios kept only in idea provenance
@@ -150,6 +200,8 @@ reusable capability or knowledge it is intended to produce.
 
 ### Broader HCI value
 
+- Can an intelligent reader outside the domain restate the contribution using concrete people and
+  actions rather than the project's technical labels?
 - What reusable idea might remain after removing the application name?
 - What capability or knowledge survives if the preferred result is null, worse, heterogeneous, or
   burdened?
@@ -161,7 +213,9 @@ reusable capability or knowledge it is intended to produce.
 
 ## Scope calibration
 
-- Replace “first” with a bounded search scope, date, and closest-work comparison.
+- Replace unbounded “first” with a bounded search scope, date, and closest-work comparison, but do
+  not weaken a surviving complete-capability claim merely because its supporting components are
+  individually familiar.
 - Replace “real-time” with the planned operational latency and synchronization requirement until
   measured.
 - Replace “individualized” or ambiguous “personalized” with `recipient-differentiated` when

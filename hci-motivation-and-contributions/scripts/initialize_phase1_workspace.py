@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Initialize a Phase 1 project workspace and render its navigable report shelf."""
+"""Initialize a Phase 1 workspace and publish its GitHub Markdown shelf."""
 
 from __future__ import annotations
 
@@ -15,6 +15,7 @@ ASSET_ROOT = SKILL_ROOT / "assets"
 
 ROOT_ASSETS = (
     "agent-context.json",
+    "starting-state.md",
     "phase-1-collaboration-workboard.md",
     "author-decisions.md",
     "source-manifest.md",
@@ -23,14 +24,17 @@ ROOT_ASSETS = (
     "notebooklm-maintenance.md",
     "evidence-strength-register.md",
     "references.csv",
+    "search-log.md",
     "missing-full-copies.md",
     "claim-evidence-ledger.csv",
     "motivation-claim-research-queue.md",
+    "motivation-evidence-map.md",
     "authoritative-source-map.md",
     "current-practice-audit.md",
     "consequence-severity-ranking.md",
     "acm-sigchi-related-work-audit.md",
     "related-work-search-recall-audit.md",
+    "related-work-matrix.md",
     "related-work-contribution-tier-audit.md",
     "ranked-related-work-positioning.md",
     "prior-work-contribution-boundary.md",
@@ -38,7 +42,10 @@ ROOT_ASSETS = (
     "idea-provenance-ledger.csv",
     "late-found-work-postmortem.csv",
     "novelty-regression-sentinels.yaml",
+    "citation-chain-log.md",
     "exemplar-analysis.md",
+    "approach-options.md",
+    "contribution-options.md",
     "terminology-contract.md",
     "related-work-quadrant-variations.md",
     "research-framing-outline.md",
@@ -48,12 +55,14 @@ ROOT_ASSETS = (
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Create missing Phase 1 templates, a project README, and initial HTML reports."
+        description="Create missing Phase 1 templates, a project README, and Markdown reports."
     )
     parser.add_argument("repo", type=Path, help="Project repository root")
     parser.add_argument("--project-name", help="Display name (default: repository folder name)")
     parser.add_argument(
-        "--no-render", action="store_true", help="Create source artifacts without rendering HTML"
+        "--no-render",
+        action="store_true",
+        help="Create source artifacts without publishing Markdown views",
     )
     return parser.parse_args()
 
@@ -93,6 +102,16 @@ def main() -> int:
         framing / "decision-packets" / "decision-packet-template.md",
     ):
         created.append(framing / "decision-packets" / "decision-packet-template.md")
+    if copy_missing(
+        ASSET_ROOT / "decision-packets-readme.md",
+        framing / "decision-packets" / "README.md",
+    ):
+        created.append(framing / "decision-packets" / "README.md")
+    if copy_missing(
+        ASSET_ROOT / "reviewer-panel-readme.md",
+        framing / "reviewer-panel" / "README.md",
+    ):
+        created.append(framing / "reviewer-panel" / "README.md")
     if copy_missing(
         ASSET_ROOT / "related-work-quadrant.csv",
         framing / "quadrants" / "related-work-quadrant.csv",

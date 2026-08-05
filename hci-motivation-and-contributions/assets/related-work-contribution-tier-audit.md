@@ -17,8 +17,10 @@ theory, reviews, motivation sources, components, exemplars, and internal artifac
 Canonical row-level accounting is `prior-work-evidence-accounting.csv`. For every atomic
 proposition, independently record author claim, demonstrated artifact/study, operated capability,
 evaluated result, capability collision, and contribution credit. Capability collision may include
-a `DEMONSTRATED_UNCLAIMED` operation; contribution attribution may not. Ideas and proposals remain
-in `idea-provenance-ledger.csv` with collision and credit `NONE`.
+a `DEMONSTRATED_UNCLAIMED` operation at its matched complete-predicate or independently claimed
+sub-capability scope; component/mechanism precedent alone does not collide with the complete
+capability. Contribution attribution may not inherit from collision. Ideas and proposals remain in
+`idea-provenance-ledger.csv` with collision and credit `NONE`.
 
 ## Target-problem identity and proximity
 
@@ -48,6 +50,19 @@ Classify every retained work before assigning a tier:
 
 A shared modality, device, sensing technique, personalization label, multi-user topology, or output
 channel is insufficient. “Similar approach” requires a similar causal interaction mechanism.
+
+## Human-activity predicate and collision level
+
+- **Focal complete predicate:** people/roles → meaningful action or information relationship →
+  focal activity → immediate purpose → essential interdependence, semantics, timing, and control.
+- **Core dimensions under the removal test:**
+- **Supporting components and generic qualifiers:**
+- **Drop-in-port test:** could the prior mechanism unchanged support the focal semantics,
+  interdependence, and purpose?
+- **Collision levels:** `FULL_CAPABILITY_COLLISION`, `INDEPENDENT_SUBCAPABILITY_COLLISION`,
+  `COMPONENT_OR_MECHANISM_PRECEDENT`, or `NO_COLLISION`.
+- **Component-subtraction check:** a loose subset of adjectives does not erase novelty of the
+  complete capability.
 
 ## Existing-workflow and communication map
 
@@ -90,6 +105,10 @@ For every close work:
   evidence and locator.
 - **Evaluated result:** yes / no / partial / unresolved / N/A; method, result, uncertainty, and
   locator.
+- **Prior positively operated human-activity predicate:**
+- **Removal-test and drop-in-port results:**
+- **Collision level:** full capability / independent sub-capability / component or mechanism /
+  none.
 - **Capability collision:** exact / partial / none / unresolved; smallest colliding unit and scope.
 - **Contribution credit:** full / partial / none / unresolved; exact attributed atom and scope.
 - **Attribution status:** claimed-and-demonstrated / demonstrated-unclaimed /
@@ -171,6 +190,8 @@ For every close work:
 - General concept lineage / in-domain HCI collision / exact remaining construct:
 - Claimed-and-demonstrated attributed prior contributions:
 - Demonstrated-unclaimed capability collisions and false-firstness/comparator risks:
+- Full-capability versus independent-sub-capability collisions:
+- Component/mechanism precedents credited without narrowing the complete capability:
 - Claimed-undemonstrated atoms excluded from collision and credit:
 - Ideas/proposals reserved for Discussion with collision and credit `NONE`:
 - Mixed-channel and whole-system classification results:
@@ -186,8 +207,8 @@ For every close work:
 - Terminology selected and rejected implications:
 - Shared-awareness value or risk:
 - Claims ruled out by prior work:
-- Qualifiers established separately by prior work:
-- Complete conjunction not documented:
+- Qualifiers/components established separately by prior work:
+- Complete human-activity predicate not documented by prior work:
 - Tier 2 fallback:
 - Tier 3 fallback:
 - Closest unresolved collision:

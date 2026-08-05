@@ -40,6 +40,15 @@ Also state:
   first-definition location, and intended scope; and
 - shared-awareness value or risk and whether it is established or hypothesized.
 
+## Contribution candidate classification
+
+Complete this register before presenting contribution-package options. Keep one row per atomic
+reusable output; the options below may combine several rows into a coherent package.
+
+| Candidate ID | Benefit-first candidate | Reusable output | Primary type | Supporting type(s) | Classification rationale and strongest rejected alternative | Closest prior output and exact delta | Evidence state | Type-specific evidence gate | Null-result survivor | Status and reopen trigger |
+|---|---|---|---|---|---|---|---|---|---|---|
+| CP-01 | | | | | | | established / observed / planned / hypothesis / aspiration / needs evidence | | | candidate / decision-ready / selected-primary / selected-supporting / rejected / blocked / reopened |
+
 ## Options
 
 | Option | Candidate | Evidence | Emphasis | Tradeoff | Status | Recommendation |
@@ -63,6 +72,8 @@ Delete unused fourth or fifth rows; retain at least three substantive options.
 - Terminology contract dependencies:
 - Terminology definitions, likely reader inferences, and rejected implications:
 - Concrete default, structural contrast, scoped tailoring/control term, and reserved terms:
+- Benefit-first entry wording: human situation and desired value before capability/implementation:
+- Evidence state of the intended user value:
 
 ## Author decision
 

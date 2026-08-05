@@ -23,7 +23,12 @@ Phase 2 may import this artifact, but must also accept any other starting materi
 - Hypothesized mechanisms kept separate from the problem identity:
 - Primary same/similar-problem ranking:
 - Eligible-work shortage or residual search risk:
-- Separate mechanism/capability claim-specific collisions and claims narrowed/retired:
+- Focal complete human-activity predicate and core dimensions:
+- Prior predicates plus `FULL_CAPABILITY_COLLISION`, `INDEPENDENT_SUBCAPABILITY_COLLISION`,
+  `COMPONENT_OR_MECHANISM_PRECEDENT`, or `NO_COLLISION` classifications:
+- Removal-test, drop-in-port, and no-component-subtraction results:
+- Separate full/sub-capability claim-specific collisions and claims narrowed/retired:
+- Component/mechanism precedents inherited without narrowing the complete capability:
 - Concept/theory/foundation inventory and claim-specific roles:
 - What is learned from/built on/inspired by:
 - Prior-work six-field accounting IDs:
@@ -45,7 +50,7 @@ Phase 2 may import this artifact, but must also accept any other starting materi
 
 - Stable citation keys and full-review locators eligible for citation/comparison:
 - Clearly marked project evidence eligible for bounded use:
-- Source-resolution ledger and reader-facing HTML mirror:
+- Source-resolution ledger and reader-facing Markdown publication view:
 - Imported-bibliography accountability and terminal source-resolution cross-check:
 - Late-found-work postmortems, sibling sweeps, repaired routes, regression sentinels, and final
   zero-yield promotion wave:
@@ -62,7 +67,9 @@ Downstream design and writing may cite or compare only opened full copies or cle
 evidence. `UNASSESSED`, unobtained, or inaccessible sources and their affected claims remain
 visibly blocked or narrowed in the internal record; prose cannot omit or upgrade that boundary
 when the affected claim remains active. Preserve exact access requests, component foundations,
-lineage, stronger-source dispositions, and reopen triggers. Include a limitation in reader-facing
+lineage, collision levels, complete human-activity predicates, stronger-source dispositions, and
+reopen triggers. Downstream phases must not turn a component/mechanism precedent into a collision
+with the complete capability or reconstruct anti-novelty from generic qualifiers. Include a limitation in reader-facing
 prose only when it materially constrains a claim or comparison actually made; if the claim is
 removed, do not append a disclaimer about an unclaimed distal outcome.
 
@@ -86,6 +93,8 @@ removed, do not append a disclaimer about an unclaimed distal outcome.
 - Primary contribution layer and ranking rationale:
 - Workflow relationship/significance:
 - Interaction, control-policy, or information-distribution capability:
+- Complete human-activity predicate and core dimensions:
+- Full-capability / independent-sub-capability / component-mechanism collision result:
 - Intervention objective and equal-quantity construct:
 - General concept lineage / in-domain HCI collision / exact remaining construct:
 - Collision–delta result:

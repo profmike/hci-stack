@@ -53,6 +53,9 @@ OUTLINE_TEMPLATE = (
     ROOT / "assets" / "research-framing-outline.md"
 ).read_text(encoding="utf-8")
 RUBRIC = (ROOT / "references" / "contribution-rubric.md").read_text(encoding="utf-8")
+CONTRIBUTION_TYPES = (
+    ROOT / "references" / "hci-contribution-types.md"
+).read_text(encoding="utf-8")
 EVIDENCE = (ROOT / "references" / "evidence-protocol.md").read_text(
     encoding="utf-8"
 )
@@ -131,7 +134,10 @@ CURRENT_PRACTICE_TEMPLATE = (
 RANKED_POSITIONING_TEMPLATE = (
     ROOT / "assets" / "ranked-related-work-positioning.md"
 ).read_text(encoding="utf-8")
-HTML_REPORTS = (ROOT / "references" / "html-reports.md").read_text(
+MARKDOWN_REPORTS = (ROOT / "references" / "markdown-reports.md").read_text(
+    encoding="utf-8"
+)
+REVIEWER_PANEL = (ROOT / "references" / "reviewer-panel.md").read_text(
     encoding="utf-8"
 )
 PROJECT_README = (ROOT / "assets" / "project-readme.md").read_text(
@@ -153,6 +159,61 @@ PHASE_ONE_INSTRUCTIONS = SKILL + "\n" + DETAILED_WORKFLOW
 
 
 class SkillContractTests(unittest.TestCase):
+    def test_hci_contribution_type_taxonomy_is_routed_and_type_specific(self):
+        self.assertIn(
+            "[hci-contribution-types.md](references/hci-contribution-types.md)",
+            SKILL,
+        )
+        for type_name in (
+            "Empirical knowledge",
+            "Artifact",
+            "Methodological knowledge",
+            "Theoretical knowledge",
+            "Dataset",
+            "Survey/meta-analysis",
+            "Opinion/argument",
+        ):
+            self.assertIn(type_name, CONTRIBUTION_TYPES)
+            self.assertIn(type_name, RUBRIC)
+        self.assertIn("primary type", CONTRIBUTION_TYPES)
+        self.assertIn("supporting types", CONTRIBUTION_TYPES)
+        self.assertIn("type-specific", SKILL)
+
+    def test_contributions_are_identified_framed_classified_and_evidence_aligned(self):
+        for stage in ("identify", "frame", "classify", "align evidence"):
+            self.assertIn(stage, CONTRIBUTION_TYPES.lower())
+        for required_field in (
+            "Candidate ID",
+            "Benefit-first candidate",
+            "Reusable output",
+            "Primary type",
+            "Supporting type(s)",
+            "Classification rationale",
+            "strongest rejected alternative",
+            "Closest prior output and exact delta",
+            "Evidence state",
+            "Type-specific evidence gate",
+            "Null-result survivor",
+            "Status and reopen trigger",
+        ):
+            self.assertIn(required_field, CONTRIBUTION_TYPES)
+            self.assertIn(required_field, PHASE_1_WORKBOARD)
+            self.assertIn(required_field, DECISION_PACKET)
+            self.assertIn(required_field, OUTLINE_TEMPLATE)
+        for false_shortcut in (
+            "running a user study",
+            "using interviews",
+            "collecting study data",
+            "organizing Related Work",
+        ):
+            self.assertIn(false_shortcut, CONTRIBUTION_TYPES)
+        self.assertIn("Identify atomic reusable outputs", SKILL)
+        self.assertIn("seven knowledge-oriented types", DETAILED_WORKFLOW)
+        self.assertIn(
+            "three to five author-facing contribution packages",
+            " ".join(PHASE_1_WORKBOARD.split()),
+        )
+
     def test_acm_dl_and_sigchi_related_work_gate_is_required(self):
         self.assertIn("native ACM Digital Library pass", PHASE_ONE_INSTRUCTIONS)
         self.assertIn("[acm-sigchi-related-work.md]", PHASE_ONE_INSTRUCTIONS)
@@ -499,21 +560,21 @@ class SkillContractTests(unittest.TestCase):
             ACTIVE_AUTHOR_COLLABORATION,
         )
         self.assertIn(
-            "Decision-first current-state communication",
-            ACTIVE_AUTHOR_COLLABORATION,
+            "Current state — read this first",
+            AUTHOR_COLLABORATION,
         )
         self.assertIn("Current state — read this first", DETAILED_WORKFLOW)
-        self.assertIn("phase-1-collaboration-workboard.md", HTML_REPORTS)
-        self.assertIn("Its first substantive section", HTML_REPORTS)
+        self.assertIn("phase-1-collaboration-workboard.md", MARKDOWN_REPORTS)
+        self.assertIn("first substantive destination", MARKDOWN_REPORTS)
         for phrase in (
-            "temporary loopback-only static server",
-            "127.0.0.1",
-            "A blocked `file:` URL is not a reason to omit visual",
-            "explicit viewport capability",
-            "stop the server immediately after inspection",
-            "review server to `0.0.0.0`",
+            "Publish Phase 1 as linked Markdown",
+            "Compute paths from",
+            "machine-local absolute path",
+            "Do not generate HTML reports",
+            "visible full-reference entry",
+            "desktop and phone",
         ):
-            self.assertIn(phrase, HTML_REPORTS)
+            self.assertIn(phrase, MARKDOWN_REPORTS)
 
     def test_phase_one_keeps_author_session_live_and_delegates_literature_work(self):
         openai_prompt = (
@@ -566,13 +627,14 @@ class SkillContractTests(unittest.TestCase):
         ):
             self.assertIn(f"`{state}`", SKILL)
 
-    def test_html_reports_and_exemplar_routing_are_required(self):
+    def test_markdown_reports_and_exemplar_routing_are_required(self):
         for report in (
-            "phase-1-progress.html",
-            "literature-and-evidence.html",
-            "phase-1-final.html",
+            "phase-1-progress.md",
+            "literature-and-evidence.md",
+            "phase-1-final.md",
         ):
-            self.assertIn(report, SKILL)
+            self.assertIn(report, PHASE_ONE_INSTRUCTIONS)
+        self.assertNotIn("phase-1-progress.html", SKILL)
         self.assertIn("exemplar-routing.md", SKILL)
         self.assertIn(
             "corresponding section",
@@ -717,6 +779,7 @@ class SkillContractTests(unittest.TestCase):
             "reopen_trigger",
             "terminal_reason",
             "next_action",
+            "identity_verified_against",
         ):
             self.assertIn(column, SOURCE_RESOLUTION_TEMPLATE)
         self.assertIn("Source-resolution state", SOURCE_MANIFEST_TEMPLATE)
@@ -800,25 +863,31 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn("phase.status` to `complete", DETAILED_WORKFLOW)
         self.assertNotIn("/", AGENT_CONTEXT["notebooklm"]["profile"])
 
-    def test_html_reports_require_citation_catalog_and_post_render_audit(self):
+    def test_markdown_reports_require_citation_catalog_and_post_publish_audit(self):
         reports_contract = (
-            ROOT / "references" / "html-reports.md"
+            ROOT / "references" / "markdown-reports.md"
         ).read_text(encoding="utf-8")
         self.assertIn("references.csv", SKILL)
         self.assertIn("audit_phase1_reports.py", SKILL)
         self.assertIn("references.csv", reports_contract)
-        self.assertIn("headed browser", reports_contract)
-        self.assertIn("escaped pipes", reports_contract)
+        self.assertIn("GitHub-Flavored Markdown renderer", reports_contract)
+        self.assertIn("GitHub tables", reports_contract)
         self.assertIn("Author (Year Venue): Short Title", reports_contract)
-        self.assertIn("source-resolution.html", reports_contract)
+        self.assertIn("source-resolution.md", reports_contract)
         for phrase in (
             "[@CitationKey]",
             "unknown key",
             "alias can resolve to more than one work",
-            "full authors, full title, and full",
+            "visible `References` section",
+            "full-reference entry",
+            "exact catalog-backed shorthand",
+            "maps to exactly one stable key",
+            "Ambiguous or uncatalogued surfaces",
             "repository-wide contract test",
         ):
             self.assertIn(phrase, CITATION_INTEGRITY)
+        for phrase in ("**What it did:**", "**How this project differs:**"):
+            self.assertIn(phrase, reports_contract)
 
     def test_workspace_creation_requires_readme_and_initial_audited_reports(self):
         for text in (SKILL, DETAILED_WORKFLOW):
@@ -827,25 +896,37 @@ class SkillContractTests(unittest.TestCase):
             self.assertIn("before every", text.lower())
             self.assertIn("push", text.lower())
         for report in (
-            "phase-1-progress.html",
-            "literature-and-evidence.html",
-            "phase-1-final.html",
-            "artifact-index.html",
+            "phase-1-progress.md",
+            "literature-and-evidence.md",
+            "phase-1-final.md",
+            "artifact-index.md",
         ):
             self.assertIn(report, PROJECT_README)
-            self.assertIn(report, HTML_REPORTS)
+            self.assertIn(report, MARKDOWN_REPORTS)
         self.assertIn("render_phase1_reports.py", WORKSPACE_INITIALIZER)
         self.assertIn("audit_phase1_reports.py", WORKSPACE_INITIALIZER)
+
+    def test_phase_one_readme_uses_iso_24495_1_reader_outcomes(self):
+        plain_language = (ROOT / "references" / "iso-24495-1-plain-language.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("[iso-24495-1-plain-language.md]", SKILL)
+        for phrase in ("relevant", "findable", "understandable", "usable"):
+            self.assertIn(phrase, plain_language)
+            self.assertIn(phrase, MARKDOWN_REPORTS)
+        for phrase in (
+            "HCI-PLAIN-LANGUAGE",
+            "ISO 24495-1:2023",
+            "## At a glance",
+            "## Continue by task",
+        ):
+            self.assertIn(phrase, PROJECT_README)
 
     def test_project_artifacts_never_fall_back_to_the_skill_repository(self):
         self.assertIn("[repository-boundaries.md]", SKILL)
         for phrase in (
             "commit the skill and shared-contract changes",
             "push the commit",
-            "synchronize every existing local installation",
-            "remove stale files",
-            "verify recursive equality",
-            "Never finish a skill-update task",
             "continue only read-only inspection, research, and interactive planning",
             "Do not create",
             "an arbitrary workspace",
@@ -853,7 +934,7 @@ class SkillContractTests(unittest.TestCase):
             self.assertIn(phrase, REPOSITORY_BOUNDARIES)
 
     def test_private_project_stores_do_not_screen_sources_by_copyright(self):
-        for text in (SKILL, REPOSITORY_BOUNDARIES, NOTEBOOKLM, DETAILED_WORKFLOW):
+        for text in (SKILL, NOTEBOOKLM, DETAILED_WORKFLOW):
             normalized = text.lower()
             self.assertIn("private", normalized)
             self.assertIn("copyright", normalized)
@@ -906,6 +987,40 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn("Apply six-field prior-work evidence accounting", POSITIONING)
         self.assertIn("Capability collision", flattened)
         self.assertIn("Contribution attribution", flattened)
+
+    def test_complete_capability_is_not_erased_by_component_subtraction(self):
+        required_texts = (
+            SKILL,
+            DETAILED_WORKFLOW,
+            POSITIONING,
+            PRIOR_WORK_BOUNDARIES,
+            EVIDENCE,
+            CLAIM_FOCUSED_WRITING,
+            RUBRIC,
+            RANKED_POSITIONING_TEMPLATE,
+            AUDIT_TEMPLATE,
+            BOUNDARY_TEMPLATE,
+            OUTLINE_TEMPLATE,
+            PHASE_2_HANDOFF,
+        )
+        for text in required_texts:
+            self.assertIn("human-activity predicate", text.lower())
+
+        for phrase in (
+            "component-subtraction fallacy",
+            "FULL_CAPABILITY_COLLISION",
+            "INDEPENDENT_SUBCAPABILITY_COLLISION",
+            "COMPONENT_OR_MECHANISM_PRECEDENT",
+            "drop-in port",
+            "loose subset of adjectives",
+            "does not narrow the complete capability",
+        ):
+            self.assertIn(phrase.lower(), " ".join(POSITIONING.lower().split()))
+
+        self.assertIn("HUMAN_ACTIVITY_PREDICATES_AND_COLLISION_LEVELS_CHECKED", BOUNDARY_TEMPLATE)
+        self.assertIn("NO_COMPONENT_SUBTRACTION_FALLACY", BOUNDARY_TEMPLATE)
+        self.assertIn("HUMAN_ACTIVITY_PREDICATES_AND_COLLISION_LEVELS_CHECKED", PRIOR_WORK_CHECKER)
+        self.assertIn("NO_COMPONENT_SUBTRACTION_FALLACY", PRIOR_WORK_CHECKER)
 
     def test_ranked_related_work_requires_full_working_positioning_paragraphs(self):
         for text in (SKILL, POSITIONING, RANKED_POSITIONING_TEMPLATE):
@@ -984,8 +1099,8 @@ class SkillContractTests(unittest.TestCase):
             NOTEBOOKLM,
         )
         self.assertIn(
-            "different-problem mechanism collisions",
-            PHASE_ONE_INSTRUCTIONS.lower(),
+            "different-problem component or mechanism precedents",
+            " ".join(PHASE_ONE_INSTRUCTIONS.lower().split()),
         )
 
     def test_related_work_calibrates_capability_and_value_novelty_separately(self):
@@ -1082,9 +1197,9 @@ class SkillContractTests(unittest.TestCase):
             self.assertIn(phrase, SOURCE_MANIFEST_TEMPLATE)
 
     def test_reader_facing_artifact_shelf_keeps_markdown_as_source(self):
-        self.assertIn("artifact-index.html", SKILL)
-        self.assertIn("artifact-index.html", HTML_REPORTS)
-        self.assertIn("authoritative, editable, diffable research record", HTML_REPORTS)
+        self.assertIn("artifact-index.md", PHASE_ONE_INSTRUCTIONS)
+        self.assertIn("artifact-index.md", MARKDOWN_REPORTS)
+        self.assertIn("durable research record", MARKDOWN_REPORTS)
         for source in (
             "phase-1-collaboration-workboard.md",
             "ranked-related-work-positioning.md",
@@ -1103,8 +1218,8 @@ class SkillContractTests(unittest.TestCase):
             "source-resolution.csv",
             "missing-full-copies.md",
         ):
-            self.assertIn(source, HTML_REPORTS)
-        self.assertIn("visible missing-source page", HTML_REPORTS)
+            self.assertIn(source, PHASE_ONE_INSTRUCTIONS + MARKDOWN_REPORTS)
+        self.assertIn("remain visible as `MISSING`", MARKDOWN_REPORTS)
 
     def test_prior_work_boundary_uses_six_independent_fields(self):
         fields = (
@@ -1208,6 +1323,8 @@ class SkillContractTests(unittest.TestCase):
             "IMPORTED_BIBLIOGRAPHY_ACCOUNTED",
             "CLAIM_DEMONSTRATION_OPERATION_EVALUATION_DECOMPOSED",
             "CAPABILITY_COLLISION_AND_CREDIT_SEPARATED",
+            "HUMAN_ACTIVITY_PREDICATES_AND_COLLISION_LEVELS_CHECKED",
+            "NO_COMPONENT_SUBTRACTION_FALLACY",
             "DEMONSTRATED_UNCLAIMED_OPERATIONS_REVIEWED",
             "MIXED_CHANNELS_DECOMPOSED",
             "PORT_CREDIT_GATES_APPLIED",
@@ -1428,6 +1545,28 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn("Approved later short form", TERMINOLOGY_TEMPLATE)
         self.assertIn("Precise construct or metric", AUTHOR_DECISIONS)
         self.assertIn("Approved later short form", AUTHOR_DECISIONS)
+
+    def test_reader_facing_descriptions_lead_with_human_value_before_mechanism(self):
+        normalized_skill = " ".join(SKILL.split())
+        normalized_reviewer = " ".join(REVIEWER_PANEL.split())
+        for phrase in (
+            "Lead with human value before mechanism",
+            "human situation or tension → value people need → capability",
+            "Why should this person\ncare?",
+            "Capability is not benefit",
+            "players whose actions must work together",
+            "different teammates hear the next instruction they need",
+        ):
+            self.assertIn(phrase, CLAIM_FOCUSED_WRITING)
+        self.assertIn("human situation and desired value", normalized_skill)
+        self.assertIn("benefit-first entry sentence", TERMINOLOGY)
+        self.assertIn("Benefit-first entry sentence", TERMINOLOGY_TEMPLATE)
+        self.assertIn("Plain-language, benefit-first explanation", OUTLINE_TEMPLATE)
+        self.assertIn("Plain-language contribution lead", OUTLINE_TEMPLATE)
+        self.assertIn("Benefit-first entry wording", DECISION_PACKET)
+        self.assertIn("human problem and target context", MARKDOWN_REPORTS)
+        self.assertIn("human situation and value it serves", normalized_reviewer)
+        self.assertIn("plain-language, benefit-first lead", DETAILED_WORKFLOW)
 
     def test_internal_evidence_completeness_is_separate_from_reader_facing_caveats(self):
         self.assertIn(

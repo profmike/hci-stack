@@ -98,8 +98,9 @@ Populate the lattice from known project language, index terms, andâ€”criticallyâ
 keywords, abstracts, and Related Work vocabulary of close full papers. Run disjunctive and
 mechanism-only queries as well as target-heavy conjunctions. Saturate the same/similar-problem
 branch independently. A paper addressing a different problem through the same causal mechanism
-may omit the target population and context entirely; retain it as a mechanism/capability collision
-when relevant, but do not rank it as a closest problem comparator.
+may omit the target population and context entirely; retain it as a component/mechanism precedent,
+or as a capability collision only when its complete human-activity predicate or an independently
+claimed sub-capability matches. Do not rank it as a closest problem comparator.
 
 If a query returns hundreds or thousands of records, screening only the first page or first 20
 records never establishes coverage. Refine the query by mechanism dimension, screen additional
@@ -172,8 +173,10 @@ system/intervention, study, findings, Discussion, limitations, and references. R
 - the precise relationship to the current project.
 
 Before calling a paper close overall, record its problem-proximity band. A paper can be a
-claim-specific collision because it shares an exact mechanism or capability while remaining
-adjacent or different in problem, objective, context, and intended outcome.
+claim-specific collision because it shares the complete human-activity predicate or an
+independently claimed consequential sub-capability while remaining adjacent or different in
+problem. A shared device, modality, channel, routing pattern, timing property, or low-level
+mechanism alone is a foundation to credit, not evidence that the complete capability is old.
 
 Before using words such as *gradual*, *progressive*, *adaptive*, *stronger*, *soft*, or *hard*,
 decompose each intervention into independent mechanism dimensions:
@@ -268,7 +271,9 @@ Create `acm-sigchi-related-work-audit.md` from the asset template. Step 5 is com
 - every material prior-work atom has independent author-claim, demonstrated-artifact/study,
   operated-capability, evaluated-result, capability-collision, and contribution-credit fields;
 - capability collision uses only positively operated units, including demonstrated-unclaimed
-  operations, while attributed contribution credit uses claimed-and-demonstrated evidence;
+  operations, and compares complete human-activity predicates before components; full-capability,
+  independent-sub-capability, and component/mechanism overlap are distinguished without qualifier
+  subtraction, while attributed contribution credit uses claimed-and-demonstrated evidence;
 - proposals and future work remain in idea provenance with collision and credit `NONE`; source
   silence creates only search priority or a reopen query;
 - mixed channels are decomposed, package evidence stays at package scope, and whole-system labels

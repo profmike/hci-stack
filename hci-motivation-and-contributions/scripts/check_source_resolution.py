@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import csv
 import re
+import sys
 import unicodedata
 from datetime import date
 from pathlib import Path
@@ -34,6 +35,7 @@ REQUIRED_COLUMNS = (
     "reopen_trigger",
     "terminal_reason",
     "next_action",
+    "identity_verified_against",
 )
 
 ALLOWED_RELEVANCE = {"retain", "exclude", "undecided"}
@@ -254,6 +256,254 @@ def load_reference_registry(path: Path) -> tuple[dict[str, str], list[str]]:
     return registry, errors
 
 
+DOI_PATTERN = re.compile(r"10\.\d{4,9}/[^\s|,;\"'<>)\]]+")
+
+
+def extract_doi(text: str) -> str:
+    """Return the first DOI in ``text``, normalized for comparison."""
+    match = DOI_PATTERN.search(text or "")
+    if not match:
+        return ""
+    return match.group(0).rstrip(".").lower()
+
+
+def check_imported_identifier_agreement(
+    path: Path,
+    rows: list[dict[str, str]],
+) -> list[str]:
+    """Fail when an imported bibliography row and its resolution row disagree on the DOI.
+
+    A supplied bibliography is a discovery seed, so neither side is authoritative on its
+    own. A disagreement means one of the two was transcribed wrong, and a wrong DOI sends
+    the author to the wrong paper. Resolve it against the obtained full copy, then make
+    both records say the same thing.
+    """
+    imported_path = path.parent / "imported-bibliography-accountability.csv"
+    if not imported_path.is_file():
+        return []
+
+    by_source_id = {row["source_id"]: row for row in rows if row.get("source_id")}
+    by_citation_key: dict[str, dict[str, str]] = {}
+    for row in rows:
+        key = row.get("citation_key") or ""
+        if key and key not in by_citation_key:
+            by_citation_key[key] = row
+
+    errors: list[str] = []
+    with imported_path.open(newline="", encoding="utf-8-sig") as handle:
+        for index, raw in enumerate(csv.DictReader(handle), start=2):
+            record = {
+                column: (value or "").strip() for column, value in raw.items() if column
+            }
+            imported_doi = extract_doi(record.get("bibliographic_identity", ""))
+            if not imported_doi:
+                continue
+            resolution = by_source_id.get(record.get("source_resolution_id", ""))
+            if resolution is None:
+                resolution = by_citation_key.get(record.get("citation_key", ""))
+            if resolution is None:
+                continue
+            resolved_doi = extract_doi(resolution.get("canonical_url", ""))
+            if not resolved_doi or resolved_doi == imported_doi:
+                continue
+            if resolved_doi.startswith(imported_doi) or imported_doi.startswith(
+                resolved_doi
+            ):
+                # A book DOI against one of its chapter DOIs is a granularity choice,
+                # not a transcription error. Record which artifact is held; do not fail.
+                continue
+            label = record.get("accountability_id") or f"row {index}"
+            errors.append(
+                f"imported bibliography {label} and source-resolution row "
+                f"{resolution['source_id']} ({resolution.get('citation_key', '')}) "
+                f"disagree on the DOI: imported '{imported_doi}' against resolved "
+                f"'{resolved_doi}'. One of them is a transcription error and it will "
+                "send the author to the wrong paper. Resolve it against the obtained "
+                "full copy or a registry lookup, then correct both records"
+            )
+    return errors
+
+
+SOURCE_ID_PATTERN = re.compile(r"\bSR-\d{2,4}\b")
+
+
+def check_access_queue_agreement(
+    path: Path,
+    rows: list[dict[str, str]],
+) -> list[str]:
+    """Fail when the author-facing access queue still asks for an obtained source.
+
+    ``missing-full-copies.md`` is the page an author actually works from. When a row
+    resolves in the ledger but its prose section is never updated, the queue keeps asking
+    for a paper that is already in the corpus, and the author spends a library trip on it.
+    """
+    queue_path = path.parent / "missing-full-copies.md"
+    if not queue_path.is_file():
+        return []
+
+    state_by_id = {
+        row["source_id"]: row["acquisition_state"].upper()
+        for row in rows
+        if row.get("source_id")
+    }
+    text = queue_path.read_text(encoding="utf-8")
+    errors: list[str] = []
+    for line in text.splitlines():
+        if not line.lstrip().startswith("#"):
+            continue
+        for source_id in SOURCE_ID_PATTERN.findall(line):
+            state = state_by_id.get(source_id)
+            if state and state != "NEEDS_AUTHOR_SOURCE_ACCESS":
+                errors.append(
+                    f"missing-full-copies.md still carries a section for {source_id}, "
+                    f"but its source-resolution state is {state}. An author reading this "
+                    "queue would be sent after a source that is already resolved: close "
+                    "the section and record how it resolved"
+                )
+    return errors
+
+
+BROADCAST_PAGES = ("source-manifest.md", "missing-full-copies.md")
+
+
+def check_identifier_broadcast_agreement(
+    path: Path,
+    rows: list[dict[str, str]],
+) -> list[str]:
+    """Fail when an author-facing page prints a different DOI than the ledger holds.
+
+    Every DOI an author acts on is copied out of the ledger into prose: a manifest row, an
+    access-request table, a reading list. Those copies do not update themselves. A stale or
+    mistyped copy sends the author to the wrong article and the error is invisible until
+    the wrong PDF arrives, so each printed DOI is checked back against its source row.
+
+    A line may quote a superseded identifier on purpose when it is recording the correction.
+    Such a line must say so, using the word ``CORRECTION``, and it is then exempt.
+    """
+    def normalize(doi: str) -> str:
+        """A DOI is case-insensitive, and prose wraps it in punctuation."""
+        return doi.strip().rstrip(".,;:)]}`'\"").casefold()
+
+    doi_by_id: dict[str, str] = {}
+    doi_by_key: dict[str, str] = {}
+    for row in rows:
+        doi = normalize(extract_doi(row.get("canonical_url", "")))
+        if not doi:
+            continue
+        if row.get("source_id"):
+            doi_by_id[row["source_id"]] = doi
+        if row.get("citation_key"):
+            doi_by_key[row["citation_key"]] = doi
+
+    errors: list[str] = []
+    for page in BROADCAST_PAGES:
+        page_path = path.parent / page
+        if not page_path.is_file():
+            continue
+        for number, line in enumerate(page_path.read_text(encoding="utf-8").splitlines(), 1):
+            if "CORRECTION" in line:
+                continue
+            printed = {normalize(doi) for doi in DOI_PATTERN.findall(line)}
+            if not printed:
+                continue
+            expected = {
+                doi_by_id[source_id]
+                for source_id in SOURCE_ID_PATTERN.findall(line)
+                if source_id in doi_by_id
+            }
+            expected |= {
+                doi for key, doi in doi_by_key.items() if key and key in line
+            }
+            if not expected:
+                continue
+            stray = printed - expected
+            if stray:
+                errors.append(
+                    f"{page}:line {number}: prints DOI(s) {', '.join(sorted(stray))} for a "
+                    f"source whose ledger DOI is {', '.join(sorted(expected))}. An author "
+                    "acting on this page would fetch the wrong article: correct the page, or "
+                    "mark the line as a recorded CORRECTION"
+                )
+    return errors
+
+
+# A recorded identity check has to name where in the held copy it was read. These tokens are
+# what a real locator looks like; a bare date or a bare "yes" is not one.
+IDENTITY_LOCATOR_PATTERN = re.compile(
+    r"\b(p{1,2}\.?\s*\d|page\s*\d|pp\b|title page|first page|front matter|cover sheet|"
+    r"masthead|byline|colophon|§|section\s|abstract page|running head)",
+    re.IGNORECASE,
+)
+
+
+def check_identity_verification(rows: list[dict[str, str]]) -> list[str]:
+    """Fail when a held full copy's identity was never read off the copy itself.
+
+    Wrong authors, wrong titles, and wrong page ranges enter a project the same way every
+    time: someone types the identity out of a bibliography, a database record, or another
+    paper's reference list, and nobody ever opens the held PDF's own front matter to
+    contradict it. Those errors survive every consistency check, because every copy of the
+    identity descends from the same bad transcription.
+
+    A row that holds a full copy therefore has to record where in that copy the identity was
+    read: a page, a title page, a masthead. The DOI checks compare copies of a value against
+    each other; this one is the only check that reaches the paper.
+
+    A source whose copy is an unsearchable scan is not exempt. Record that it was read
+    visually and name the page.
+    """
+    errors: list[str] = []
+    for index, row in enumerate(rows, start=2):
+        if not row.get("full_copy_locator", "").strip():
+            continue
+        source_id = row.get("source_id") or f"row {index}"
+        recorded = row.get("identity_verified_against", "").strip()
+        if is_placeholder(recorded):
+            errors.append(
+                f"{source_id}: a full copy is held but identity_verified_against is empty. "
+                "Open the copy, read its own front matter, and record where the authors, "
+                "title, year, venue, and pages were read, for example "
+                "'held copy p.1 title page, 2026-08-05'. Never copy an identity out of "
+                "another work's bibliography"
+            )
+        elif not IDENTITY_LOCATOR_PATTERN.search(recorded):
+            errors.append(
+                f"{source_id}: identity_verified_against is {recorded!r}, which names no "
+                "place in the held copy. Record the page or front-matter element the "
+                "identity was read from, for example 'held copy p.1 byline'"
+            )
+    return errors
+
+
+def check_source_manifest_generated(path: Path) -> list[str]:
+    """Fail when the manifest's ledger-derived columns disagree with the ledger.
+
+    The manifest used to hold a hand-typed second copy of every identifier. Those columns
+    are generated now, by ``render_source_manifest.py``. This check runs the same derivation
+    and reports any cell that has drifted, so the duplicate cannot come back.
+    """
+    manifest = path.parent / "source-manifest.md"
+    if not manifest.is_file():
+        return []
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        from render_source_manifest import render  # noqa: PLC0415
+    except Exception as error:  # pragma: no cover - defensive
+        return [f"could not load render_source_manifest.py: {error}"]
+    try:
+        _, changes = render(path.parent)
+    except SystemExit as error:
+        return [f"source-manifest.md could not be rendered: {error}"]
+    if not changes:
+        return []
+    return [
+        "source-manifest.md disagrees with source-resolution.csv in "
+        f"{len(changes)} place(s); the manifest's ledger-derived columns are generated. "
+        "Run render_source_manifest.py to regenerate them. First disagreement: "
+        + changes[0]
+    ]
+
+
 def validate(
     path: Path,
     *,
@@ -270,9 +520,19 @@ def validate(
         fieldnames = tuple(reader.fieldnames or ())
         missing = [column for column in REQUIRED_COLUMNS if column not in fieldnames]
         if missing:
+            detail = ""
+            if "identity_verified_against" in missing:
+                detail = (
+                    " Add the 'identity_verified_against' column and, for every row that "
+                    "holds a full copy, record where in that copy the identity was read, "
+                    "for example 'held copy p.1 title page, 2026-08-05'. An identity typed "
+                    "out of another work's bibliography is how wrong authors, titles, and "
+                    "page ranges enter a project unchallenged."
+                )
             return [
                 "source-resolution queue is missing required column(s): "
                 + ", ".join(missing)
+                + detail
             ], warnings, 0
         rows = [
             {column: (value or "").strip() for column, value in row.items()}
@@ -563,6 +823,12 @@ def validate(
                 f"row {index} ({source_id}): superseded_by '{replacement}' must resolve "
                 "to a source with a stable citation_key"
             )
+
+    errors.extend(check_imported_identifier_agreement(path, rows))
+    errors.extend(check_access_queue_agreement(path, rows))
+    errors.extend(check_identifier_broadcast_agreement(path, rows))
+    errors.extend(check_identity_verification(rows))
+    errors.extend(check_source_manifest_generated(path))
 
     if phase_ready and not rows:
         errors.append("phase-ready source-resolution queue has no source records")

@@ -20,6 +20,9 @@ def base_row() -> dict[str, str]:
         {
             "source_provenance": "independent concept search",
             "candidate_role": "motivation evidence",
+            # Any fixture holding a full copy must also say where its identity was read, so
+            # the default carries a real locator instead of tripping every unrelated case.
+            "identity_verified_against": "held copy p.1 title page, 2026-01-01",
         }
     )
     return row
@@ -672,6 +675,68 @@ class SourceResolutionTests(unittest.TestCase):
             "placeholder value '**pending**' for upgrade_search",
         ):
             self.assertTrue(any(phrase in error for error in errors), errors)
+
+    def test_held_copy_requires_identity_read_off_that_copy(self):
+        """A held full copy whose identity was never read off it does not pass.
+
+        This is the only check that reaches the paper itself. Every other identity check
+        compares copies of a value against each other, so a single bad transcription out of
+        somebody else's bibliography propagates cleanly through all of them.
+        """
+        row = base_row()
+        row.update(
+            {
+                "source_id": "SR-001",
+                "citation_key": "held-work",
+                "bibliographic_identity": "Held Work",
+                "canonical_url": "https://doi.org/10.0000/held",
+                "relevance": "retain",
+                "acquisition_state": "FULL_TEXT_ASSESSED",
+                "full_copy_locator": "sources/full-text/held-work.pdf",
+                "full_text_review_locator": "reviews/held-work.md",
+                "evidence_register_locator": "prior-work-evidence-accounting.csv PW-001",
+                "upgrade_search": "searched for a stronger direct source; none found",
+                "identity_verified_against": "",
+            }
+        )
+        errors, _, _ = self.validate_rows([row])
+        self.assertTrue(
+            any("identity_verified_against is empty" in error for error in errors), errors
+        )
+
+        # A bare assertion is not a locator: it names no place in the copy.
+        row["identity_verified_against"] = "verified"
+        errors, _, _ = self.validate_rows([row])
+        self.assertTrue(
+            any("names no place in the held copy" in error for error in errors), errors
+        )
+
+        # An unsearchable scan is not exempt; it is read visually and the page recorded.
+        row["identity_verified_against"] = "scan not machine-readable; read visually, p.1"
+        errors, _, _ = self.validate_rows([row])
+        self.assertFalse(
+            any("identity_verified_against" in error for error in errors), errors
+        )
+
+    def test_identity_verification_is_not_demanded_before_a_copy_is_held(self):
+        """A row with no full copy has nothing to read, so the check stays silent."""
+        row = base_row()
+        row.update(
+            {
+                "source_id": "SR-002",
+                "citation_key": "blocked-work",
+                "bibliographic_identity": "Blocked Work",
+                "canonical_url": "https://doi.org/10.0000/blocked",
+                "relevance": "undecided",
+                "acquisition_state": "ACQUIRING",
+                "next_action": "request through the university library proxy",
+                "identity_verified_against": "",
+            }
+        )
+        errors, _, _ = self.validate_rows([row])
+        self.assertFalse(
+            any("identity_verified_against" in error for error in errors), errors
+        )
 
 
 if __name__ == "__main__":

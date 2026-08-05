@@ -35,7 +35,7 @@ For every material atom, record all six fields independently. No field inherits 
 | `DEMONSTRATED ARTIFACT OR STUDY` | Was the exact atom instantiated or studied with matched evidence at the claimed rung? | The claim itself, venue prestige, a nearby measure, an architecture diagram alone, or a package result used for one component. |
 | `OPERATED CAPABILITY` | Did an artifact actually perform the named operation in a concrete execution, technical test, study condition, official demonstration, or inspectable implementation record? | Mock-ups, scenarios, intended affordances, plausible architecture, or unverified implementation prose. |
 | `EVALUATED RESULT` | Did an evaluation directly measure the named result, with method, comparator, construct, scope, and uncertainty appropriate to the wording? | Operation alone, nonsignificance, proxy measures, or a bundled condition used for component causality. |
-| `CAPABILITY COLLISION` | Does a positively demonstrated operated unit overlap the focal capability at that same unit and scope? | A claim, proposal, source silence, platform label, or broader category name. |
+| `CAPABILITY COLLISION` | Does a positively demonstrated operated unit overlap the same complete human-activity predicate or an independently claimed consequential sub-capability? | A claim, proposal, source silence, platform label, broader category name, or loose subset of generic qualifiers. |
 | `CONTRIBUTION CREDIT` | What exact claimed-and-demonstrated capability or knowledge may fairly be attributed to the work? | Collision alone, operation the authors did not claim, a port by itself, or analyst interpretation. |
 
 Keep the familiar `Claimed`, `Demonstrated`, and `Capability` tags only as shorthand views over the
@@ -46,20 +46,69 @@ first three fields. The six-field ledger is canonical.
 These are different decisions:
 
 - A capability is prior art only when positive evidence shows that the exact operation actually
-  ran. It may create `EXACT` or `PARTIAL` capability collision even when the authors never claimed
-  it as a contribution.
+  ran. It creates `EXACT` full-capability collision only when the complete human-activity predicate
+  matches, or `PARTIAL` collision when an independently consequential sub-capability matches, even
+  when the authors never claimed it as a contribution. A component or generic qualifier alone is a
+  precedent, not a collision with the complete capability.
 - Contribution credit requires an explicit author claim and matched demonstration. For an
   artifact-capability atom, it also requires demonstrated operation. Give credit only to the
   matched intersection and bound it to the weakest supported people, activity, artifact version,
   data, comparator, construct, causal rung, and timeframe.
 
 Record an operated but unclaimed atom as `DEMONSTRATED_UNCLAIMED`. It can retire or narrow a
-capability-level firstness claim, force a fair comparator, or show inheritance. It receives
-`CONTRIBUTION CREDIT=NONE` and must not be written as the authors' claimed contribution.
+firstness claim only at its matched full-predicate or independently claimed sub-capability scope,
+force a fair comparator, or show component inheritance. It receives `CONTRIBUTION CREDIT=NONE` and
+must not be written as the authors' claimed contribution.
 
 Record a claimed but undemonstrated atom as `CLAIMED_UNDEMONSTRATED`. It receives
 `CAPABILITY COLLISION=NONE` and `CONTRIBUTION CREDIT=NONE` unless separate positive evidence
 demonstrates the operation. A claim is not evidence for itself.
+
+### An idea without a demonstration or a study collides with nothing
+
+A proposed idea, concept, design sketch, scenario, architecture, or intended affordance creates
+**no capability collision and no contribution credit**, at any scope. It cannot retire, narrow, or
+pre-empt a focal capability, and it cannot force a comparator. Record
+`CAPABILITY COLLISION=NONE`, `CONTRIBUTION CREDIT=NONE`, and `CLAIMED_UNDEMONSTRATED`. This holds no
+matter how closely the idea resembles the focal atom, how early it was published, or how well known
+the authors are. Priority of an idea is a Discussion-section courtesy, routed to
+`idea-provenance-ledger.csv`; it is not prior art for a capability.
+
+Venue is the prompt to check this, never the verdict. Formats that frequently carry an idea with no
+matched demonstration or study include:
+
+- posters and poster abstracts;
+- CHI Extended Abstracts, Late-Breaking Work, and Work-in-Progress;
+- demo and video abstracts;
+- workshop position papers;
+- vision, provocation, and *alt.chi* papers;
+- preprints, tech reports, and patents describing an intended system;
+- future-work sections and figures in an otherwise-demonstrating paper.
+
+Run the check on the content, not the label, and record which way it went:
+
+1. **Did an artifact actually run the named operation?** A concrete execution, technical test, study
+   condition, official demonstration, or inspectable implementation record counts. A figure of a
+   planned system, a storyboard, a Wizard-of-Oz stand-in for the operation under audit, or prose
+   asserting that it was built does not.
+2. **Did an evaluation directly measure the named result?** A formative walkthrough with no measured
+   construct, an author's impression, or a pilot reported without method, N, or comparator does not.
+
+If both answers are no, the work is an idea. Stop there: it takes `NONE` in both the collision and
+the credit column, and no further diffing is needed.
+
+If either answer is yes, audit the demonstrated part **at its own small scope** and only that part.
+A four-page extended abstract that ran a working prototype and reports a five-person formative test
+has positively operated a capability, and the short format never discounts what it actually ran. It
+also never inflates it: the collision scope is the operation that ran, and the evaluated-result
+scope is the construct that was measured, with its N and its comparator.
+
+Two errors this rule prevents, in both directions:
+
+- treating an early concept paper as though it had already delivered the capability, which retires a
+  real contribution against nothing;
+- dismissing a short paper that did build and test something, which hides a genuine collision behind
+  a page count.
 
 For non-artifact empirical, design, methodological, or theoretical knowledge, use
 `OPERATED CAPABILITY=N/A`; matched evaluation or study evidence can still support contribution
@@ -88,6 +137,121 @@ Examples:
 
 These examples illustrate unit discipline. Project-specific terminology still requires an
 operational definition and full-source evidence.
+
+## Do not confuse an atomic operation with a complete capability
+
+Atomic evidence is necessary for collision analysis but is not sufficient to collide with a
+complete human capability. Write both the focal and prior capability as a human-activity predicate:
+
+`people/roles → meaningful action or information relationship → focal activity → immediate purpose
+→ essential interdependence, semantics, timing, and control`
+
+Then label the overlap:
+
+- `FULL_CAPABILITY_COLLISION`: every core predicate dimension matches; record `EXACT`.
+- `INDEPENDENT_SUBCAPABILITY_COLLISION`: a named, separately consequential sub-capability claimed by
+  the focal project matches; record `PARTIAL`.
+- `COMPONENT_OR_MECHANISM_PRECEDENT`: only a device, modality, channel, routing pattern, timing
+  property, topology, or low-level mechanism matches; record `NONE` for the complete capability and
+  credit the inherited component.
+- `NO_COLLISION`: no positively operated capability overlaps at a claimed level; record `NONE`.
+
+Run a removal test—would deleting the dimension change what people can meaningfully do?—and a
+drop-in-port test—could the prior mechanism unchanged support the focal semantics,
+interdependence, and purpose? A loose subset of adjectives such as `live`, `multi-user`, `physical`,
+`different outputs`, or `audio` is not an independent sub-capability. Do not perform the
+**component-subtraction fallacy** by using separately familiar components to erase a novel complete
+capability. Conversely, a new domain noun does not rescue novelty when the same prior capability
+ports unchanged.
+
+## What counts as a collision: decision procedure
+
+A collision is not "these two things resemble each other." It is a finding that prior work already
+delivered the same capability to the same people for the same purpose under the same essential
+constraints. Run these three steps in order, and record the answer to each.
+
+**Step 1. Write both predicates in full, then diff them dimension by dimension.** Write the prior
+work's predicate from what its authors actually operated, and the focal predicate from what the
+focal system actually operates. Diff every dimension: who the people are, what they do, on what
+display and hardware, what signal the system emits, what consumes that signal, what else is running
+at the same time, and what constraint bounds the whole arrangement. A shared *mechanism* will
+usually survive this diff. That is expected and is not yet a collision.
+
+**Step 2. For every dimension that differs, decide whether the difference is load-bearing.** Apply
+both tests, and state the result of each:
+
+- *Removal test*: delete the dimension. Does what people can meaningfully do change? If yes, the
+  dimension is load-bearing.
+- *Drop-in-port test*: could the prior mechanism, unchanged, deliver the focal semantics, timing,
+  interdependence, and purpose? If it would need redesign rather than reconfiguration, the
+  difference is load-bearing.
+
+**Step 3. Label the result. Only the first two labels are collisions.**
+
+- `FULL_CAPABILITY_COLLISION` — every core predicate dimension matches, and no surviving difference
+  is load-bearing. This is a collision. Record `EXACT`.
+- `INDEPENDENT_SUBCAPABILITY_COLLISION` — a sub-capability that the focal project claims separately
+  and consequentially matches in full. This is a collision at that sub-capability's scope only, and
+  never at the scope of the whole system. Record `PARTIAL`.
+- `COMPONENT_OR_MECHANISM_PRECEDENT` — a device, modality, transfer function, control law, routing
+  pattern, timing property, or topology matches, but at least one load-bearing dimension differs.
+  **This is not a collision.** Record `CAPABILITY COLLISION=NONE` and credit the inherited component.
+- `NO_COLLISION` — nothing positively operated overlaps at a claimed level. Record `NONE`.
+
+Before Step 1, apply the idea gate above. If nothing was operated and nothing was measured, the
+answer is `NO_COLLISION` and the three steps do not run.
+
+### The mechanism-precedent trap
+
+The most common failure in this workflow is finding a shared mechanism and reporting it as though
+the focal capability were retired. Guard against it explicitly:
+
+- A mechanism precedent **never** retires a capability, a technique, or a contribution. It bounds
+  what may be claimed as *new mechanism*, and it obliges citation and a fair comparator. Nothing more.
+- Do not write "X is Y", "X already does this", or "this retires X" on the strength of a mechanism
+  precedent. Write "X inherits Y's control law; the difference is Z", and then say whether Z is
+  load-bearing.
+- Do not report collisions on one ordered severity scale that mixes precedents with collisions. A
+  scale that runs `FULL > SUB-CAPABILITY > COMPONENT-PRECEDENT > NONE` invites a reader to treat a
+  precedent as a weak collision. It is not a weak collision; it is a `NONE` with an inherited
+  component. Report the collision label and the component-inheritance note as two separate fields.
+- Restating the prior work in the focal project's own vocabulary makes a match look tighter than it
+  is. Quote the prior authors' own description of what they operated, then diff against the focal
+  description. Never diff two paraphrases you wrote yourself.
+
+### Worked example: a shared control law is usually a precedent, not a collision
+
+Prior work: in a surrounding projected display, the horizontal vector from the room centre to the
+user's tracked head position drives travel; a neutral zone suppresses small displacements; speed
+rises linearly with distance from that zone and saturates. Inside the neutral zone the display's
+viewpoint stays coupled one-to-one to the head.
+
+Focal work: the player's ground position, sensed by webcams, is converted into an analog-stick
+deflection that is injected into an unmodified commercial console game shown on a fixed television,
+while a separate head-orientation channel drives the in-game camera through a bounded gain curve.
+
+The control law matches: displacement from a calibrated centre, dead zone, proportional gain,
+saturation. Run step 2 on what differs:
+
+- The emitted signal is a *stick deflection consumed by a game whose own transfer function,
+  camera behaviour, and animation state sit downstream*, not a velocity applied directly to a
+  viewpoint. Removal test: yes, load-bearing — the designer no longer controls the final motion.
+- The display is fixed and does not surround the player, so the view channel cannot stay head-coupled
+  and must instead be bounded by what the player can still see. Removal test: yes, load-bearing —
+  it changes what the person can do with their head.
+- A second body channel runs concurrently. Removal test: yes, load-bearing.
+- Drop-in-port test: the prior mechanism cannot be reconfigured into this arrangement; it assumes a
+  surrounding display and a tracked head as the position source.
+
+Label: `COMPONENT_OR_MECHANISM_PRECEDENT`, therefore `CAPABILITY COLLISION=NONE` for the focal
+capability, with the control law recorded as inherited and requiring citation. The correct sentence
+is "the focal mapping inherits this control law and must cite it and compare against it", not "the
+focal mapping is that technique."
+
+Note what this does and does not settle. It does not by itself make the focal mapping a
+contribution: inherited-mechanism plus load-bearing differences earns credit only through a
+demonstrated nontrivial adaptation, a demonstrated new use class, or a directly validated empirical
+finding. Collision and credit remain separate decisions.
 
 ## Decompose mixed and hybrid systems
 
@@ -152,7 +316,8 @@ accounting row so the claim and exclusion are visible; optionally cross-referenc
 Normalize away hardware, sensor, operating system, app, game, and delivery-platform labels. A port
 or reimplementation receives `CONTRIBUTION CREDIT=NONE` by default, even when it required
 substantial engineering. It can still create a capability collision when the underlying operation
-ran.
+ran at the same full-predicate or independently claimed sub-capability scope; otherwise it is a
+component precedent.
 
 Credit survives only when complete-source evidence demonstrates at least one of:
 
@@ -197,8 +362,10 @@ paper:
 
 ## Reader-facing use
 
-Use capability collisions to bound capability novelty and fair-comparator claims. Use contribution
-credit to describe what the prior authors contributed. Never substitute one for the other.
+Use full-predicate and independent-sub-capability collisions to bound capability novelty and fair-
+comparator claims. Use component/mechanism precedents to show inheritance without implying that the
+complete capability is old. Use contribution credit to describe what the prior authors contributed.
+Never substitute one for another.
 
 In prose:
 
@@ -209,3 +376,25 @@ In prose:
 - describe package-level results at package scope;
 - describe ports only through the adaptation gate they actually pass; and
 - state unresolved source boundaries without converting silence into absence.
+
+## The idea gate
+
+An idea with no demonstration and no study collides with nothing. A proposed concept, design
+sketch, scenario, or intended affordance takes `CAPABILITY COLLISION=NONE` and
+`CONTRIBUTION CREDIT=NONE` at every scope, however closely it resembles the focal atom. It cannot
+retire or narrow a focal capability and cannot force a comparator.
+
+Posters, CHI Extended Abstracts, Late-Breaking Work, Work-in-Progress, demo and video abstracts,
+workshop position papers, vision and provocation papers, preprints, tech reports, and patents are
+the formats where this arises most often. Treat the venue as the prompt to check and never as the
+verdict, in either direction. A short paper that built something and measured something is audited
+on what it ran and measured, exactly like a full paper, and receives no page-count discount. A full
+paper at a strong venue that only proposed something is still an idea.
+
+Ask two questions and nothing else:
+
+1. Did an artifact actually run the named operation?
+2. Did an evaluation directly measure the named result?
+
+If both answers are no, stop and record `NONE` in both columns. If either is yes, audit the
+demonstrated part at its own small scope, and credit nothing beyond what it ran and measured.

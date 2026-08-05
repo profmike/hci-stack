@@ -8,6 +8,15 @@ Last verified:
 Human-facing evidence-map source/note:
 Notebook maintenance record:
 
+Eight columns of the table below are **generated** from `source-resolution.csv`: Source ID,
+Citation key, Bibliographic identity, DOI/canonical URL, Canonical repository location,
+Source-resolution state/locator, Claim-matched upgrade search / stronger source, and Author-access
+request surfaced date/locator. Never edit them by hand — an identifier stored twice will diverge,
+and the copy the author acts on is the one that goes wrong. Run
+`python3 scripts/render_source_manifest.py PROJECT_DIR` after any ledger change;
+`check_source_resolution.py` fails on drift. The remaining columns are judgements no ledger holds:
+they stay hand-maintained, and regeneration preserves them untouched.
+
 | Source ID | Citation key | Bibliographic identity | Tier | Directness | DOI/canonical URL | Canonical repository location | Added | Ingestion status | Source-resolution state/locator | Original checked | Present in author draft? | Found independently by skill? | Discovery route | Claim-matched upgrade search / stronger source | Author-access request surfaced date/locator | Provenance verified by/date | Notes |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 
