@@ -77,7 +77,10 @@ class Phase1MarkdownPublicationTests(unittest.TestCase):
             "ranked-related-work-positioning.md": "# Ranked work\n\nExample [@Example2024].\n",
             "prior-work-contribution-boundary.md": "# Prior-work boundary\n\nBounded.\n",
             "citation-chain-log.md": "# Citation chain\n\nComplete.\n",
-            "research-framing-outline.md": "# Research framing outline\n\nDirection is planned.\n",
+            "research-framing-outline.md": (
+                "# Research framing outline\n\nDirection is planned.\n\n"
+                "## 6. Selected approach hypothesis\n\nApproach remains planned.\n"
+            ),
             "phase-2-handoff.md": "# Phase 2 handoff\n\nOptional and incomplete.\n",
         }.items():
             path = self.root / relative
@@ -167,6 +170,94 @@ class Phase1MarkdownPublicationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "unknown citation key"):
             self.publish()
 
+    def test_completed_phase_fails_when_research_gates_are_open_or_templated(self):
+        (self.root / "agent-context.json").write_text(
+            '{"phase": {"status": "complete"}}\n', encoding="utf-8"
+        )
+        (self.root / "motivation-claim-research-queue.md").write_text(
+            "# Queue\n\nStatus: `NEEDS_MOTIVATION_CLAIM_RESEARCH`\n\n"
+            "Last sweep: YYYY-MM-DD\n\n- [ ] Search remains open.\n",
+            encoding="utf-8",
+        )
+        errors: list[str] = []
+        AUDIT.audit_phase_completion(self.root, errors)
+        combined = "\n".join(errors)
+        self.assertIn("requires Status `MOTIVATION_CLAIM_AUDIT_COMPLETE`", combined)
+        self.assertIn("research gate item(s) remain unchecked", combined)
+        self.assertIn("template placeholder 'YYYY-MM-DD' remains", combined)
+
+    def test_completed_phase_accepts_terminal_populated_research_gates(self):
+        (self.root / "agent-context.json").write_text(
+            '{"phase": {"status": "complete"}}\n', encoding="utf-8"
+        )
+        terminal = {
+            "motivation-claim-research-queue.md": (
+                "MOTIVATION_CLAIM_AUDIT_COMPLETE",
+                None,
+                "Last sweep",
+            ),
+            "acm-sigchi-related-work-audit.md": (
+                "ACM_SIGCHI_LANDSCAPE_AUDITED",
+                "ACM_SIGCHI_LANDSCAPE_AUDITED",
+                "Last checked",
+            ),
+            "related-work-search-recall-audit.md": (
+                "RELATED_WORK_SEARCH_RECALL_AUDITED",
+                "RELATED_WORK_SEARCH_RECALL_AUDITED",
+                "Last checked",
+            ),
+        }
+        for relative, (status, gate, date_label) in terminal.items():
+            gate_line = f"\nGate: `{gate}`\n" if gate else ""
+            (self.root / relative).write_text(
+                f"# Gate\n\nStatus: `{status}`\n\n{date_label}: 2026-08-09\n"
+                f"{gate_line}\n- [x] Completed.\n",
+                encoding="utf-8",
+            )
+        errors: list[str] = []
+        AUDIT.audit_phase_completion(self.root, errors)
+        self.assertEqual(errors, [])
+
+    def test_completed_phase_rejects_superficially_closed_real_gate_templates(self):
+        (self.root / "agent-context.json").write_text(
+            '{"phase": {"status": "complete"}}\n', encoding="utf-8"
+        )
+        replacements = {
+            "motivation-claim-research-queue.md": (
+                "NEEDS_MOTIVATION_CLAIM_RESEARCH",
+                "MOTIVATION_CLAIM_AUDIT_COMPLETE",
+                "Last sweep: YYYY-MM-DD",
+                "Last sweep: 2026-08-09",
+            ),
+            "acm-sigchi-related-work-audit.md": (
+                "NEEDS_ACM_SIGCHI_LANDSCAPE_RESEARCH",
+                "ACM_SIGCHI_LANDSCAPE_AUDITED",
+                "Last checked:",
+                "Last checked: 2026-08-09",
+            ),
+            "related-work-search-recall-audit.md": (
+                "NEEDS_RELATED_WORK_SEARCH_RECALL_AUDIT",
+                "RELATED_WORK_SEARCH_RECALL_AUDITED",
+                "Last checked: YYYY-MM-DD",
+                "Last checked: 2026-08-09",
+            ),
+        }
+        for relative, (open_status, terminal_status, old_date, new_date) in replacements.items():
+            source = (ROOT / "assets" / relative).read_text(encoding="utf-8")
+            source = source.replace(
+                f"Status: `{open_status}`", f"Status: `{terminal_status}`", 1
+            )
+            source = source.replace(old_date, new_date, 1).replace("- [ ]", "- [x]")
+            (self.root / relative).write_text(source, encoding="utf-8")
+
+        errors: list[str] = []
+        AUDIT.audit_phase_completion(self.root, errors)
+        combined = "\n".join(errors)
+        self.assertIn("requires Gate `ACM_SIGCHI_LANDSCAPE_AUDITED`", combined)
+        self.assertIn("requires Gate `RELATED_WORK_SEARCH_RECALL_AUDITED`", combined)
+        self.assertIn("blank table cell", combined)
+        self.assertIn("unfinished table value", combined)
+
     def test_casefold_duplicate_catalog_key_fails_closed(self):
         self.write_catalog(duplicate_casefold=True)
         with self.assertRaisesRegex(ValueError, "case-folding"):
@@ -180,7 +271,7 @@ class Phase1MarkdownPublicationTests(unittest.TestCase):
         self.assertIn("[Phase 1 index](../reports/artifact-index.md)", source)
         self.assertIn("[Live workboard](../phase-1-collaboration-workboard.md)", source)
 
-    def test_fenced_and_inline_code_tokens_remain_literal_and_are_not_citations(self):
+    def test_fenced_tokens_remain_literal_but_inline_citation_tokens_are_published(self):
         path = self.root / "search-log.md"
         path.write_text(
             "# Search log\n\nUse `[@Example2024]` in migration examples.\n\n"
@@ -189,9 +280,47 @@ class Phase1MarkdownPublicationTests(unittest.TestCase):
         )
         self.publish()
         source = path.read_text(encoding="utf-8")
-        self.assertEqual(source.count("[@Example2024]"), 2)
+        self.assertEqual(source.count("[@Example2024]"), 1)
+        self.assertIn("[Example et al. (2024 CHI): Useful Example][Example2024]", source)
         errors, _ = AUDIT.audit(self.root)
         self.assertEqual(errors, [])
+
+    def test_source_resolution_mirror_links_existing_full_copy_locator(self):
+        full_copy = self.root / "sources/full-text/example.pdf"
+        full_copy.parent.mkdir(parents=True, exist_ok=True)
+        full_copy.write_bytes(b"paper")
+        self.write_csv(
+            "source-resolution.csv",
+            ["source_id", "citation_key", "acquisition_state", "full_copy_locator"],
+            [["S1", "Example2024", "FULL_TEXT_ASSESSED", "sources/full-text/example.pdf"]],
+        )
+        documents = self.publish()
+        self.assertIn(
+            "[sources/full-text/example.pdf](<../sources/full-text/example.pdf>)",
+            documents["source-resolution.md"],
+        )
+
+    def test_csv_semantic_prose_starting_with_url_is_not_linkified(self):
+        prose = "https://publisher.example/paper returned CAPTCHA; then searched Crossref"
+        self.write_csv(
+            "source-resolution.csv",
+            ["source_id", "citation_key", "acquisition_state", "attempted_routes"],
+            [["S1", "Example2024", "NEEDS_AUTHOR_SOURCE_ACCESS", prose]],
+        )
+        documents = self.publish()
+        mirror = documents["source-resolution.md"]
+        self.assertIn(prose, mirror)
+        self.assertNotIn(f"[{prose}]", mirror)
+
+    def test_inline_code_citation_token_cannot_bypass_audit(self):
+        (self.root / "search-log.md").write_text("# Search log\n", encoding="utf-8")
+        self.publish()
+        path = self.root / "search-log.md"
+        source = path.read_text(encoding="utf-8")
+        source = source.replace("# Search log", "# Search log\n\nHidden citation `[@Example2024]`.", 1)
+        path.write_text(source, encoding="utf-8")
+        errors, _ = AUDIT.audit(self.root)
+        self.assertTrue(any("inline-code citation token" in error for error in errors), errors)
 
     def test_catalog_backed_author_or_title_year_shorthand_is_published_as_links(self):
         path = self.root / "research-framing-outline.md"
@@ -339,6 +468,45 @@ class Phase1MarkdownPublicationTests(unittest.TestCase):
         errors, _ = AUDIT.audit(self.root)
         self.assertTrue(any("missing required section '## At a glance'" in error for error in errors))
         self.assertTrue(any("at least two reader goals" in error for error in errors))
+
+    def test_readme_requires_user_value_intro_and_approach_substrate_boundary(self):
+        path = self.repo / "README.md"
+        source = path.read_text(encoding="utf-8")
+        source = source.replace("## The user value", "## Value")
+        source = source.replace("- **Platform-substitution result:**", "")
+        path.write_text(source, encoding="utf-8")
+        self.publish()
+        errors, _ = AUDIT.audit(self.root)
+        self.assertTrue(any("missing required section '## The user value'" in error for error in errors))
+        self.assertTrue(any("Introduction outline lacks 'Platform-substitution result'" in error for error in errors))
+
+    def test_readme_requires_answer_first_and_approach_before_substrate_in_intro(self):
+        path = self.repo / "README.md"
+        source = path.read_text(encoding="utf-8")
+        source = source.replace("## At a glance", "## Summary", 1)
+        source = source.replace("## The user value", "## At a glance\n\nReplacement summary.\n\n## The user value", 1)
+        source = source.replace(
+            "- **Approach invariant:**\n- **Essential interaction/control-policy dimensions:**\n- **Implementation substrate / empirical waist:**",
+            "- **Implementation substrate / empirical waist:**\n"
+            "- **Essential interaction/control-policy dimensions:**\n"
+            "- **Approach invariant:**",
+            1,
+        )
+        path.write_text(source, encoding="utf-8")
+        self.publish()
+        errors, _ = AUDIT.audit(self.root)
+        self.assertTrue(any("At a glance must be the first" in error for error in errors))
+        self.assertTrue(any("must state the approach invariant before" in error for error in errors))
+
+    def test_readme_rejects_approach_labels_outside_intro(self):
+        path = self.repo / "README.md"
+        source = path.read_text(encoding="utf-8")
+        source = source.replace("- **Platform-substitution result:**", "", 1)
+        source += "\nOutside the outline: Platform-substitution result.\n"
+        path.write_text(source, encoding="utf-8")
+        self.publish()
+        errors, _ = AUDIT.audit(self.root)
+        self.assertTrue(any("Introduction outline lacks 'Platform-substitution result'" in error for error in errors))
 
     def test_external_standard_url_ending_in_html_is_not_a_legacy_report(self):
         self.publish()

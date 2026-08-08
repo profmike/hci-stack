@@ -30,6 +30,24 @@ class InitializePhase1WorkspaceTests(unittest.TestCase):
             readme = (repo / "README.md").read_text(encoding="utf-8")
             self.assertIn("# Example Project", readme)
             self.assertIn("research-framing/reports/phase-1-progress.md", readme)
+            for phrase in (
+                "## The user value",
+                "## Introduction — structure and outline",
+                "Approach invariant",
+                "Implementation substrate / empirical waist",
+                "Platform-substitution result",
+                "Adaptation-credit disposition",
+            ):
+                self.assertIn(phrase, readme)
+            headings = [line for line in readme.splitlines() if line.startswith("## ")]
+            self.assertEqual(headings[0], "## At a glance")
+            introduction = readme.split(
+                "## Introduction — structure and outline", 1
+            )[1].split("\n## ", 1)[0]
+            self.assertLess(
+                introduction.index("Approach invariant"),
+                introduction.index("Implementation substrate / empirical waist"),
+            )
             framing = repo / "research-framing"
             for relative in (
                 "starting-state.md",

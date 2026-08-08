@@ -460,6 +460,7 @@ current venue scope. These are routing examples, not a permanent list. Do not as
 select a motivation frame while this map is incomplete.
 
 Before synthesizing that chain, read
+[research-discovery-recall.md](research-discovery-recall.md) and
 [motivation-claim-strengthening.md](motivation-claim-strengthening.md) completely and
 create `motivation-claim-research-queue.md` from the asset template. Sweep every active
 `hypothesis` and `unsupported` row in the claim ledger and assign one primary resolution route:
@@ -467,7 +468,12 @@ external research, official practice audit, author/project evidence, future syst
 retirement/supersession. Create `current-practice-audit.md` whenever a claim concerns current
 products or documented controls.
 
-Work the queue recursively. Prioritize motivation and problem-definition claims that can change
+Work the queue recursively. Keep recall-first candidate discovery separate from claim admissibility.
+For every high-impact claim, populate the claim-facet matrix, run the required cross-disciplinary
+route portfolio, reconcile unique candidates from an independent retrieval challenger, promote
+identities embedded in notes and references, and store non-title/non-author positive controls.
+Preserve replayable provider/model/version, prompt/query, timestamp, filter/sort/screen-depth, raw
+artifact/hash, and terminal-disposition records. Prioritize motivation and problem-definition claims that can change
 whether the project is worth pursuing: target behavior/population, current practice, unmet need,
 consequence, and why-now. Search exact and neighboring constructs, full primary sources, official
 documentation, backward/forward citations, and contradictions/nulls. After each material batch,
@@ -482,7 +488,9 @@ project evidence, or concrete help with a decision-relevant full-source access b
 Reach `MOTIVATION_CLAIM_AUDIT_COMPLETE` only when every active motivation/problem-definition
 `hypothesis` or `unsupported` claim has a precise route, documented research or official audit,
 explicit disposition, and either sufficient bounded support or the smallest named project evidence
-action. A report that merely repeats the labels does not pass.
+action. High-impact external routes must also have reconciled independent retrieval systems,
+terminal candidate roles, passing recall sentinels, and a complete zero-yield promotion wave. A
+report that merely repeats the labels does not pass.
 
 Use authoritative sources for population health, policy, standards, or large-scale facts. Prefer
 systematic reviews, highly relevant primary studies, and top HCI venues for the questions they can
@@ -899,6 +907,9 @@ Generate three to five coherent contribution packages, not synonym lists. Each p
 - the setting or activity boundary;
 - the implementation choices and design rationales, including whether any independently enables a
   consequential capability rather than merely instantiating the interaction;
+- the platform-independent approach invariant, essential interaction/control-policy dimensions,
+  implementation substrate or empirical waist, platform-substitution result, and any demonstrated
+  adaptation credit;
 - the proposed reusable HCI capability or knowledge;
 - every atomic candidate’s primary and optional supporting contribution types, why each type fits,
   and why the strongest tempting alternative was rejected;
@@ -949,6 +960,9 @@ Record the selected primary layer, the ranking rationale, and the strongest fall
 Do not promote a lower-level implementation choice into the primary contribution merely because it
 is visually distinctive or technically difficult. If the hardware or medium is itself
 contribution-bearing, state and support the human capability, outcome, or access change it enables.
+For the focal project as well as prior work, state the approach invariant before the implementation
+substrate. Treat an OS, device, framework, sensor, or medium as the empirical waist unless matched
+evidence shows reusable adaptation knowledge, a new use class, or a direct empirical finding.
 
 ### 10. Run a phase-aware constructive review
 
@@ -978,7 +992,9 @@ Write `research-framing-outline.md` as an argument and decision outline:
    collision separated from contribution attribution, demonstrated-unclaimed operation visible,
    and ideas/proposals kept separate.
 5. **Gap:** selected interpretation and closest-work comparison.
-6. **Approach hypothesis:** intended experience, enabling insight, inherited foundations, and risks.
+6. **Approach hypothesis:** platform-independent approach invariant, essential interaction/control-policy
+   dimensions, intended experience, inherited foundations, implementation substrate/empirical waist,
+   platform-substitution result, any demonstrated adaptation credit, and risks.
 7. **Research process:** what is known, underway, and planned.
 8. **Terminology contract:** operational meanings, selected hierarchy, non-implications, and open
    terms.
@@ -1044,6 +1060,9 @@ Reconcile `agent-context.json` against the final workboard, author decisions, so
 NotebookLM maintenance record, and handoff. Set `phase.status` to `complete` only after that
 reconciliation; the manifest then lets either Codex or Claude Code rehydrate the bounded handoff
 without silently reactivating Phase 1.
+
+The publication auditor must fail when `phase.status` is `complete` while the motivation-claim,
+ACM/SIGCHI, or search-recall file retains an open status, unchecked gate, or template placeholder.
 
 ### 13. Publish the GitHub Markdown record
 

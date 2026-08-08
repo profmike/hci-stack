@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import argparse
+import datetime as dt
+import json
 import re
 import sys
 from pathlib import Path
@@ -54,6 +56,33 @@ REQUIRED_ROOT_LINKS = (
     "research-framing/reports/artifact-index.md",
 )
 
+PHASE_COMPLETION_GATES = (
+    (
+        "motivation-claim-research-queue.md",
+        "MOTIVATION_CLAIM_AUDIT_COMPLETE",
+        None,
+        "Last sweep",
+    ),
+    (
+        "acm-sigchi-related-work-audit.md",
+        "ACM_SIGCHI_LANDSCAPE_AUDITED",
+        "ACM_SIGCHI_LANDSCAPE_AUDITED",
+        "Last checked",
+    ),
+    (
+        "related-work-search-recall-audit.md",
+        "RELATED_WORK_SEARCH_RECALL_AUDITED",
+        "RELATED_WORK_SEARCH_RECALL_AUDITED",
+        "Last checked",
+    ),
+)
+
+OPEN_TABLE_VALUE_RE = re.compile(
+    r"^(?:no|not reached|queued|needs_[a-z0-9_]+)$|\bpending\b",
+    re.IGNORECASE,
+)
+TABLE_SEPARATOR_CELL_RE = re.compile(r"^:?-{3,}:?$")
+
 
 def expected_report_names() -> set[str]:
     return {
@@ -64,8 +93,114 @@ def expected_report_names() -> set[str]:
     }
 
 
+def audit_completed_gate_body(path: Path, source: str, errors: list[str]) -> None:
+    """Reject residue from the real gate templates, not just their headline markers."""
+    for line_number, line in enumerate(source.splitlines(), start=1):
+        if re.match(r"^-\s+\*\*[^*]+:\*\*\s*$", line):
+            errors.append(f"{path}:{line_number}: completed research gate has a blank field")
+
+        stripped = line.strip()
+        if not (stripped.startswith("|") and stripped.endswith("|")):
+            continue
+        cells = [cell.strip() for cell in stripped[1:-1].split("|")]
+        if cells and all(TABLE_SEPARATOR_CELL_RE.fullmatch(cell) for cell in cells):
+            continue
+        for cell in cells:
+            normalized = cell.strip().strip("`")
+            if not normalized:
+                errors.append(
+                    f"{path}:{line_number}: completed research gate has a blank table cell"
+                )
+                break
+            if OPEN_TABLE_VALUE_RE.search(normalized):
+                errors.append(
+                    f"{path}:{line_number}: completed research gate retains unfinished "
+                    f"table value {cell!r}"
+                )
+                break
+
+
+def audit_phase_completion(root: Path, errors: list[str]) -> None:
+    """Reject a completed phase whose canonical research gates are visibly unfinished."""
+    manifest_path = root / "agent-context.json"
+    if not manifest_path.is_file():
+        return
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError) as exc:
+        errors.append(f"{manifest_path}: invalid project-context manifest: {exc}")
+        return
+    if manifest.get("phase", {}).get("status") != "complete":
+        return
+
+    for relative, terminal_status, terminal_gate, date_label in PHASE_COMPLETION_GATES:
+        path = root / relative
+        if not path.is_file():
+            errors.append(f"phase.status=complete but required research gate is missing: {path}")
+            continue
+        source = path.read_text(encoding="utf-8")
+        status = re.search(r"^Status:\s*`([^`]+)`\s*$", source, re.MULTILINE)
+        if status is None or status.group(1) != terminal_status:
+            actual = status.group(1) if status else "missing"
+            errors.append(
+                f"{path}: phase.status=complete requires Status `{terminal_status}`; found `{actual}`"
+            )
+        if terminal_gate is not None:
+            gate = re.search(r"^Gate:\s*`([^`]+)`\s*$", source, re.MULTILINE)
+            if gate is None or gate.group(1) != terminal_gate:
+                actual = gate.group(1) if gate else "missing"
+                errors.append(
+                    f"{path}: phase.status=complete requires Gate `{terminal_gate}`; "
+                    f"found `{actual}`"
+                )
+        date_match = re.search(
+            rf"^{re.escape(date_label)}:\s*(\S+)\s*$", source, re.MULTILINE
+        )
+        date_value = date_match.group(1) if date_match else ""
+        try:
+            dt.date.fromisoformat(date_value)
+        except ValueError:
+            errors.append(
+                f"{path}: phase.status=complete requires {date_label} as an ISO date; "
+                f"found {date_value!r}"
+            )
+        unchecked = len(re.findall(r"(?m)^-\s*\[\s\]", source))
+        if unchecked:
+            errors.append(
+                f"{path}: phase.status=complete but {unchecked} research gate item(s) remain unchecked"
+            )
+        for placeholder in ("YYYY-MM-DD", "| Pending |"):
+            if placeholder in source:
+                errors.append(
+                    f"{path}: phase.status=complete but template placeholder {placeholder!r} remains"
+                )
+        audit_completed_gate_body(path, source, errors)
+
+
 def strip_managed_citations(text: str) -> str:
     return publisher.MANAGED_CITATION_RE.sub("\n", text)
+
+
+def inline_code_citation_tokens(text: str) -> list[str]:
+    """Return exact inline-code citation keys while ignoring fenced examples."""
+    tokens: list[str] = []
+    in_fence = False
+    fence_token = ""
+    for line in text.splitlines():
+        stripped = line.lstrip()
+        fence = re.match(r"(```+|~~~+)", stripped)
+        if fence:
+            token = fence.group(1)
+            if not in_fence:
+                in_fence = True
+                fence_token = token[0]
+            elif token[0] == fence_token:
+                in_fence = False
+                fence_token = ""
+            continue
+        if not in_fence:
+            tokens.extend(publisher.INLINE_CODE_TOKEN_RE.findall(line))
+    return tokens
 
 
 def mask_match(match: re.Match[str]) -> str:
@@ -197,7 +332,14 @@ def audit_citations(
     repo_root: Path,
     errors: list[str],
 ) -> None:
-    outside_block = publisher.strip_code(strip_managed_citations(text))
+    unmanaged = strip_managed_citations(text)
+    hidden_inline_tokens = sorted(set(inline_code_citation_tokens(unmanaged)))
+    if hidden_inline_tokens:
+        errors.append(
+            f"{path}: inline-code citation token(s) must be published as links: "
+            + ", ".join(hidden_inline_tokens)
+        )
+    outside_block = publisher.strip_code(unmanaged)
     raw_tokens = sorted(set(publisher.RAW_TOKEN_RE.findall(outside_block)))
     if raw_tokens:
         errors.append(f"{path}: unresolved raw citation token(s): {', '.join(raw_tokens)}")
@@ -319,6 +461,8 @@ def audit_root_readme(repo_root: Path, errors: list[str]) -> None:
         return
     source = path.read_text(encoding="utf-8")
     for heading in (
+        "## The user value",
+        "## Introduction — structure and outline",
         "## At a glance",
         "## Closest prior work",
         "## Planned approach",
@@ -329,6 +473,38 @@ def audit_root_readme(repo_root: Path, errors: list[str]) -> None:
     ):
         if heading not in source:
             errors.append(f"README.md: missing required section {heading!r}")
+
+    level_two_headings = re.findall(r"^##\s+.+$", source, re.MULTILINE)
+    if level_two_headings and level_two_headings[0] != "## At a glance":
+        errors.append("README.md: At a glance must be the first level-two section")
+
+    introduction = re.search(
+        r"^## Introduction — structure and outline\s*$\n(.*?)(?=^##\s+|\Z)",
+        source,
+        re.MULTILINE | re.DOTALL,
+    )
+    introduction_source = introduction.group(1) if introduction else ""
+    for label in (
+        "Approach invariant",
+        "Essential interaction/control-policy dimensions",
+        "Implementation substrate / empirical waist",
+        "Platform-substitution result",
+        "Adaptation-credit disposition",
+    ):
+        if label not in introduction_source:
+            errors.append(f"README.md: Introduction outline lacks {label!r}")
+
+    approach_position = introduction_source.find("Approach invariant")
+    substrate_position = introduction_source.find("Implementation substrate / empirical waist")
+    if (
+        approach_position >= 0
+        and substrate_position >= 0
+        and approach_position > substrate_position
+    ):
+        errors.append(
+            "README.md: Introduction outline must state the approach invariant before "
+            "the implementation substrate / empirical waist"
+        )
 
     profile = re.search(
         r"^<!-- HCI-PLAIN-LANGUAGE: ISO 24495-1:2023 \| "
@@ -449,6 +625,7 @@ def audit(
 
     audit_root_readme(repo_root, errors)
     audit_readme_prior_work_context(repo_root, catalog, errors)
+    audit_phase_completion(root, errors)
 
     legacy_html = sorted(output_dir.rglob("*.html")) if output_dir.is_dir() else []
     for path in legacy_html:
@@ -478,6 +655,9 @@ def audit(
             publisher.strip_code(text),
             flags=re.IGNORECASE,
         )
+        # HTML files under a figures/ directory are canonical figure artifacts,
+        # not legacy HTML report views; only non-figure HTML references are errors.
+        html_scan = re.sub(r"[^\s|()\[\]]*figures/[^\s|()\[\]]*\.html", "", html_scan)
         if re.search(r"\.html(?:[#?)\s]|$)", html_scan, re.IGNORECASE):
             errors.append(f"{path}: contains a legacy HTML report reference")
         audit_citations(path, text, catalog, output_dir, repo_root, errors)

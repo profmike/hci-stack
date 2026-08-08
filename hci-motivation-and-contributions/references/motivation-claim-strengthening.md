@@ -41,7 +41,8 @@ project generates the required evidence.
 
 ## Resolution cycle
 
-Create `motivation-claim-research-queue.md` from the asset template, then:
+Read [research-discovery-recall.md](research-discovery-recall.md) completely and create
+`motivation-claim-research-queue.md` from the asset template, then:
 
 1. **Enumerate.** Copy every active `hypothesis` and `unsupported` ledger row into the queue. Add
    important motivation-chain gaps that are absent from the ledger.
@@ -53,19 +54,28 @@ Create `motivation-claim-research-queue.md` from the asset template, then:
 4. **Prioritize.** Work first on claims with high framing impact, high uncertainty, and a feasible
    resolving route. Within a motivation chain, normally resolve target behavior and population,
    current practice, unmet need, consequence, and why-now before proposed-system mechanisms.
-5. **Search in layers.** Use the target phrase, validated neighboring constructs, systematic
-   reviews, primary studies, official product documentation, intervention/adherence evidence,
-   backward/forward citations, and an explicit contradiction/null search. Record exact queries,
-   dates, screening, and exclusions.
-6. **Acquire and audit.** Obtain and open the full source, apply the source tier, ingestion,
+5. **Separate discovery from admissibility.** Build the population, task, interface/control,
+   acquisition-stage, outcome/failure, context, and evidence-role facets before searching. Admit a
+   candidate when it can expand vocabulary, a citation graph, a boundary, counterevidence, or an
+   evidentiary role; do not require it to satisfy the final direct-evidence predicate at intake.
+6. **Search in layers and challenge recall independently.** Use exact and disjunctive queries,
+   component and neighboring tasks, discipline-native vocabulary and databases, systematic reviews,
+   primary studies, official product documentation, intervention/adherence evidence,
+   backward/forward/sibling citations, and an explicit contradiction/null search. Reconcile unique
+   candidates from at least two independent retrieval systems. Preserve provider/model/version,
+   exact prompt/query, date, filters, sort, screen depth, raw-result artifact/hash, and terminal
+   candidate dispositions.
+7. **Acquire and audit.** Obtain and open the full source, apply the source tier, ingestion,
    directness, and claim-specific evidence-strength axes, and record the decisive locator,
    uncertainty, limitation, and re-review trigger.
-7. **Resolve.** Use one of:
+8. **Resolve.** Use one of:
    `supported-bounded`, `narrowed`, `contradicted`, `superseded`, `retired`,
    `routed-to-project-evidence`, `needs-author-source-access`, or `still-open`.
    Update the claim ledger and motivation evidence map; do not leave the old broad wording as the
    governing claim.
-8. **Repeat.** Run another ledger sweep after every material research batch because new findings
+9. **Repeat.** Promote every title, DOI, or canonical URL found inside notes, references, reports,
+   and candidates into its own terminal row. Run another ledger sweep after every material research
+   batch because new findings
    often split or invalidate other claims.
 
 ## Research stopping rule
@@ -76,6 +86,9 @@ problem-definition claim marked `hypothesis` or `unsupported` has:
 - a precise claim and explicit route;
 - a documented full-source or official-practice search, including contradictory evidence when
   externally resolvable;
+- a replayable claim-facet matrix, independent retrieval challenger, reconciled candidate-role
+  dispositions, passing non-title/non-author positive controls, and a complete zero-yield promotion
+  wave for every high-impact external route;
 - a disposition and bounded replacement wording; and
 - either sufficient evidence for its current use or the smallest named project evidence action.
 

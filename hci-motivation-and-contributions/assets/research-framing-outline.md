@@ -163,11 +163,16 @@ change/outcome`. Hypothesized mechanism(s), kept separate:
 - Human situation or tension:
 - Desired user value and evidence state:
 - Plain-language, benefit-first explanation:
+- Platform-independent approach invariant:
+- Essential interaction/control-policy dimensions:
 - Intended user experience:
 - Existing workflow retained:
 - Workflow stage replaced, complemented, extended, or bridged:
 - Enabling insight:
 - Adopted foundations:
+- Implementation substrate / empirical waist:
+- Platform-substitution result:
+- Adaptation-credit disposition and evidence:
 - Planned instantiation:
 - Expected advantage:
 - Costs and failure modes:

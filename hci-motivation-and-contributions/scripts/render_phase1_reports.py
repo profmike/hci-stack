@@ -41,6 +41,7 @@ GENERATED_MARKER = "<!-- GENERATED: hci-motivation-and-contributions Markdown pu
 
 KEY_PATTERN = r"[A-Za-z0-9][A-Za-z0-9_.:-]*"
 RAW_TOKEN_RE = re.compile(rf"(?<!\])\[@({KEY_PATTERN})\]")
+INLINE_CODE_TOKEN_RE = re.compile(rf"`+\[@({KEY_PATTERN})\]`+")
 KEYED_LINK_RE = re.compile(rf"\[([^\]\n]+)\]\[({KEY_PATTERN})\]")
 WRAPPED_TOKEN_LINK_RE = re.compile(
     rf"\[[^\]\n]*`?\[@({KEY_PATTERN})\]`?[^\]\n]*\]\([^\n]+?\)"
@@ -341,7 +342,12 @@ def _transform_non_code_segment(segment: str, catalog: dict[str, Citation]) -> s
 
 
 def transform_citations(text: str, catalog: dict[str, Citation]) -> tuple[str, tuple[str, ...]]:
-    """Resolve draft tokens outside fenced and inline code and return used keys."""
+    """Resolve draft tokens outside fenced code and return used keys.
+
+    An exact inline-code token such as ``[@Key]`` is legacy citation authoring, not a code
+    example. Publish it as a link so backticks cannot hide an unlinked scholarly citation.
+    Fenced code remains literal for documentation examples.
+    """
     output: list[str] = []
     in_fence = False
     fence_token = ""
@@ -369,6 +375,7 @@ def transform_citations(text: str, catalog: dict[str, Citation]) -> tuple[str, t
             return f"[{citation.label}][{key}]"
 
         line = WRAPPED_TOKEN_LINK_RE.sub(replace_wrapped_token, line)
+        line = INLINE_CODE_TOKEN_RE.sub(replace_wrapped_token, line)
         parts = re.split(r"(`+[^`]*`+)", line)
         output.append(
             "".join(
@@ -540,6 +547,27 @@ def markdown_cell(value: str) -> str:
     return " ".join((value or "").split()).replace("|", "\\|")
 
 
+def csv_markdown_value(field: str, value: str, source: Path, report_path: Path) -> str:
+    """Render URL and resolvable locator fields as human-usable Markdown links."""
+    value = " ".join((value or "").split())
+    if not value:
+        return ""
+    destination = ""
+    if field in {"canonical_url", "url", "full_copy_locator"} and value.startswith(
+        ("https://", "http://")
+    ):
+        destination = value
+    elif field == "full_copy_locator":
+        path_part, separator, fragment = value.partition("#")
+        candidate = source.parent / path_part
+        if path_part and not Path(path_part).is_absolute() and candidate.exists():
+            destination = relative_link(report_path, candidate)
+            if separator:
+                destination += "#" + quote(fragment, safe="._~-")
+    escaped = markdown_cell(value)
+    return f"[{escaped}](<{destination}>)" if destination else escaped
+
+
 def csv_mirror(source: Path, report_path: Path) -> str:
     with source.open(newline="", encoding="utf-8-sig") as handle:
         reader = csv.DictReader(handle)
@@ -554,7 +582,12 @@ def csv_mirror(source: Path, report_path: Path) -> str:
         ]
         for row in rows:
             lines.append(
-                "| " + " | ".join(markdown_cell(row.get(field, "")) for field in fields) + " |"
+                "| "
+                + " | ".join(
+                    csv_markdown_value(field, row.get(field, ""), source, report_path)
+                    for field in fields
+                )
+                + " |"
             )
         return "\n".join(lines) + "\n"
     lines = []
@@ -569,7 +602,7 @@ def csv_mirror(source: Path, report_path: Path) -> str:
         identity = next((row.get(field, "").strip() for field in preferred_ids if row.get(field, "").strip()), str(index))
         lines.extend([f"### Record {index} — `{identity}`", ""])
         for field in fields:
-            value = markdown_cell(row.get(field, "")) or "—"
+            value = csv_markdown_value(field, row.get(field, ""), source, report_path) or "—"
             lines.append(f"- **{field}:** {value}")
         lines.append("")
     if not rows:

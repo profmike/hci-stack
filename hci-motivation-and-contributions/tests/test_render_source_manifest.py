@@ -82,6 +82,37 @@ def write_project(directory: Path, rows: list[dict[str, str]], manifest_body: st
     (directory / "source-manifest.md").write_text(manifest, encoding="utf-8")
 
 
+def write_catalog(directory: Path) -> None:
+    with (directory / "references.csv").open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(
+            (
+                "citation_key",
+                "author_year",
+                "short_title",
+                "venue_abbrev",
+                "full_title",
+                "full_authors",
+                "full_venue",
+                "url",
+                "aliases",
+            )
+        )
+        writer.writerow(
+            (
+                "iwata-1996",
+                "Iwata & Fujii, 1996",
+                "Virtual Perambulator",
+                "VRAIS",
+                "Virtual Perambulator",
+                "Hiroo Iwata; Tomohiro Fujii",
+                "Proceedings of VRAIS 1996",
+                "https://doi.org/10.1109/VRAIS.1996.490511",
+                "Iwata & Fujii (1996)",
+            )
+        )
+
+
 class RenderSourceManifestTests(unittest.TestCase):
     def test_a_stale_printed_doi_is_replaced_by_the_ledger_value(self):
         with tempfile.TemporaryDirectory() as name:
@@ -108,6 +139,28 @@ class RenderSourceManifestTests(unittest.TestCase):
             output, changes = RENDER.render(directory)
             self.assertTrue(any("row added" in change for change in changes), changes)
             self.assertIn("iwata-1996", output)
+
+    def test_existing_full_copy_and_canonical_url_are_clickable(self):
+        with tempfile.TemporaryDirectory() as name:
+            directory = Path(name)
+            (directory / "sources/full-text").mkdir(parents=True)
+            (directory / "sources/full-text/iwata-1996.pdf").write_bytes(b"paper")
+            (directory / "reviews").mkdir()
+            (directory / "reviews/iwata-1996.md").write_text(
+                "# Review\n", encoding="utf-8"
+            )
+            write_project(directory, [ledger_row()], "")
+            output, _ = RENDER.render(directory)
+            self.assertIn(
+                "[sources/full-text/iwata-1996.pdf](<sources/full-text/iwata-1996.pdf>)",
+                output,
+            )
+            self.assertIn("FULL_TEXT_ASSESSED — reviews/iwata-1996.md", output)
+            self.assertIn(
+                "[https://doi.org/10.1109/VRAIS.1996.490511]"
+                "(<https://doi.org/10.1109/VRAIS.1996.490511>)",
+                output,
+            )
 
     def test_the_checker_fails_on_a_manifest_that_has_drifted(self):
         with tempfile.TemporaryDirectory() as name:
@@ -150,6 +203,40 @@ class RenderSourceManifestTests(unittest.TestCase):
                 CHECK.check_source_manifest_generated(directory / "source-resolution.csv"),
                 [],
             )
+
+    def test_published_hyperlinked_identity_still_matches_the_ledger(self):
+        with tempfile.TemporaryDirectory() as name:
+            directory = Path(name)
+            row = ledger_row(
+                bibliographic_identity="Iwata & Fujii (1996), Virtual Perambulator"
+            )
+            published = (
+                "| SR-001 | iwata-1996 | "
+                "[Iwata & Fujii (1996 VRAIS): Virtual Perambulator][iwata-1996], "
+                "Virtual Perambulator | T1 | "
+                "[https://doi.org/10.1109/VRAIS.1996.490511]"
+                "(<https://doi.org/10.1109/VRAIS.1996.490511>) | "
+                "sources/full-text/iwata-1996.pdf | "
+                "FULL_TEXT_ASSESSED — reviews/iwata-1996.md | "
+                "no stronger direct source found |  | reads well |\n"
+            )
+            write_project(directory, [row], published)
+            write_catalog(directory)
+
+            self.assertEqual(
+                CHECK.check_source_manifest_generated(directory / "source-resolution.csv"),
+                [],
+            )
+
+            wrong = (directory / "source-manifest.md").read_text(encoding="utf-8").replace(
+                ", Virtual Perambulator | T1 |",
+                ", Wrong trailing title | T1 |",
+            )
+            (directory / "source-manifest.md").write_text(wrong, encoding="utf-8")
+            errors = CHECK.check_source_manifest_generated(
+                directory / "source-resolution.csv"
+            )
+            self.assertTrue(any("disagrees" in error for error in errors), errors)
 
 
 if __name__ == "__main__":

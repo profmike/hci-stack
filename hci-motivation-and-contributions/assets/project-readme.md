@@ -12,6 +12,32 @@ context, unwanted state or episode, intended change, and current decision or nex
 with the answer readers need; keep the checked evidence and exact claim boundaries in the linked
 [research framing outline](research-framing/research-framing-outline.md).
 
+## The user value
+
+**Evidence state: `hypothesis`.** Describe the specific people, transition or activity, and value the
+project aims to support before naming the mechanism. Link the exact evidence boundary in the
+[research framing outline](research-framing/research-framing-outline.md).
+
+## Introduction — structure and outline
+
+This is an argument outline, not polished manuscript prose. Use this move order:
+
+1. problem and human stakes;
+2. closest prior work and its residual gap;
+3. the platform-independent approach invariant and essential interaction/control-policy dimensions;
+4. inherited mechanism or rationale;
+5. implementation substrate / empirical waist, platform-substitution result, and any demonstrated
+   adaptation credit; and
+6. planned evidence and prospective contributions.
+
+State explicitly:
+
+- **Approach invariant:**
+- **Essential interaction/control-policy dimensions:**
+- **Implementation substrate / empirical waist:**
+- **Platform-substitution result:**
+- **Adaptation-credit disposition:**
+
 ## Closest prior work
 
 When the framing cites prior work, add one compact bullet per work using the exact structure
@@ -21,7 +47,8 @@ difference.` Do not leave citations as unexplained mechanism labels.
 ## Planned approach
 
 **Status: `planned`.** Summarize the human situation and intended value first, then the planned
-capability and only the implementation detail needed to understand it. Link the selected approach
+platform-independent approach, essential dimensions, and only then the implementation substrate.
+State the substitution result and whether any platform adaptation independently earns credit. Link the selected approach
 and rejected alternatives in the [collaboration workboard](research-framing/phase-1-collaboration-workboard.md)
 and [author decisions](research-framing/author-decisions.md).
 

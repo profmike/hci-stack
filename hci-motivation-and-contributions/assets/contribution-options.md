@@ -8,3 +8,6 @@ the contribution is the reusable knowledge or capability that survives the requi
 
 Before author selection, expand three to five coherent packages and preserve selected, combined,
 rejected, superseded, or delegated variants with rationale in the workboard/decision packet.
+For each package, state the platform-independent approach invariant, essential dimensions,
+implementation substrate / empirical waist, platform-substitution result, and whether demonstrated
+**adaptation-credit disposition** exists. Never use the substrate itself as contribution shorthand.

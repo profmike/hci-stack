@@ -59,6 +59,7 @@ Use: `not-inspected`, `researching`, `needs-author-fact`, `decision-ready`, `aut
 | Terminology contract and lexical spine | | | | | | | |
 | Gap interpretations | | | | | | | |
 | Approach hypotheses and premise tests | | | | | | | |
+| Approach invariant versus implementation substrate | | Prevents an OS/device/framework from replacing the reusable human or control-policy idea | | | | | |
 | Positioning-view alternatives | | | | | | | |
 | Prospective contribution packages and evidence needs | | | | | | | |
 | Phase-aware constructive review | | | | | | | |
@@ -104,6 +105,15 @@ the affected evidence state; narrow or block the claim and propagate the consequ
 | Claim ID | Exact active claim | Complete internal evidence boundary / non-claims | Reader-facing qualifier: required / not required + reason | Direct supported wording | Familiar entry term → precise construct + first-use definition | Propagation and reopen trigger |
 |---|---|---|---|---|---|---|
 | | | | | | | |
+
+## Focal approach and substrate boundary
+
+- **Platform-independent approach invariant:**
+- **Essential interaction/control-policy dimensions:**
+- **Implementation substrate / empirical waist:**
+- **Platform-substitution result:**
+- **Adaptation-credit disposition and evidence:**
+- **Propagation targets and reopen trigger:**
 
 ## Variation and propagation log
 

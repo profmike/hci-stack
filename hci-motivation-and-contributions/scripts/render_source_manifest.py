@@ -14,6 +14,10 @@ manifest-only judgements that no ledger holds, and the script preserves them unt
 ``check_source_resolution.py`` runs the same derivation in memory and fails when a rendered
 cell disagrees, so the page cannot drift again between runs.
 
+The citation publisher may replace a catalog-backed bibliographic shorthand with its deterministic
+keyed-link form. The renderer accepts that published form as equivalent while continuing to reject
+any changed key, label, or trailing bibliographic text.
+
 Usage:
     python3 render_source_manifest.py PROJECT_DIR [--check]
 
@@ -27,9 +31,11 @@ import csv
 import os
 import sys
 from pathlib import Path
+from urllib.parse import quote
 
 MANIFEST_NAME = "source-manifest.md"
 LEDGER_NAME = "source-resolution.csv"
+CATALOG_NAME = "references.csv"
 
 # Column header -> how that cell is built from a ledger row. A column absent from this map
 # is a manifest-only judgement and is never touched.
@@ -51,7 +57,26 @@ def join_parts(*parts: str) -> str:
     return " — ".join(kept)
 
 
-def derive(header: str, row: dict[str, str]) -> str:
+def linked_locator(value: str, project_dir: Path) -> str:
+    """Make a real external URL or existing project-relative locator clickable."""
+    value = (value or "").strip()
+    if not value:
+        return ""
+    if value.startswith(("https://", "http://")):
+        return f"[{value}](<{value}>)"
+    path_part, separator, fragment = value.partition("#")
+    if not path_part or Path(path_part).is_absolute():
+        return value
+    destination = project_dir / path_part
+    if not destination.exists():
+        return value
+    target = quote(path_part, safe="/._~-")
+    if separator:
+        target += "#" + quote(fragment, safe="._~-")
+    return f"[{value}](<{target}>)"
+
+
+def derive(header: str, row: dict[str, str], project_dir: Path) -> str:
     """Return the ledger-derived text for one manifest cell."""
     if header == "Source ID":
         return row.get("source_id", "")
@@ -60,9 +85,9 @@ def derive(header: str, row: dict[str, str]) -> str:
     if header == "Bibliographic identity":
         return row.get("bibliographic_identity", "")
     if header == "DOI/canonical URL":
-        return row.get("canonical_url", "")
+        return linked_locator(row.get("canonical_url", ""), project_dir)
     if header == "Canonical repository location":
-        return row.get("full_copy_locator", "")
+        return linked_locator(row.get("full_copy_locator", ""), project_dir)
     if header == "Source-resolution state/locator":
         return join_parts(
             row.get("acquisition_state", ""),
@@ -156,6 +181,24 @@ def render(project_dir: Path) -> tuple[str, list[str]]:
     with ledger_path.open(newline="", encoding="utf-8-sig") as handle:
         ledger = list(csv.DictReader(handle))
 
+    published_identity = None
+    if (project_dir / CATALOG_NAME).is_file():
+        # The Markdown publisher deterministically turns catalog-backed bibliographic
+        # shorthand into keyed links. Accept that published form as semantically equal to
+        # the ledger-derived plain form, or generation and publication can never both pass.
+        script_dir = str(Path(__file__).resolve().parent)
+        if script_dir not in sys.path:
+            sys.path.insert(0, script_dir)
+        from render_phase1_reports import (  # noqa: PLC0415
+            load_citation_catalog,
+            transform_citations,
+        )
+
+        catalog = load_citation_catalog(project_dir)
+
+        def published_identity(value: str) -> str:
+            return transform_citations(value, catalog)[0]
+
     text = manifest_path.read_text(encoding="utf-8")
     lines = text.splitlines()
     start, end, headers = locate_table(lines)
@@ -197,8 +240,13 @@ def render(project_dir: Path) -> tuple[str, list[str]]:
             cells = [""] * width
             changes.append(f"{source_id}: row added from the ledger")
         for header, position in derived_index.items():
-            wanted = escape_cell(derive(header, row))
-            if cells[position] != wanted:
+            wanted = escape_cell(derive(header, row, project_dir))
+            accepted = {wanted}
+            if header == "Bibliographic identity" and published_identity is not None:
+                accepted.add(
+                    escape_cell(published_identity(derive(header, row, project_dir)))
+                )
+            if cells[position] not in accepted:
                 changes.append(
                     f"{source_id}: {header!r} was {cells[position]!r}, now {wanted!r}"
                 )

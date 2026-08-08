@@ -16,9 +16,7 @@ description: |
 
 # HCI Motivation and Contributions
 
-Help researchers solve the **right problem** before expensive design, implementation, and
-evaluation choices become fixed. Produce a defensible research direction and outline, not polished
-manuscript prose.
+Help researchers solve the **right problem** before expensive design, implementation, and evaluation choices become fixed. Produce a defensible research direction and outline, not polished manuscript prose.
 
 ## Phase contract
 
@@ -29,9 +27,7 @@ Every phase is independently enterable. This is Phase 1 of:
 Never require an Office Hours brief or another prior-phase artifact. Accept any starting material.
 Import prior conclusions as evidence-bounded hypotheses, not approved premises. Office Hours remains a complete standalone experience.
 
-Read [pipeline-contract.md](references/pipeline-contract.md) when deciding phase scope or preparing
-the handoff. Read [exemplar-routing.md](references/exemplar-routing.md) before using full exemplar
-papers. Exemplars teach research structure and communication; they are not project evidence.
+Read [pipeline-contract.md](references/pipeline-contract.md) when deciding phase scope or preparing the handoff. Read [exemplar-routing.md](references/exemplar-routing.md) before using full exemplar papers. Exemplars teach research structure and communication; they are not project evidence.
 
 In scope: problem importance and timeliness, evidence status, current practice, related work,
 terminology, gaps, approach hypotheses, positioning, prospective contributions, and Phase 2/3
@@ -51,7 +47,7 @@ the direction; do not grade their absence.
 - Before durable project writes, read [repository-boundaries.md](references/repository-boundaries.md).
 - Before the first citation-bearing artifact, read [citation-integrity.md](references/citation-integrity.md).
 - Before motivation research or claim assessment, read [evidence-protocol.md](references/evidence-protocol.md),
-  [authoritative-domain-sources.md](references/authoritative-domain-sources.md),
+  [authoritative-domain-sources.md](references/authoritative-domain-sources.md), [research-discovery-recall.md](references/research-discovery-recall.md),
   [motivation-claim-strengthening.md](references/motivation-claim-strengthening.md), and
   [consequence-severity-research.md](references/consequence-severity-research.md).
 - Before translating evidence into author discussion, report narrative, outline language, or downstream writing
@@ -225,7 +221,9 @@ claim audit, update the resolution records, and resume the blocked analysis.
 Use Gemini NotebookLM through `notebooklm-mcp-cli` for source organization and synthesis. Create a
 new notebook per project, use headed Chrome for authorized access, store notebook/source IDs but no
 credentials, and write the resolved notebook ID, title, and profile to both `source-manifest.md`
-and `agent-context.json`. Keep those records synchronized after any notebook/profile change and
+and `agent-context.json`. Also link the notebook's `notebooklm.google.com/notebook/<id>` URL at
+the top of the project's root `README.md` so the author can open it in one click; keep that link
+current after any notebook change. Keep those records synchronized after any notebook/profile change and
 persist the vetted evidence bar and source markings. Treat NotebookLM ratings as review aids that
 must be reconciled against opened originals. Keep the notebook human-readable:
 maintain a `START HERE` evidence map, verify imports contain the intended work, use readable
@@ -301,7 +299,8 @@ registers, motivation and authority audits, `source-resolution.csv`,
 related-work matrices and positioning, terminology, options, reviewer records,
 `research-framing-outline.md`, `phase-2-handoff.md`, and generated reports.
 
-Treat the root README and linked Markdown shelf as workspace invariants, not end-of-phase polish. Before any
+Treat the root README and linked Markdown shelf as workspace invariants, not end-of-phase polish. The
+README's top matter links the project's NotebookLM notebook URL once one exists. Before any
 commit, push, terminal handoff, or claim that a durable work batch is complete, verify that the
 README links resolve, regenerate the reports after the latest material changes, and run the report
 auditor. Do not publish canonical updates with absent, stale, unlinked, or machine-local reader views.
@@ -417,8 +416,8 @@ study is not automatically a contribution. Run the contribution-discovery gates 
 `related-work-positioning.md`: objective/equal-quantity, concept lineage/in-domain collision,
 collision–delta, control-policy/residual state, anchor semantics/quality, temporal identifiability, construct independence, causal
 ladder/fidelity, and null survival. Apply the full six-field accounting symmetrically to prior work
-and the focal project. Separate the prospective causal core, supporting implementation, realization
-evidence, and value evidence. Do not promote a planned focal capability into a demonstrated
+and the focal project. Separate the platform-independent **approach invariant**—the human-activity, interaction, or control-policy change that survives platform substitution—from the implementation
+substrate/empirical waist, realization evidence, and value evidence. Do not promote a planned focal capability into a demonstrated
 contribution; preserve a demonstrated-unclaimed operation at its matched scope without using an
 old component to erase a novel human-activity capability or misattribute prior contribution.
 Do not conflate untested human value with absence of capability novelty: assess capability

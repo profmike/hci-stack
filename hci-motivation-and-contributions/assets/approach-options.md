@@ -8,7 +8,12 @@ record:
 ## Option ID — benefit-first name
 
 - **Intended human value:**
-- **Enabling insight and mechanism:**
+- **Platform-independent approach invariant:**
+- **Essential interaction/control-policy dimensions:**
+- **Enabling insight and inherited mechanism/rationale:**
+- **Implementation substrate / empirical waist:**
+- **Platform-substitution result:**
+- **Adaptation-credit disposition and evidence:**
 - **Inheritance and closest collision:**
 - **Evidence/applicability boundary:**
 - **Costs, risks, and failure modes:**

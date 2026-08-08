@@ -24,6 +24,9 @@ a universal order:
 - workflow relationship or significance;
 - interaction or information-distribution capability;
 - setting or activity boundary;
+- platform-independent approach invariant and essential interaction/control-policy dimensions;
+- implementation substrate / empirical waist, platform-substitution result, and demonstrated or
+  rejected **adaptation-credit disposition**;
 - implementation/design rationale that is not independent novelty;
 - untested outcome hypothesis; and
 - fair future comparator preserving valued current practice.

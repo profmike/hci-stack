@@ -52,6 +52,26 @@ write `is designed to`, `aims to`, or `lets us investigate` rather than assertin
 already improves learning, autonomy, coordination, workload, or performance. Record the intended
 value, evidence state, and later evidence need separately from the implemented mechanism.
 
+## State the approach before its implementation substrate
+
+Define the focal **approach invariant** as the human-activity, interaction, or control-policy change
+that should remain meaningful if the operating system, device, framework, sensor, or rendering
+medium changes. Then name the **implementation substrate / empirical waist** on which the project
+instantiates and evaluates that approach. Use the substitution test: if the same human-facing
+policy ran on another platform, what important idea would remain? That surviving idea is the
+approach; the replaceable platform is not.
+
+Use this reader-facing order:
+
+`problem → closest-work residual gap → platform-independent approach → inherited mechanism or rationale → implementation instance → planned evidence and prospective contributions`
+
+A useful pattern is: `We present [approach invariant]. We instantiate and evaluate it on
+[implementation substrate].` Do not open with `We present an Android/iOS/VR/... system` when the
+platform merely realizes the approach. Credit platform-specific work only when matched evidence
+demonstrates non-routine reusable adaptation knowledge, enables a new class of use, or produces a
+direct empirical finding. Preserve the existing exception when hardware or medium itself changes
+the human capability, outcome, or access boundary.
+
 ## Separate capability collision, contribution attribution, and idea provenance
 
 For prior-work framing and scoping, use the six-field accounting in

@@ -75,11 +75,15 @@ removed, do not append a disclaimer about an unclaimed distal outcome.
 
 ## Approach hypothesis
 
+- Platform-independent approach invariant:
+- Essential interaction/control-policy dimensions:
 - Intended experience:
 - Workflow stage replaced, complemented, extended, or bridged:
 - Proposed communication structure:
 - Enabling mechanism:
-- Planned empirical waist:
+- Implementation substrate / empirical waist:
+- Platform-substitution result:
+- Adaptation-credit disposition and evidence:
 - Alternatives considered:
 - Expected costs and failure modes:
 - Terminology-contract status:

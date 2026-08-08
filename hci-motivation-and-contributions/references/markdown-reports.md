@@ -13,6 +13,9 @@ outcomes—relevant, findable, understandable, and usable—without simplifying 
 claim boundaries, author decisions, or reopen triggers. It must contain a concise,
 evidence-status-aware summary of:
 
+- `## The user value`, stated before the mechanism;
+- `## Introduction — structure and outline`, ordered from problem and residual gap through the
+  platform-independent approach to its implementation substrate and planned evidence;
 - the human problem and target context;
 - a `## Closest prior work` comparison in which every cited work says **What it did:** and
   **How this project differs:**;

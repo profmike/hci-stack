@@ -40,6 +40,9 @@ Select and record the output profile before publishing. All profiles preserve th
 - A temporary `[@CitationKey]` token may be used while drafting or inside a structured narrative
   cell only when the phase's deterministic GitHub publication step resolves it before delivery.
   Raw `[@CitationKey]` is never a finished GitHub-facing citation.
+- Backticks do not exempt a scholarly citation: an exact inline-code form such as `` `[@Key]` ``
+  must publish as the same keyed link. Keep literal citation-syntax examples inside fenced code;
+  the output audit rejects an inline-code token that survives publication.
 - Derive the visible label, destination, and metadata from `references.csv`; authors do not hand-copy
   or redefine bibliographic identity in prose.
 - Give every citation-bearing Markdown file a visible `References` section containing the full

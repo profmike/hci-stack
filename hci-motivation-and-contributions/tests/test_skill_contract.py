@@ -125,6 +125,9 @@ EVIDENCE_STRENGTH_TEMPLATE = (
 MOTIVATION_STRENGTHENING = (
     ROOT / "references" / "motivation-claim-strengthening.md"
 ).read_text(encoding="utf-8")
+RESEARCH_DISCOVERY_RECALL = (
+    ROOT / "references" / "research-discovery-recall.md"
+).read_text(encoding="utf-8")
 MOTIVATION_QUEUE_TEMPLATE = (
     ROOT / "assets" / "motivation-claim-research-queue.md"
 ).read_text(encoding="utf-8")
@@ -141,6 +144,10 @@ REVIEWER_PANEL = (ROOT / "references" / "reviewer-panel.md").read_text(
     encoding="utf-8"
 )
 PROJECT_README = (ROOT / "assets" / "project-readme.md").read_text(
+    encoding="utf-8"
+)
+APPROACH_OPTIONS = (ROOT / "assets" / "approach-options.md").read_text(encoding="utf-8")
+CONTRIBUTION_OPTIONS = (ROOT / "assets" / "contribution-options.md").read_text(
     encoding="utf-8"
 )
 WORKSPACE_INITIALIZER = (
@@ -490,7 +497,7 @@ class SkillContractTests(unittest.TestCase):
 
     def test_phase_one_is_active_collaboration_not_batch_document_generation(self):
         flattened_skill = " ".join(SKILL.split())
-        self.assertLessEqual(len(SKILL.splitlines()), 500)
+        self.assertLess(len(SKILL.splitlines()), 500)
         self.assertIn(
             "[phase-1-research-workflow.md]"
             "(references/phase-1-research-workflow.md)",
@@ -714,6 +721,47 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn("Contradictory", CURRENT_PRACTICE_TEMPLATE)
         self.assertIn("Unsupported failure or abandonment claims", CURRENT_PRACTICE_TEMPLATE)
 
+    def test_motivation_discovery_is_recall_first_replayable_and_challenged(self):
+        self.assertIn("research-discovery-recall.md", SKILL)
+        combined = " ".join(
+            (RESEARCH_DISCOVERY_RECALL + "\n" + MOTIVATION_STRENGTHENING).split()
+        )
+        for phrase in (
+            "Keep two gates separate",
+            "Candidate discovery",
+            "Claim admissibility",
+            "claim-facet matrix",
+            "independent retrieval challenger",
+            "natural-language experience route",
+            "two independent retrieval systems",
+            "opaque session citation handles",
+            "Promote identities wherever they appear",
+            "non-title/non-author",
+            "zero new decision-relevant candidates",
+            "not found under these dated routes",
+        ):
+            self.assertIn(phrase, combined)
+        for phrase in (
+            "High-impact discovery facet matrix",
+            "Independent retrieval challenger accountability",
+            "Candidate-role reconciliation",
+            "Durable raw artifact + hash",
+            "opaque session citation handles are not treated as evidence",
+        ):
+            self.assertIn(phrase, MOTIVATION_QUEUE_TEMPLATE)
+
+    def test_completed_phase_is_audited_against_open_research_gates(self):
+        combined = " ".join((SKILL + "\n" + DETAILED_WORKFLOW).split())
+        for phrase in (
+            "phase.status` is `complete`",
+            "motivation-claim",
+            "ACM/SIGCHI",
+            "search-recall",
+            "unchecked gate",
+            "template placeholder",
+        ):
+            self.assertIn(phrase, combined)
+
     def test_missing_full_sources_trigger_concrete_author_access_help(self):
         missing_template = (
             ROOT / "assets" / "missing-full-copies.md"
@@ -917,6 +965,8 @@ class SkillContractTests(unittest.TestCase):
         for phrase in (
             "HCI-PLAIN-LANGUAGE",
             "ISO 24495-1:2023",
+            "## The user value",
+            "## Introduction — structure and outline",
             "## At a glance",
             "## Continue by task",
         ):
@@ -1402,6 +1452,36 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn("Activity-versus-implementation counterfactual", AUDIT_TEMPLATE)
         self.assertIn("physical versus virtual", RUBRIC)
         self.assertIn("not merely the rendering environment", QUADRANT)
+
+    def test_focal_approach_invariant_precedes_implementation_substrate(self):
+        self.assertIn("platform-independent **approach invariant**", SKILL)
+        self.assertIn("State the approach before its implementation substrate", CLAIM_FOCUSED_WRITING)
+        self.assertIn("problem → closest-work residual gap → platform-independent approach", CLAIM_FOCUSED_WRITING)
+        self.assertIn("platform-independent approach invariant", DETAILED_WORKFLOW)
+        for text in (
+            PROJECT_README,
+            APPROACH_OPTIONS,
+            CONTRIBUTION_OPTIONS,
+            PHASE_1_WORKBOARD,
+            OUTLINE_TEMPLATE,
+            PHASE_2_HANDOFF,
+            DECISION_PACKET,
+        ):
+            self.assertIn("approach invariant", text.lower())
+            self.assertIn("implementation substrate / empirical waist", text.lower())
+            self.assertIn("platform-substitution", text.lower())
+            self.assertIn("adaptation-credit", text.lower())
+        introduction = PROJECT_README.split(
+            "## Introduction — structure and outline", 1
+        )[1].split("\n## ", 1)[0]
+        self.assertLess(
+            introduction.index("Approach invariant"),
+            introduction.index("Implementation substrate / empirical waist"),
+        )
+        first_level_two = next(
+            line for line in PROJECT_README.splitlines() if line.startswith("## ")
+        )
+        self.assertEqual(first_level_two, "## At a glance")
 
     def test_existing_workflow_and_fair_comparator_are_required(self):
         self.assertIn("existing human workflow", POSITIONING)

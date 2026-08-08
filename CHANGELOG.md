@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.4.5] - 2026-08-09 — Recall-First Motivation Research
+
+### Added
+
+- **Research-discovery recall contract.** High-impact motivation claims now separate recall-first
+  candidate intake from strict evidentiary admission, use a population/task/control/acquisition/
+  outcome/context facet matrix, promote embedded titles and identifiers, and reconcile an
+  independent retrieval challenger.
+- **Replayable external-research records.** Search logs and motivation queues now preserve
+  provider/model versions, exact prompts or queries, filters, screen depth, raw-artifact hashes,
+  candidate roles, and terminal dispositions. Opaque session citation handles cannot serve as
+  evidence.
+- **Fail-closed phase completion.** The publication audit rejects `phase.status=complete` while the
+  motivation, ACM/SIGCHI, or related-work recall gate is open, unchecked, or still templated.
+
+### Changed
+
+- Synchronized previously installed Phase 1 contract, report, citation, and source-manifest fixes
+  back into the canonical skill package so the version-controlled source and Codex installation
+  are identical.
+
 ## [0.4.4] - 2026-08-05 — Source Identity Is Read, Not Retyped
 
 Wrong DOIs and wrong author names reached an author. Both defects had the same shape: an
