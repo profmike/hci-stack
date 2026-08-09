@@ -38,8 +38,31 @@ contribution, use this order:
 `human situation or tension → value people need → capability that supports it → necessary implementation detail`
 
 Explain why people would want a behavior or control before naming how the system implements it.
-A reader should not have to infer the benefit from a feature list. Ask: **Why should this person
-care?** If the answer appears only after the capability or implementation, reorder the passage.
+Make the benefit explicit rather than leaving the reader to infer it from a feature list. Ask:
+**What matters in this person's activity, and what breaks without it?** If the answer appears only
+after the capability or implementation, reorder the passage.
+
+### State motivation and user value declaratively
+
+Write reader-facing motivation, human need, and user value as positive declarative statements.
+Do not use author-voice `should`, `ought`, `deserves`, or `should be able to` as a substitute for
+showing the activity, constraint, consequence, or value. Deontic wording asks readers to endorse a
+value judgment; strong motivation makes the warranted premise legible as a matter of fact.
+
+Match the declaration to its evidence state:
+
+- state an established or observed condition directly: `One team play gives different players
+  different jobs.`;
+- state a grounded need directly: `Each player needs the instruction relevant to that job while
+  the team keeps practising.`; and
+- state an untested intended value as a design goal: `The design aims to let guidance step back as
+  players learn.`
+
+Declarative wording does not authorize an unmeasured benefit. Keep causal outcomes at their actual
+evidence state. Reserve `should` for a precisely attributed recommendation, policy, or formal
+standard—and keep that attribution in the sentence—or for internal procedural instructions rather
+than paper-facing motivation or user value. A factual task requirement such as `the actions must
+occur in sequence` is not a normative appeal and remains acceptable when evidence supports it.
 
 Prefer concrete people, actions, and consequences over compressed academic noun stacks. For
 example, introduce `players whose actions must work together` before a precise term such as

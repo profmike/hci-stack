@@ -480,6 +480,25 @@ class Phase1MarkdownPublicationTests(unittest.TestCase):
         self.assertTrue(any("missing required section '## The user value'" in error for error in errors))
         self.assertTrue(any("Introduction outline lacks 'Platform-substitution result'" in error for error in errors))
 
+    def test_readme_motivation_and_user_value_reject_author_voice_should(self):
+        path = self.repo / "README.md"
+        source = path.read_text(encoding="utf-8")
+        source = source.replace(
+            "**Status: `unsupported` pending project-specific research.**",
+            "**Status: `unsupported` pending project-specific research.** People should care.",
+            1,
+        )
+        source = source.replace(
+            "**Evidence state: `hypothesis`.**",
+            "**Evidence state: `hypothesis`.** Users should be able to receive support.",
+            1,
+        )
+        path.write_text(source, encoding="utf-8")
+        self.publish()
+        errors, _ = AUDIT.audit(self.root)
+        self.assertTrue(any("At a glance must state motivation" in error for error in errors))
+        self.assertTrue(any("The user value must state motivation" in error for error in errors))
+
     def test_readme_requires_answer_first_and_approach_before_substrate_in_intro(self):
         path = self.repo / "README.md"
         source = path.read_text(encoding="utf-8")

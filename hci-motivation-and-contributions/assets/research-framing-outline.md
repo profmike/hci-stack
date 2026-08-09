@@ -11,7 +11,7 @@ Status: candidate / author-selected / ready-with-risks / ready-for-phase-2
 - Authority's verified remit and document type:
 - Exact claim supported / explicit cannot-support boundary:
 - Method and strength:
-- Why a broad HCI audience should care:
+- Why this matters to a broad HCI audience:
 - Boundary:
 
 ## 2. Specific human problem

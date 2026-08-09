@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.4.6] - 2026-08-09 — Declarative Motivation and User Value
+
+### Changed
+
+- **Declarative reader-facing motivation.** Motivation, human need, and user value now state the
+  evidenced condition or grounded need directly instead of asking readers to endorse that people
+  `should` receive a benefit. Untested benefits remain explicit design goals rather than facts.
+- **Publication audit.** The project overview now fails publication when its `At a glance` or
+  `The user value` section uses author-voice `should`; attributed recommendations and internal
+  procedural requirements remain available outside those sections.
+
 ## [0.4.5] - 2026-08-09 — Recall-First Motivation Research
 
 ### Added

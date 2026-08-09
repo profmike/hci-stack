@@ -16,7 +16,8 @@ with the answer readers need; keep the checked evidence and exact claim boundari
 
 **Evidence state: `hypothesis`.** Describe the specific people, transition or activity, and value the
 project aims to support before naming the mechanism. Link the exact evidence boundary in the
-[research framing outline](research-framing/research-framing-outline.md).
+[research framing outline](research-framing/research-framing-outline.md). State the motivation and
+user value declaratively; do not ask readers to endorse that people `should` receive a benefit.
 
 ## Introduction — structure and outline
 

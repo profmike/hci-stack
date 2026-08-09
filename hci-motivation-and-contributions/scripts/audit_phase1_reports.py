@@ -478,6 +478,21 @@ def audit_root_readme(repo_root: Path, errors: list[str]) -> None:
     if level_two_headings and level_two_headings[0] != "## At a glance":
         errors.append("README.md: At a glance must be the first level-two section")
 
+    for heading in ("At a glance", "The user value"):
+        section = re.search(
+            rf"^## {re.escape(heading)}\s*$\n(.*?)(?=^##\s+|\Z)",
+            source,
+            re.MULTILINE | re.DOTALL,
+        )
+        if section and re.search(
+            r"\bshould\b", publisher.strip_code(section.group(1)), re.IGNORECASE
+        ):
+            errors.append(
+                f"README.md: {heading} must state motivation and user value declaratively; "
+                "author-voice 'should' belongs only in an attributed recommendation outside "
+                "these sections"
+            )
+
     introduction = re.search(
         r"^## Introduction — structure and outline\s*$\n(.*?)(?=^##\s+|\Z)",
         source,

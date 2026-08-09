@@ -1632,12 +1632,20 @@ class SkillContractTests(unittest.TestCase):
         for phrase in (
             "Lead with human value before mechanism",
             "human situation or tension → value people need → capability",
-            "Why should this person\ncare?",
+            "What matters in this person's activity, and what breaks without it?",
+            "State motivation and user value declaratively",
+            "Do not use author-voice `should`",
+            "Deontic wording asks readers to endorse a\nvalue judgment",
+            "Reserve `should` for a precisely attributed recommendation",
             "Capability is not benefit",
             "players whose actions must work together",
             "different teammates hear the next instruction they need",
         ):
             self.assertIn(phrase, CLAIM_FOCUSED_WRITING)
+        self.assertNotIn("Why should this person\ncare?", CLAIM_FOCUSED_WRITING)
+        self.assertIn("Why this matters to a broad HCI audience", OUTLINE_TEMPLATE)
+        self.assertNotIn("Why a broad HCI audience should care", OUTLINE_TEMPLATE)
+        self.assertIn("State the motivation and\nuser value declaratively", PROJECT_README)
         self.assertIn("human situation and desired value", normalized_skill)
         self.assertIn("benefit-first entry sentence", TERMINOLOGY)
         self.assertIn("Benefit-first entry sentence", TERMINOLOGY_TEMPLATE)
