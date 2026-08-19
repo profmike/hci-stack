@@ -40,8 +40,18 @@ GENERIC_AUTHOR_YEAR_RE = re.compile(
     r"\b[A-ZÀ-ÖØ-Þ][A-Za-zÀ-ÖØ-öø-ÿ'’\-]+\s+et\s+al\.\s*"
     r"\([^()\n]*\b(?:19|20)\d{2}[a-z]?\b[^()\n]*\)"
 )
-CITATION_CLUSTER_SEPARATOR_RE = re.compile(
-    r"^\s*(?:(?:[,;/&]|\band\b)\s*)+$", re.IGNORECASE
+LANDSCAPE_ENUMERATION_RE = re.compile(
+    r"\b(?:HCI|(?:prior|existing|previous|earlier|related)\s+"
+    r"(?:work|research|studies)|the\s+literature|research|studies)\b"
+    r"[^.!?]{0,280}\b(?:interventions?|strategies|approaches|techniques|mechanisms|"
+    r"controls|features|effects|outcomes|behaviors|behaviours)\b"
+    r"[^.!?]{0,160}\b(?:include(?:s|d)?|including|such\s+as|for\s+example|e\.g\.|namely)"
+    r"(?=\s|[:,])[:,]?\s*"
+    r"(?P<items>[^.!?]{0,500})",
+    re.IGNORECASE,
+)
+ENUMERATION_ITEM_SEPARATOR_RE = re.compile(
+    r"\s*(?:,|;)\s*|\s+\b(?:and|or)\b\s+", re.IGNORECASE
 )
 VAGUE_IMPORTANCE_RE = re.compile(
     r"\b(?:a|an)\s+"
@@ -217,48 +227,54 @@ def inline_code_citation_tokens(text: str) -> list[str]:
     return tokens
 
 
-def oversized_citation_clusters(
-    text: str,
-    catalog: dict[str, publisher.Citation],
-) -> list[tuple[int, list[str]]]:
-    """Return adjacent scholarly citation clusters containing more than two works."""
-    visible = publisher.strip_code(strip_managed_citations(text))
-    uses = [
-        match
-        for match in GENERAL_REFERENCE_LINK_RE.finditer(visible)
-        if match.group(2) in catalog
-    ]
-    oversized: list[tuple[int, list[str]]] = []
-    cluster: list[re.Match[str]] = []
-    for match in uses:
-        if not cluster:
-            cluster = [match]
-            continue
-        gap = visible[cluster[-1].end() : match.start()]
-        if gap.isspace() or CITATION_CLUSTER_SEPARATOR_RE.fullmatch(gap):
-            cluster.append(match)
-            continue
-        if len(cluster) > 2:
-            oversized.append(
-                (
-                    visible.count("\n", 0, cluster[0].start()) + 1,
-                    [item.group(2) for item in cluster],
-                )
-            )
-        cluster = [match]
-    if len(cluster) > 2:
-        oversized.append(
-            (
-                visible.count("\n", 0, cluster[0].start()) + 1,
-                [item.group(2) for item in cluster],
-            )
-        )
-    return oversized
-
-
 def mask_match(match: re.Match[str]) -> str:
     """Hide Markdown syntax while preserving line numbers for diagnostics."""
     return "".join("\n" if character == "\n" else " " for character in match.group(0))
+
+
+def broadcast_landscape_enumerations(
+    text: str,
+    catalog: dict[str, publisher.Citation],
+) -> list[tuple[int, list[str]]]:
+    """Return high-confidence prior-work lists lacking item-local citations.
+
+    Whether several sources support one indivisible claim is semantic, so cluster size is not
+    audited. This narrow check catches the common broadcast pattern in which a research-landscape
+    sentence enumerates at least three intervention atoms but places citations only after the list.
+    """
+    visible = publisher.strip_code(strip_managed_citations(text))
+    visible = GENERIC_REFERENCE_DEF_RE.sub(mask_match, visible)
+    findings: list[tuple[int, list[str]]] = []
+    paragraph_re = re.compile(r"(?:\A|(?:\r?\n){2,})(?P<body>.*?)(?=(?:\r?\n){2,}|\Z)", re.DOTALL)
+
+    for paragraph_match in paragraph_re.finditer(visible):
+        paragraph = paragraph_match.group("body")
+        if any(line.lstrip().startswith("|") for line in paragraph.splitlines()):
+            continue
+
+        def hide_citation(match: re.Match[str]) -> str:
+            return mask_match(match) if match.group(2) in catalog else match.group(0)
+
+        masked = GENERAL_REFERENCE_LINK_RE.sub(hide_citation, paragraph)
+        for enumeration in LANDSCAPE_ENUMERATION_RE.finditer(masked):
+            item_start, item_end = enumeration.span("items")
+            original_items = paragraph[item_start:item_end]
+            marked_items = GENERAL_REFERENCE_LINK_RE.sub(
+                lambda match: "<CITE>" if match.group(2) in catalog else match.group(0),
+                original_items,
+            )
+            items = [
+                item.strip(" ()[]\n\t")
+                for item in ENUMERATION_ITEM_SEPARATOR_RE.split(marked_items)
+                if item.strip(" ()[]\n\t")
+            ]
+            if len(items) < 3:
+                continue
+            uncited = [item for item in items if "<CITE>" not in item]
+            if uncited:
+                absolute = paragraph_match.start("body") + enumeration.start("items")
+                findings.append((visible.count("\n", 0, absolute) + 1, uncited))
+    return findings
 
 
 def unlinked_citation_shorthands(
@@ -386,11 +402,11 @@ def audit_citations(
     errors: list[str],
 ) -> None:
     unmanaged = strip_managed_citations(text)
-    for line_number, keys in oversized_citation_clusters(text, catalog):
+    for line_number, uncited in broadcast_landscape_enumerations(text, catalog):
         errors.append(
-            f"{path}:{line_number}: citation cluster contains {len(keys)} works "
-            f"({', '.join(keys)}); place citations beside their smallest supported claims "
-            "and use no more than two per cluster"
+            f"{path}:{line_number}: research-landscape enumeration has item(s) without an "
+            f"immediate citation ({', '.join(uncited)}); cite each independently supported "
+            "item locally and repeat a citation key when one work supports multiple items"
         )
     hidden_inline_tokens = sorted(set(inline_code_citation_tokens(unmanaged)))
     if hidden_inline_tokens:

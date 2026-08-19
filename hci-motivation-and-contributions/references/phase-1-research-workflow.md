@@ -993,7 +993,9 @@ Write the `Reader-facing Introduction spine` first as a conclusion-level outline
 6. an evidence-state-matched study and contribution statement.
 
 Open with findings rather than an abstract importance label. Put each citation immediately after
-the smallest supported claim or keyword and use no more than two citations in one cluster. Keep
+the smallest supported claim or keyword, repeat a work wherever it supports another atom, and cite
+each independently supported item in an enumeration. Split clusters as finely as the evidence
+permits; a cluster has no numeric cap only when every work supports the same indivisible atom. Keep
 generic methodological disclaimers in the researcher record when calibrated verbs already express
 the boundary; retain qualifiers that change an active claim's truth or causal meaning. Use `We
 conducted` only after the study is complete and verified.

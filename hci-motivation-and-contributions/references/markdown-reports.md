@@ -127,10 +127,12 @@ Append one file-local definition and one visible full-reference entry for every 
 both from `references.csv`. The stable key remains explicit in Markdown source and downstream tools
 can recover manuscript identity without parsing visible prose.
 
-Place each citation immediately after the smallest claim or keyword it supports. Prefer one source
-per supported claim; use no more than two citations in a cluster, and only when both support that
-same smallest claim. Split larger syntheses into claim-local citations rather than leaving a source
-pile at the end of a sentence or paragraph.
+Place each citation immediately after the smallest claim or keyword it supports. Repeat the same
+work wherever it supports another atom, including after multiple independently supported items in
+one enumeration. Split clusters as finely as the evidence permits. Prefer one source per atom; a
+multi-source cluster has no numeric cap only when every work supports the same indivisible atom.
+Never leave one broadcast source pile at the end of a sentence or paragraph to support distinct
+claims.
 
 Fail publication or audit on unknown or case-folded duplicate keys, duplicate definitions,
 ambiguous aliases, unresolved citation shorthand, raw draft tokens outside code, mismatched labels,

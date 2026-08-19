@@ -1,6 +1,6 @@
 # HCI citation integrity contract
 
-Contract version: `HCI-CITATIONS-3`
+Contract version: `HCI-CITATIONS-4`
 
 This contract applies to every current and future `hci-*` skill in this repository.
 
@@ -15,16 +15,21 @@ This contract applies to every current and future `hci-*` skill in this reposito
   unique. Do not use a conceptual claim, mechanism label, or author surname shared by multiple
   works as an alias.
 
-## Claim-local placement and cluster limit
+## Claim-local placement and maximally split clusters
 
 - Place each citation immediately after the smallest claim, result, construct, or keyword it
   supports. Do not collect sources at the end of a sentence or paragraph when they support
   different propositions.
-- Prefer one citation at each supported claim. When two sources jointly support the same smallest
-  claim, they may share one cluster. Never put more than two citations in one cluster.
-- When three or more sources matter, split the prose into distinct supported claims and place each
-  source beside its relevant claim. Keep the complete source portfolio in the internal evidence
-  record or a dedicated related-work synthesis rather than compressing it into a citation pile.
+- Treat each independently supportable item in a coordinated list as its own citation atom. Cite
+  `monitoring [A]`, `reminders [B]`, `limits [C]`, `friction [D]`, and `blocking [E]` beside the
+  relevant keyword rather than attaching one broadcast cluster to the end of the list.
+- Repeat a work wherever it supports multiple distinct atoms, even within one sentence. Citation
+  reuse is expected; never move or omit a citation merely because the same key appeared earlier.
+- Prefer one citation at each supported atom. A cluster has no numeric maximum, but every work in
+  it must support the same smallest indivisible claim. Split clusters as finely as the evidence
+  permits whenever sources support different items, constructs, results, or links in the argument.
+- Keep the complete source portfolio in the internal evidence record or a dedicated related-work
+  synthesis rather than using a broad end-of-sentence cluster to stand for multiple claims.
 - These placement rules apply to GitHub Markdown and native manuscript profiles. Rendering syntax
   may differ, but source scope and proximity may not.
 
@@ -42,8 +47,9 @@ Select and record the output profile before publishing. All profiles preserve th
   [CitationKey]: <https://canonical.example/work> "Full authors. Full title. Full venue."
   ```
 
-- Use one keyed link per work. When exactly two works jointly support the same smallest claim, use
-  `([First work][FirstKey]; [Second work][SecondKey])`.
+- Use one keyed link for each citation occurrence and reuse the same stable key every time that work
+  is cited. When multiple works support the same smallest indivisible claim, they may share a
+  cluster such as `([First work][FirstKey]; [Second work][SecondKey]; [Third work][ThirdKey])`.
 - Hyperlink every scholarly citation. An author/title/venue/year shorthand such as
   `Author et al. (Venue Year)` or `System Name (Venue Year)` outside a keyed link is unfinished and
   must fail the output gate, even when the same work is linked elsewhere in the file.

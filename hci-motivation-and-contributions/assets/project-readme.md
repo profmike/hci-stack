@@ -43,7 +43,9 @@ This is an argument outline, not polished manuscript prose. Use this move order:
 
 Open with the concrete finding, not a label such as `a serious human problem`. Write conclusion-level
 synthesis rather than study-by-study detail. Put each citation immediately after the smallest claim
-or keyword it supports, and never put more than two citations in one cluster. Keep generic review
+or keyword it supports. Repeat a work wherever it supports another atom, cite each independently
+supported item in an enumeration, and split clusters as finely as the evidence permits. A cluster
+has no numeric cap only when every work supports the same indivisible atom. Keep generic review
 disclaimers in the internal evidence record; retain a claim-local qualifier when removing it would
 change the statement's truth, scope, causal meaning, or likely interpretation.
 

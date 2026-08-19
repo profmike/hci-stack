@@ -27,8 +27,9 @@ Phase 2 may import this artifact, but must also accept any other starting materi
 - Claim-local qualifiers that must remain reader-facing:
 - Generic review caveats that remain researcher-only because the prose already uses calibrated
   constructs and verbs:
-- Citation-placement rule: each citation follows the smallest supported claim or keyword; no
-  cluster contains more than two citations.
+- Citation-placement rule: each citation follows the smallest supported claim or keyword; a work
+  repeats wherever it supports another atom; independently supported list items are cited locally;
+  and clusters are split as finely as the evidence permits. A same-atom cluster has no numeric cap.
 
 ## Landscape and gap
 

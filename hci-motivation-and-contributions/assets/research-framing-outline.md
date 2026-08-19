@@ -6,7 +6,9 @@ Status: candidate / author-selected / ready-with-risks / ready-for-phase-2
 
 This section is a conclusion-level argument outline. Keep study-level methods, full limitations,
 and generic review disclaimers in the linked internal records. Put each citation immediately after
-the smallest supported claim or keyword; use no more than two citations in one cluster.
+the smallest supported claim or keyword. Repeat sources across atoms, cite independently supported
+list items locally, and split clusters as finely as the evidence permits. A same-atom cluster has no
+numeric cap.
 
 1. **Concrete behavior and consequence**
    - Focal people, behavior, and temporal or situational context:

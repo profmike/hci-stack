@@ -139,10 +139,9 @@ NotebookLM unless a separate, explicit data-governance decision authorizes them.
 
 ### Ground every retained claim in complete sources
 
-Every retained reference must have an obtained, saved, and opened full copy. Abstracts, snippets,
-AI summaries, and secondary paraphrases may discover candidates but cannot ground claims or
-comparisons. Maintain stable `references.csv` keys and follow `HCI-CITATIONS-3`: GitHub Markdown
-uses keyed links plus catalog-derived definitions and visible full references; resolve all draft
+Every retained reference must have an obtained, saved, and opened full copy. Abstracts, snippets, AI summaries,
+and secondary paraphrases may discover candidates but cannot ground claims or
+comparisons. Maintain stable `references.csv` keys and follow `HCI-CITATIONS-4`: GitHub Markdown uses keyed links plus catalog-derived definitions and visible full references; resolve all draft
 tokens and hyperlink every citation shorthand. Unknown/duplicate identities, missing metadata, and broken links block delivery.
 
 Record each material claim's method, population/context, sample or coverage, result, uncertainty,
@@ -248,12 +247,13 @@ would establish every important project claim.
 
 ### Separate complete evidence review from concise reader-facing claims
 
-Preserve uncertainty, limitations, non-claims, counterevidence, and reopen triggers internally. In reader-facing
-approach, feature, design-choice, or contribution descriptions, lead with the human situation and desired value,
+Preserve uncertainty, limitations, non-claims, counterevidence, and reopen triggers internally. In reader-facing approach, feature, design-choice, or contribution descriptions, lead with the human situation and desired value,
 then the capability and only necessary implementation detail. Open with concrete behavior and consequences, never
 an abstract label such as `a serious human problem`. Place each citation immediately after the smallest claim or
-keyword it supports; use no more than two citations in one cluster. Keep generic review disclaimers internal, but
-retain any claim-local qualifier or counterfinding needed to keep the active synthesis true. For a time-anchored
+keyword it supports. Repeat a work wherever it supports another atom; cite each independently supported item in an
+enumeration; split clusters as finely as the evidence permits. A multi-source cluster has no numeric cap only when
+every work supports the same indivisible atom. Keep generic review disclaimers internal, but retain any
+claim-local qualifier or counterfinding needed to keep the active synthesis true. For a time-anchored
 transition intervention, use this conclusion-first spine: concrete behavior and consequence → why the transition
 differs from aggregate control → prior user/technical approaches and measured limits → outcome-oriented approach
 and mechanisms → newly enabled comparison and outcomes → evidence-state-matched study and contribution statement.

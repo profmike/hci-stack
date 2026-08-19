@@ -43,7 +43,8 @@ class InitializePhase1WorkspaceTests(unittest.TestCase):
                 "Outcome-oriented approach and mechanisms",
                 "Newly enabled investigation",
                 "Study and contribution statement",
-                "never put more than two citations in one cluster",
+                "split clusters as finely as the evidence permits",
+                "has no numeric cap",
             ):
                 self.assertIn(phrase, readme)
             headings = [line for line in readme.splitlines() if line.startswith("## ")]

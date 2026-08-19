@@ -58,10 +58,14 @@ when several studies support the same bounded conclusion.
 
 Place a citation immediately after the smallest supported claim, result, construct, or keyword.
 Do not collect sources at the end of a sentence or paragraph when they support different links in
-the argument. Prefer one citation per supported claim. Use at most two citations in one cluster,
-and only when both support the same smallest claim. If three or more sources matter, split the
-sentence or paragraph and place each source beside its relevant claim. Keep the full evidence
-portfolio in the internal record rather than turning the Introduction into a citation pile.
+the argument. Repeat a work wherever it directly supports another key claim; a citation elsewhere
+in the paper does not support the current claim. Treat independently supported items in an
+enumeration as separate claim atoms and cite each item immediately—for example, `monitoring [A]`,
+`reminders [B]`, `limits [C]`, `friction [D]`, and `blocking [E]`. Split citation clusters as finely
+as the evidence permits. Prefer one source per atom. A multi-source cluster is appropriate only
+when every work supports the exact same indivisible atom; it has no numeric cap in that case. Keep
+the full evidence portfolio in the internal record rather than turning the Introduction into a
+broadcast citation pile.
 
 ## Use a six-move Introduction for time-anchored transition interventions
 

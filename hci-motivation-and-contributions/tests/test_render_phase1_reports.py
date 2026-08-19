@@ -392,7 +392,7 @@ class Phase1MarkdownPublicationTests(unittest.TestCase):
         errors, _ = AUDIT.audit(self.root)
         self.assertEqual(errors, [])
 
-    def test_two_claim_local_citations_pass_but_three_source_cluster_fails(self):
+    def test_same_atom_cluster_and_repeated_claim_local_key_pass(self):
         with (self.root / "references.csv").open("a", newline="", encoding="utf-8") as handle:
             writer = csv.writer(handle)
             writer.writerows(
@@ -423,7 +423,9 @@ class Phase1MarkdownPublicationTests(unittest.TestCase):
             )
         path = self.root / "research-framing-outline.md"
         path.write_text(
-            "# Outline\n\nOne claim ([@Example2024]; [@Second2024]).\n",
+            "# Outline\n\n"
+            "One indivisible claim ([@Example2024]; [@Second2024]; [@Third2024]).\n\n"
+            "The study recruited participants in London, Taipei, and New York [@Example2024].\n",
             encoding="utf-8",
         )
         self.publish()
@@ -431,12 +433,39 @@ class Phase1MarkdownPublicationTests(unittest.TestCase):
         self.assertEqual(errors, [])
 
         path.write_text(
-            "# Outline\n\nOne claim ([@Example2024]; [@Second2024]; [@Third2024]).\n",
+            "# Outline\n\n"
+            "HCI has developed interventions including monitoring, reminders, limits,\n"
+            "friction, and blocking ([@Example2024]; [@Second2024]; [@Third2024]).\n",
             encoding="utf-8",
         )
         self.publish()
         errors, _ = AUDIT.audit(self.root)
-        self.assertTrue(any("citation cluster contains 3 works" in error for error in errors), errors)
+        self.assertTrue(
+            any("research-landscape enumeration" in error for error in errors),
+            errors,
+        )
+
+        path.write_text(
+            "# Outline\n\n"
+            "Prior work describes interventions including monitoring [@Example2024], "
+            "reminders, and blocking [@Second2024].\n",
+            encoding="utf-8",
+        )
+        self.publish()
+        errors, _ = AUDIT.audit(self.root)
+        self.assertTrue(any("reminders" in error for error in errors), errors)
+
+        path.write_text(
+            "# Outline\n\n"
+            "HCI has developed interventions including monitoring [@Example2024], "
+            "reminders [@Example2024], limits [@Example2024], friction [@Example2024], "
+            "and blocking [@Example2024].\n",
+            encoding="utf-8",
+        )
+        self.publish()
+        errors, _ = AUDIT.audit(self.root)
+        self.assertEqual(errors, [])
+        self.assertEqual(path.read_text(encoding="utf-8").count("][Example2024]"), 5)
 
     def test_reader_facing_overview_rejects_vague_importance_and_generic_disclaimer(self):
         path = self.repo / "README.md"
