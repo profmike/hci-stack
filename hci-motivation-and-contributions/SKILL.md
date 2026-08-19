@@ -50,8 +50,7 @@ the direction; do not grade their absence.
   [authoritative-domain-sources.md](references/authoritative-domain-sources.md), [research-discovery-recall.md](references/research-discovery-recall.md),
   [motivation-claim-strengthening.md](references/motivation-claim-strengthening.md), and
   [consequence-severity-research.md](references/consequence-severity-research.md).
-- Before translating evidence into author discussion, report narrative, outline language, or downstream writing
-  guidance, read [claim-focused-writing.md](references/claim-focused-writing.md).
+- Before translating evidence into author discussion, report narrative, outline language, or downstream writing guidance, read [claim-focused-writing.md](references/claim-focused-writing.md).
 - Before NotebookLM setup or ingestion, read [notebooklm-research.md](references/notebooklm-research.md).
 - Before related-work search and comparison, read [acm-sigchi-related-work.md](references/acm-sigchi-related-work.md),
   [forward-citation-expansion.md](references/forward-citation-expansion.md), and
@@ -142,7 +141,7 @@ NotebookLM unless a separate, explicit data-governance decision authorizes them.
 
 Every retained reference must have an obtained, saved, and opened full copy. Abstracts, snippets,
 AI summaries, and secondary paraphrases may discover candidates but cannot ground claims or
-comparisons. Maintain stable `references.csv` keys and follow `HCI-CITATIONS-2`: GitHub Markdown
+comparisons. Maintain stable `references.csv` keys and follow `HCI-CITATIONS-3`: GitHub Markdown
 uses keyed links plus catalog-derived definitions and visible full references; resolve all draft
 tokens and hyperlink every citation shorthand. Unknown/duplicate identities, missing metadata, and broken links block delivery.
 
@@ -249,18 +248,19 @@ would establish every important project claim.
 
 ### Separate complete evidence review from concise reader-facing claims
 
-Preserve uncertainty, limitations, non-claims, counterevidence, and reopen triggers internally. In
-reader-facing approach, feature, design-choice, or contribution descriptions, lead with the human
-situation and desired value, then the capability and only necessary implementation detail. Use
-concrete popular-science language before precise terms, translating abstract relationships into
-actions a broad reader can picture. State the strongest supportable active claim with only
-claim-local qualifiers that change its truth, scope, quantity, causal meaning, comparison, or
-likely interpretation. Do not turn intended value into measured benefit, disclaim unclaimed
-outcomes, or hedge by reflex. Cite established prior work for an inherited general mechanism or
-design fact; require project-specific verification only for claims about the exact artifact,
-parameter, delivered dose, coverage, fidelity, or downstream effect. For a general audience, lead
-with a familiar term, define the exact scientific construct or metric at first use, and do not
-treat neighboring constructs as synonyms.
+Preserve uncertainty, limitations, non-claims, counterevidence, and reopen triggers internally. In reader-facing
+approach, feature, design-choice, or contribution descriptions, lead with the human situation and desired value,
+then the capability and only necessary implementation detail. Open with concrete behavior and consequences, never
+an abstract label such as `a serious human problem`. Place each citation immediately after the smallest claim or
+keyword it supports; use no more than two citations in one cluster. Keep generic review disclaimers internal, but
+retain any claim-local qualifier or counterfinding needed to keep the active synthesis true. For a time-anchored
+transition intervention, use this conclusion-first spine: concrete behavior and consequence → why the transition
+differs from aggregate control → prior user/technical approaches and measured limits → outcome-oriented approach
+and mechanisms → newly enabled comparison and outcomes → evidence-state-matched study and contribution statement.
+Do not turn intended value into measured benefit, call a field binary or ineffective without direct evidence, or
+present an unmeasured psychological mechanism as fact. Cite established foundations for inherited mechanisms;
+require project-specific verification for the exact artifact, parameter, dose, coverage, fidelity, or downstream effect.
+For a general audience, lead with a familiar term, define the exact source-matched construct at first use, and do not treat neighboring constructs as synonyms.
 
 ## Core workflow
 

@@ -40,6 +40,20 @@ GENERIC_AUTHOR_YEAR_RE = re.compile(
     r"\b[A-ZÀ-ÖØ-Þ][A-Za-zÀ-ÖØ-öø-ÿ'’\-]+\s+et\s+al\.\s*"
     r"\([^()\n]*\b(?:19|20)\d{2}[a-z]?\b[^()\n]*\)"
 )
+CITATION_CLUSTER_SEPARATOR_RE = re.compile(
+    r"^\s*(?:(?:[,;/&]|\band\b)\s*)+$", re.IGNORECASE
+)
+VAGUE_IMPORTANCE_RE = re.compile(
+    r"\b(?:a|an)\s+"
+    r"(?:(?:widespread|pervasive|serious|important|major|significant)\s+(?:and\s+)?){1,3}"
+    r"(?:human\s+|societal\s+|social\s+|public-health\s+)?"
+    r"(?:problem|issue|concern)\b",
+    re.IGNORECASE,
+)
+GENERIC_CORRELATIONAL_DISCLAIMER_RE = re.compile(
+    r"\bmost\s+(?:of\s+)?(?:this|the)\s+evidence\s+(?:is|was)\s+correlational\b",
+    re.IGNORECASE,
+)
 
 REQUIRED_ROOT_LINKS = (
     "research-framing/phase-1-collaboration-workboard.md",
@@ -203,6 +217,45 @@ def inline_code_citation_tokens(text: str) -> list[str]:
     return tokens
 
 
+def oversized_citation_clusters(
+    text: str,
+    catalog: dict[str, publisher.Citation],
+) -> list[tuple[int, list[str]]]:
+    """Return adjacent scholarly citation clusters containing more than two works."""
+    visible = publisher.strip_code(strip_managed_citations(text))
+    uses = [
+        match
+        for match in GENERAL_REFERENCE_LINK_RE.finditer(visible)
+        if match.group(2) in catalog
+    ]
+    oversized: list[tuple[int, list[str]]] = []
+    cluster: list[re.Match[str]] = []
+    for match in uses:
+        if not cluster:
+            cluster = [match]
+            continue
+        gap = visible[cluster[-1].end() : match.start()]
+        if gap.isspace() or CITATION_CLUSTER_SEPARATOR_RE.fullmatch(gap):
+            cluster.append(match)
+            continue
+        if len(cluster) > 2:
+            oversized.append(
+                (
+                    visible.count("\n", 0, cluster[0].start()) + 1,
+                    [item.group(2) for item in cluster],
+                )
+            )
+        cluster = [match]
+    if len(cluster) > 2:
+        oversized.append(
+            (
+                visible.count("\n", 0, cluster[0].start()) + 1,
+                [item.group(2) for item in cluster],
+            )
+        )
+    return oversized
+
+
 def mask_match(match: re.Match[str]) -> str:
     """Hide Markdown syntax while preserving line numbers for diagnostics."""
     return "".join("\n" if character == "\n" else " " for character in match.group(0))
@@ -333,6 +386,12 @@ def audit_citations(
     errors: list[str],
 ) -> None:
     unmanaged = strip_managed_citations(text)
+    for line_number, keys in oversized_citation_clusters(text, catalog):
+        errors.append(
+            f"{path}:{line_number}: citation cluster contains {len(keys)} works "
+            f"({', '.join(keys)}); place citations beside their smallest supported claims "
+            "and use no more than two per cluster"
+        )
     hidden_inline_tokens = sorted(set(inline_code_citation_tokens(unmanaged)))
     if hidden_inline_tokens:
         errors.append(
@@ -499,6 +558,24 @@ def audit_root_readme(repo_root: Path, errors: list[str]) -> None:
         re.MULTILINE | re.DOTALL,
     )
     introduction_source = introduction.group(1) if introduction else ""
+    introduction_moves = (
+        "Concrete behavior and consequence",
+        "Why the focal context differs from the general intervention target",
+        "Prior approaches and measured limits",
+        "Outcome-oriented approach and mechanisms",
+        "Newly enabled investigation",
+        "Study and contribution statement",
+    )
+    previous_position = -1
+    for move in introduction_moves:
+        position = introduction_source.find(move)
+        if position < 0:
+            errors.append(f"README.md: Introduction outline lacks {move!r}")
+        elif position < previous_position:
+            errors.append(
+                "README.md: Introduction moves must follow the required conclusion-first order"
+            )
+        previous_position = max(previous_position, position)
     for label in (
         "Approach invariant",
         "Essential interaction/control-policy dimensions",
@@ -519,6 +596,28 @@ def audit_root_readme(repo_root: Path, errors: list[str]) -> None:
         errors.append(
             "README.md: Introduction outline must state the approach invariant before "
             "the implementation substrate / empirical waist"
+        )
+
+    reader_sections: list[str] = [introduction_source]
+    for heading in ("At a glance", "The user value"):
+        section = re.search(
+            rf"^## {re.escape(heading)}\s*$\n(.*?)(?=^##\s+|\Z)",
+            source,
+            re.MULTILINE | re.DOTALL,
+        )
+        if section:
+            reader_sections.append(section.group(1))
+    reader_facing = publisher.strip_code("\n".join(reader_sections))
+    if match := VAGUE_IMPORTANCE_RE.search(reader_facing):
+        errors.append(
+            "README.md: replace vague importance label "
+            f"{match.group(0)!r} with a concrete behavior, context, or consequence"
+        )
+    if match := GENERIC_CORRELATIONAL_DISCLAIMER_RE.search(reader_facing):
+        errors.append(
+            "README.md: keep generic methodological disclaimer "
+            f"{match.group(0)!r} in the internal evidence record; calibrate each active claim "
+            "with an evidence-matched verb and retain only claim-changing qualifiers"
         )
 
     profile = re.search(

@@ -1,6 +1,6 @@
 # HCI citation integrity contract
 
-Contract version: `HCI-CITATIONS-2`
+Contract version: `HCI-CITATIONS-3`
 
 This contract applies to every current and future `hci-*` skill in this repository.
 
@@ -14,6 +14,19 @@ This contract applies to every current and future `hci-*` skill in this reposito
 - Treat aliases as legacy/discovery conveniences. Every alias must be bibliographic, exact, and
   unique. Do not use a conceptual claim, mechanism label, or author surname shared by multiple
   works as an alias.
+
+## Claim-local placement and cluster limit
+
+- Place each citation immediately after the smallest claim, result, construct, or keyword it
+  supports. Do not collect sources at the end of a sentence or paragraph when they support
+  different propositions.
+- Prefer one citation at each supported claim. When two sources jointly support the same smallest
+  claim, they may share one cluster. Never put more than two citations in one cluster.
+- When three or more sources matter, split the prose into distinct supported claims and place each
+  source beside its relevant claim. Keep the complete source portfolio in the internal evidence
+  record or a dedicated related-work synthesis rather than compressing it into a citation pile.
+- These placement rules apply to GitHub Markdown and native manuscript profiles. Rendering syntax
+  may differ, but source scope and proximity may not.
 
 ## Output profiles
 
@@ -29,7 +42,7 @@ Select and record the output profile before publishing. All profiles preserve th
   [CitationKey]: <https://canonical.example/work> "Full authors. Full title. Full venue."
   ```
 
-- Use one keyed link per work. For multiple works, use
+- Use one keyed link per work. When exactly two works jointly support the same smallest claim, use
   `([First work][FirstKey]; [Second work][SecondKey])`.
 - Hyperlink every scholarly citation. An author/title/venue/year shorthand such as
   `Author et al. (Venue Year)` or `System Name (Venue Year)` outside a keyed link is unfinished and

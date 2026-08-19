@@ -983,7 +983,22 @@ risks. Return material choices to the author.
 
 ### 11. Produce the research framing outline
 
-Write `research-framing-outline.md` as an argument and decision outline:
+Write the `Reader-facing Introduction spine` first as a conclusion-level outline:
+
+1. concrete behavior and consequence;
+2. why the focal context differs from the general intervention target;
+3. prior user-enacted and technical approaches plus directly measured limits;
+4. outcome-oriented approach and mechanisms;
+5. the newly enabled investigation, common controls, and observable outcomes; and
+6. an evidence-state-matched study and contribution statement.
+
+Open with findings rather than an abstract importance label. Put each citation immediately after
+the smallest supported claim or keyword and use no more than two citations in one cluster. Keep
+generic methodological disclaimers in the researcher record when calibrated verbs already express
+the boundary; retain qualifiers that change an active claim's truth or causal meaning. Use `We
+conducted` only after the study is complete and verified.
+
+Then preserve the complete argument and decision record:
 
 1. **Larger concern:** authoritative evidence and why the broad issue matters.
 2. **Specific human problem:** people, activity, current practice, unmet need, and consequence.

@@ -14,8 +14,9 @@ claim boundaries, author decisions, or reopen triggers. It must contain a concis
 evidence-status-aware summary of:
 
 - `## The user value`, stated before the mechanism;
-- `## Introduction — structure and outline`, ordered from problem and residual gap through the
-  platform-independent approach to its implementation substrate and planned evidence;
+- `## Introduction — structure and outline`, ordered from a concrete behavior and consequence,
+  through the focal-context distinction and prior approaches, to the outcome-oriented approach,
+  newly enabled investigation, and evidence-state-matched study/contribution statement;
 - the human problem and target context;
 - a `## Closest prior work` comparison in which every cited work says **What it did:** and
   **How this project differs:**;
@@ -25,6 +26,10 @@ evidence-status-aware summary of:
 - the historical-input/non-decision boundary when imported drafts exist.
 
 Start with `## At a glance` and state the answer and current evidence status before background.
+Do not open the Introduction with an unevidenced importance label such as `a serious human
+problem`; state the concrete behavior, context, and consequence. Keep generic methodological
+disclaimers in the internal evidence record when calibrated claim verbs already preserve the
+boundary, while retaining every qualifier needed to keep an active claim true.
 Keep the detailed closest-work comparison in its own `## Closest prior work` section so readers can
 find it without turning the opening into a literature review.
 Use `## Continue by task` instead of one undifferentiated link inventory, with two or more reader
@@ -121,6 +126,11 @@ Before delivery, resolve every temporary `[@CitationKey]` in Markdown to:
 Append one file-local definition and one visible full-reference entry for every used key. Derive
 both from `references.csv`. The stable key remains explicit in Markdown source and downstream tools
 can recover manuscript identity without parsing visible prose.
+
+Place each citation immediately after the smallest claim or keyword it supports. Prefer one source
+per supported claim; use no more than two citations in a cluster, and only when both support that
+same smallest claim. Split larger syntheses into claim-local citations rather than leaving a source
+pile at the end of a sentence or paragraph.
 
 Fail publication or audit on unknown or case-folded duplicate keys, duplicate definitions,
 ambiguous aliases, unresolved citation shorthand, raw draft tokens outside code, mismatched labels,

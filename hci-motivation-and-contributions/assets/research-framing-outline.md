@@ -2,6 +2,47 @@
 
 Status: candidate / author-selected / ready-with-risks / ready-for-phase-2
 
+## Reader-facing Introduction spine
+
+This section is a conclusion-level argument outline. Keep study-level methods, full limitations,
+and generic review disclaimers in the linked internal records. Put each citation immediately after
+the smallest supported claim or keyword; use no more than two citations in one cluster.
+
+1. **Concrete behavior and consequence**
+   - Focal people, behavior, and temporal or situational context:
+   - Intended transition or activity disrupted:
+   - Proximal measured consequence:
+   - Separately supported downstream stakes:
+2. **Why the focal context differs from the general intervention target**
+   - General intervention landscape already established:
+   - Distinct context, configuration object, timing, goal, or behavioral problem:
+   - Boundary that prevents an untested superiority claim:
+3. **Prior approaches and measured limits**
+   - User-enacted approaches:
+   - Technical approaches and their control topology:
+   - Directly measured adherence, override, abandonment, burden, or substitution findings:
+   - Claims about binary control, dropout, bypass, or efficacy that the evidence does not permit:
+4. **Outcome-oriented approach and mechanisms**
+   - Human outcome the approach is designed to support:
+   - Platform-independent approach invariant:
+   - Inherited mechanism evidence:
+   - Project capability and implementation substrate:
+   - Each channel's intensity range and access-preserving or access-denying endpoint:
+   - Unmeasured psychological explanation retained as a hypothesis:
+5. **Newly enabled investigation**
+   - Conditions or policies compared:
+   - Controls held constant:
+   - Behavioral and experiential outcomes made observable:
+   - Capability-to-knowledge contribution link:
+6. **Study and contribution statement**
+   - Study evidence state: planned / underway / completed and verified
+   - Permitted tense: `We plan` / `We will conduct` / `We conducted`
+   - Primary and supporting prospective or demonstrated contributions:
+
+Reader-facing opening sentence with a concrete finding, not an abstract importance label:
+Reader-facing qualifiers required to preserve truth or causal meaning:
+Generic methodological cautions retained only in the researcher record:
+
 ## 1. Larger concern
 
 - Governing claim:

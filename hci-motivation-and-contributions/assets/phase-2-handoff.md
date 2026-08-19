@@ -16,6 +16,20 @@ Phase 2 may import this artifact, but must also accept any other starting materi
 - Why now:
 - Evidence boundary:
 
+## Reader-facing Introduction contract
+
+- Concrete behavior and consequence conclusion:
+- Why the focal context differs from the general intervention target:
+- Prior user-enacted and technical approaches plus directly measured limits:
+- Outcome-oriented approach, inherited mechanism evidence, and project capability:
+- Newly enabled comparison, common controls, and behavioral/experiential outcomes:
+- Study evidence state, permitted tense, and contribution statement:
+- Claim-local qualifiers that must remain reader-facing:
+- Generic review caveats that remain researcher-only because the prose already uses calibrated
+  constructs and verbs:
+- Citation-placement rule: each citation follows the smallest supported claim or keyword; no
+  cluster contains more than two citations.
+
 ## Landscape and gap
 
 - Target-problem identity: people; focal activity; triggering/temporal context; unwanted

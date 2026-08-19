@@ -23,13 +23,29 @@ user value declaratively; do not ask readers to endorse that people `should` rec
 
 This is an argument outline, not polished manuscript prose. Use this move order:
 
-1. problem and human stakes;
-2. closest prior work and its residual gap;
-3. the platform-independent approach invariant and essential interaction/control-policy dimensions;
-4. inherited mechanism or rationale;
-5. implementation substrate / empirical waist, platform-substitution result, and any demonstrated
-   adaptation credit; and
-6. planned evidence and prospective contributions.
+1. **Concrete behavior and consequence:** state who does what in the focal context, how it disrupts
+   the focal activity or intended transition, the proximal outcome, and only separately supported
+   downstream stakes.
+2. **Why the focal context differs from the general intervention target:** synthesize the general
+   intervention landscape, then identify the distinct timing, goal, configuration object, or
+   behavioral problem without claiming untested superiority.
+3. **Prior approaches and measured limits:** summarize user-enacted and technical approaches, then
+   report only directly measured adherence, override, abandonment, burden, or substitution limits.
+4. **Outcome-oriented approach and mechanisms:** state the human outcome first, then the
+   platform-independent approach, inherited rationale, mechanisms, implementation substrate, and
+   any demonstrated adaptation credit. For graded interventions, state each channel's full range
+   and whether its endpoint preserves or denies access. Label unmeasured psychological explanations
+   as hypotheses.
+5. **Newly enabled investigation:** name the comparison, common controls, and behavioral or
+   experiential outcomes that the capability makes observable.
+6. **Study and contribution statement:** use `We conducted` only for a completed, verified study;
+   otherwise use planned-study language and keep contributions prospective.
+
+Open with the concrete finding, not a label such as `a serious human problem`. Write conclusion-level
+synthesis rather than study-by-study detail. Put each citation immediately after the smallest claim
+or keyword it supports, and never put more than two citations in one cluster. Keep generic review
+disclaimers in the internal evidence record; retain a claim-local qualifier when removing it would
+change the statement's truth, scope, causal meaning, or likely interpretation.
 
 State explicitly:
 

@@ -392,6 +392,80 @@ class Phase1MarkdownPublicationTests(unittest.TestCase):
         errors, _ = AUDIT.audit(self.root)
         self.assertEqual(errors, [])
 
+    def test_two_claim_local_citations_pass_but_three_source_cluster_fails(self):
+        with (self.root / "references.csv").open("a", newline="", encoding="utf-8") as handle:
+            writer = csv.writer(handle)
+            writer.writerows(
+                [
+                    [
+                        "Second2024",
+                        "Second et al., 2024",
+                        "Second Example",
+                        "CHI",
+                        "A Second Example",
+                        "Sam Second; Taylor Second",
+                        "Proceedings of CHI 2024",
+                        "https://doi.org/10.1000/second",
+                        "",
+                    ],
+                    [
+                        "Third2024",
+                        "Third et al., 2024",
+                        "Third Example",
+                        "CSCW",
+                        "A Third Example",
+                        "Terry Third; Morgan Third",
+                        "Proceedings of CSCW 2024",
+                        "https://doi.org/10.1000/third",
+                        "",
+                    ],
+                ]
+            )
+        path = self.root / "research-framing-outline.md"
+        path.write_text(
+            "# Outline\n\nOne claim ([@Example2024]; [@Second2024]).\n",
+            encoding="utf-8",
+        )
+        self.publish()
+        errors, _ = AUDIT.audit(self.root)
+        self.assertEqual(errors, [])
+
+        path.write_text(
+            "# Outline\n\nOne claim ([@Example2024]; [@Second2024]; [@Third2024]).\n",
+            encoding="utf-8",
+        )
+        self.publish()
+        errors, _ = AUDIT.audit(self.root)
+        self.assertTrue(any("citation cluster contains 3 works" in error for error in errors), errors)
+
+    def test_reader_facing_overview_rejects_vague_importance_and_generic_disclaimer(self):
+        path = self.repo / "README.md"
+        source = path.read_text(encoding="utf-8")
+        source = source.replace(
+            "**Status: `unsupported` pending project-specific research.**",
+            "**Status: `unsupported` pending project-specific research.** "
+            "This is a serious human problem. Most of this evidence is correlational.",
+        )
+        path.write_text(source, encoding="utf-8")
+        self.publish()
+        errors, _ = AUDIT.audit(self.root)
+        self.assertTrue(any("replace vague importance label" in error for error in errors), errors)
+        self.assertTrue(any("keep generic methodological disclaimer" in error for error in errors), errors)
+
+    def test_readme_requires_all_six_introduction_moves(self):
+        path = self.repo / "README.md"
+        source = path.read_text(encoding="utf-8")
+        path.write_text(
+            source.replace("5. **Newly enabled investigation:**", "5. **Comparison:**", 1),
+            encoding="utf-8",
+        )
+        self.publish()
+        errors, _ = AUDIT.audit(self.root)
+        self.assertTrue(
+            any("Introduction outline lacks 'Newly enabled investigation'" in error for error in errors),
+            errors,
+        )
+
     def test_readme_framing_citations_require_explanation_and_difference(self):
         path = self.repo / "README.md"
         source = path.read_text(encoding="utf-8")

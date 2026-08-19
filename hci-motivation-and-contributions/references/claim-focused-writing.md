@@ -30,6 +30,71 @@ Maintain two linked layers:
 Never make the reader-facing layer stronger than the internal record. Conversely, do not make it
 weaker or harder to read merely to display caution.
 
+### Keep generic disclaimers in the researcher record
+
+Keep review-wide caveats such as `Most of this evidence is correlational` in the internal evidence
+record. In reader-facing prose, make each sentence accurate at source by using evidence-matched
+verbs such as `was associated with`, `participants reported`, or `the intervention reduced`. Do
+not add a generic disclaimer after a paragraph whose individual claims are already calibrated.
+
+This is a presentation rule, not permission to hide a boundary. A population, causal, measurement,
+or transfer qualifier stays beside the claim when removing it would change the claim's truth or
+likely interpretation. Contrary evidence that makes the active synthesis misleading also remains
+reader-facing.
+
+## Open with concrete findings, not importance labels
+
+Do not begin with labels such as `a serious human problem`, `a widespread and important issue`, or
+`a major societal concern`. These phrases ask readers to accept importance before they can see it.
+Begin with the strongest concrete finding: who does what, in which context, and what proximal
+consequence was observed. Add downstream stakes only through separately supported links.
+
+Prefer conclusion-level synthesis in an Introduction. Put sample sizes, protocols, effect-size
+qualification, and full counterevidence in the internal evidence record or Related Work unless a
+number is itself necessary to establish scale or consequence. Do not narrate one study at a time
+when several studies support the same bounded conclusion.
+
+## Put each citation beside the claim it supports
+
+Place a citation immediately after the smallest supported claim, result, construct, or keyword.
+Do not collect sources at the end of a sentence or paragraph when they support different links in
+the argument. Prefer one citation per supported claim. Use at most two citations in one cluster,
+and only when both support the same smallest claim. If three or more sources matter, split the
+sentence or paragraph and place each source beside its relevant claim. Keep the full evidence
+portfolio in the internal record rather than turning the Introduction into a citation pile.
+
+## Use a six-move Introduction for time-anchored transition interventions
+
+When a project intervenes around a meaningful transition rather than an aggregate quota, build the
+reader-facing Introduction in this order:
+
+1. **Concrete behavior and consequence.** State the focal behavior in its temporal context, show
+   how it crosses or disrupts the intended transition, name the proximal outcome, and connect only
+   separately evidenced downstream stakes. Do not precede this with an abstract importance claim.
+2. **Why the transition differs from aggregate control.** Summarize the extensive general
+   intervention landscape, then explain the configuration object or behavioral problem that makes
+   the transition distinct from a daily total. Do not turn that distinction into untested
+   superiority.
+3. **Prior approaches and measured limits.** Synthesize user-enacted changes and technical
+   controls, then state the observed adherence, override, abandonment, burden, or substitution
+   tension. Call prior controls binary, high-dropout, bypassed, or ineffective only when the checked
+   evidence measures that exact property; do not generalize from one system to the field.
+4. **Outcome-oriented approach and mechanisms.** State the human outcome the approach is designed
+   to support before its mechanisms. Separate inherited mechanism evidence, the project's actual
+   capability, and any unmeasured psychological explanation. For a graded intervention, state each
+   channel's full intensity range and whether an endpoint preserves or denies access. For example,
+   delivery delay may be designed to reduce immediacy, but `reduces the reward loop` remains a
+   hypothesis unless reward processing is measured.
+5. **Newly enabled investigation.** Name the comparison that the capability makes possible, the
+   controls held constant, and the behavioral and experiential outcomes it can reveal. This is the
+   bridge from capability to knowledge contribution.
+6. **Study and contribution statement.** Use `We conducted` only after the study is complete and
+   its evidence is verified. Before execution, use `We plan`, `We will conduct`, or `The study is
+   designed to`, and keep every contribution prospective.
+
+This is an argument outline, not a requirement to write six paragraphs. A concise Introduction may
+combine adjacent moves as long as their causal and evidence boundaries remain legible.
+
 ## Lead with human value before mechanism
 
 For every reader-facing introduction of an approach, feature, design choice, control, or

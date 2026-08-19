@@ -37,6 +37,13 @@ class InitializePhase1WorkspaceTests(unittest.TestCase):
                 "Implementation substrate / empirical waist",
                 "Platform-substitution result",
                 "Adaptation-credit disposition",
+                "Concrete behavior and consequence",
+                "Why the focal context differs from the general intervention target",
+                "Prior approaches and measured limits",
+                "Outcome-oriented approach and mechanisms",
+                "Newly enabled investigation",
+                "Study and contribution statement",
+                "never put more than two citations in one cluster",
             ):
                 self.assertIn(phrase, readme)
             headings = [line for line in readme.splitlines() if line.startswith("## ")]
@@ -48,6 +55,16 @@ class InitializePhase1WorkspaceTests(unittest.TestCase):
                 introduction.index("Approach invariant"),
                 introduction.index("Implementation substrate / empirical waist"),
             )
+            moves = (
+                "Concrete behavior and consequence",
+                "Why the focal context differs from the general intervention target",
+                "Prior approaches and measured limits",
+                "Outcome-oriented approach and mechanisms",
+                "Newly enabled investigation",
+                "Study and contribution statement",
+            )
+            positions = [introduction.index(move) for move in moves]
+            self.assertEqual(positions, sorted(positions))
             framing = repo / "research-framing"
             for relative in (
                 "starting-state.md",

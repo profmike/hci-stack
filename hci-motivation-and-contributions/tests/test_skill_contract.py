@@ -1693,6 +1693,40 @@ class SkillContractTests(unittest.TestCase):
             PHASE_2_HANDOFF,
         )
 
+    def test_introduction_writing_is_concrete_claim_local_and_transition_ordered(self):
+        for phrase in (
+            "Open with concrete findings, not importance labels",
+            "a serious human problem",
+            "Keep generic disclaimers in the researcher record",
+            "Most of this evidence is correlational",
+            "Put each citation beside the claim it supports",
+            "at most two citations in one cluster",
+            "Use a six-move Introduction for time-anchored transition interventions",
+            "Call prior controls binary, high-dropout, bypassed, or ineffective only when",
+            "state each\n   channel's full intensity range",
+            "reduces the reward loop",
+            "Use `We conducted` only after the study is complete",
+        ):
+            self.assertIn(phrase, CLAIM_FOCUSED_WRITING)
+
+        moves = (
+            "Concrete behavior and consequence",
+            "Why the focal context differs from the general intervention target",
+            "Prior approaches and measured limits",
+            "Outcome-oriented approach and mechanisms",
+            "Newly enabled investigation",
+            "Study and contribution statement",
+        )
+        for document in (PROJECT_README, OUTLINE_TEMPLATE):
+            positions = [document.index(move) for move in moves]
+            self.assertEqual(positions, sorted(positions))
+        self.assertIn("no more than two citations in one cluster", SKILL)
+        self.assertIn("HCI-CITATIONS-3", SKILL)
+        self.assertIn("Citation-placement rule", PHASE_2_HANDOFF)
+        self.assertIn("no\n  cluster contains more than two citations", PHASE_2_HANDOFF)
+        self.assertIn("concrete behavior and consequence", MARKDOWN_REPORTS)
+        self.assertIn("no more than two citations in a cluster", MARKDOWN_REPORTS)
+
     def test_reusable_examples_cannot_become_or_replace_project_state(self):
         for phrase in (
             "Examples in this reusable skill illustrate the method",
