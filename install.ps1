@@ -4,7 +4,7 @@ param(
 )
 
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$Skills = @("hci-office-hours-with-mike", "hci-motivation-and-contributions")
+$Skills = @("hci-office-hours-with-mike")
 $VersionFile = Join-Path $ScriptDir "VERSION"
 $Version = (Get-Content $VersionFile -Raw).Trim()
 $InstallHome = if ($env:HCI_STACK_INSTALL_HOME) { $env:HCI_STACK_INSTALL_HOME } else { $env:USERPROFILE }
@@ -74,8 +74,5 @@ switch ($Host_) {
 Write-Host ""
 Write-Host "hci-stack v$Version ready."
 Write-Host "Claude: /hci-office-hours-with-mike"
-Write-Host "Claude: /hci-motivation-and-contributions"
 Write-Host "Codex: `$hci-office-hours-with-mike"
-Write-Host "Codex: `$hci-motivation-and-contributions"
 Write-Host "Gemini: /hci-office-hours-with-mike"
-Write-Host "Gemini: /hci-motivation-and-contributions"

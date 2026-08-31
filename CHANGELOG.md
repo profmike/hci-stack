@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.5.0] - 2026-08-31 — Motivation Skill Moved to Private Staging
+
+### Removed
+
+- **`hci-motivation-and-contributions`.** The Phase 1 research-framing skill moves to the
+  private staging repository and is no longer distributed here. The install scripts and README
+  now cover `hci-office-hours-with-mike` only. Existing installs keep working; they simply stop
+  receiving updates from this repository.
+
 ## [0.4.6] - 2026-08-09 — Declarative Motivation and User Value
 
 ### Changed

@@ -16,7 +16,6 @@ It also reflects how I approach research problems based on experience across sta
 | Skill | What it does |
 |-------|-------------|
 | `/hci-office-hours-with-mike` | HCI research mentoring — problem definition, motivation, related work, and contribution positioning. Six forcing questions, competitive positioning with 2-axis charts, evidence quality assessment, simulated CHI reviewer objections, and a structured research brief. |
-| `/hci-motivation-and-contributions` | Evidence-grounded Phase 1 research framing — full-text literature audits, strict claimed/demonstrated/capability boundaries, motivation evidence, related-work positioning, contribution options, private source-repository and NotebookLM reconciliation, and Phase 2 handoff. |
 
 ## Install
 
@@ -26,7 +25,7 @@ these skill directories are replaced.
 
 ### Claude Code
 
-> Install hci-stack: run **`git clone https://github.com/profmike/hci-stack.git ~/.claude/skills/hci-stack && cd ~/.claude/skills/hci-stack && ./install claude`** then add an "HCI Research Skills" section to CLAUDE.md that lists `/hci-office-hours-with-mike` and `/hci-motivation-and-contributions`.
+> Install hci-stack: run **`git clone https://github.com/profmike/hci-stack.git ~/.claude/skills/hci-stack && cd ~/.claude/skills/hci-stack && ./install claude`** then add an "HCI Research Skills" section to CLAUDE.md that lists `/hci-office-hours-with-mike`.
 
 ### Codex
 
@@ -56,7 +55,7 @@ cd ~/hci-stack && ./install
 ## Quick start
 
 1. Install hci-stack (see above)
-2. Run `/hci-office-hours-with-mike` for early mentoring or `/hci-motivation-and-contributions` for evidence-grounded Phase 1 framing
+2. Run `/hci-office-hours-with-mike` for early mentoring
 3. Describe what you're researching
 4. The mentor walks you through problem definition, related work, competitive positioning, and produces a research brief
 
