@@ -1,29 +1,103 @@
 # Related-work positioning protocol
 
+Read this protocol before classifying retained works, auditing contribution strength, or writing
+comparison options.
+
+## Contents
+
+- [Represent and classify works](#represent-and-classify-works)
+- [Establish target-problem identity and separate portfolios](#establish-target-problem-identity-and-separate-portfolios)
+- [Map current human practice](#map-current-human-practice)
+- [Compare consequential interactions](#compare-consequential-interactions)
+- [Compare capability predicates before components](#compare-capability-predicates-before-components)
+- [Discover objective, state, and temporal contributions](#discover-objective-state-and-temporal-contributions)
+- [Apply six-field prior-work evidence accounting](#apply-six-field-prior-work-evidence-accounting)
+- [Separate activity from implementation](#separate-activity-from-implementation)
+- [Test conjunctive claims and terminology](#test-conjunctive-claims-and-terminology)
+- [Calibrate novelty assertiveness](#calibrate-novelty-assertiveness)
+- [Rank contribution strength and proximity](#rank-contribution-strength-and-proximity)
+- [Situate the work in the HCI community](#situate-the-work-in-the-hci-community)
+- [Write the ranked positioning dossier](#write-the-ranked-positioning-dossier)
+- [Produce the audit](#produce-the-audit)
+
 ## Represent and classify works
 
-Describe prior work by its capabilities, contexts, evidence, and boundaries—never as “failures” manufactured to make an empty gap. Establish the target-problem identity and assign a problem-proximity band using the next section, then pass every retained work through a mandatory **relationship-classification gate**: (1) closest contribution comparator; (2) secondary same-domain evidence; (3) adjacent system or analogous intervention; (4) complementary tool or current-practice baseline; (5) design foundation or inspiration; (6) motivation, theory, or review; (7) excluded or unresolved.
+Represent prior work objectively and positively. Describe capabilities, contexts, evidence, and
+boundaries—not “failures” manufactured to make an empty gap.
 
-Only category 1 competes for overall contribution-comparator rank, and only `SAME-SPECIFIC-PROBLEM` or `SIMILAR-PROBLEM` work may hold it; other work is a claim-specific collision. A change of application domain is not itself a Tier 1 capability.
+First establish the target-problem identity and assign a problem-proximity band using the next
+section. Then, before comparing differences or assigning contribution tiers, pass every retained
+work through a mandatory **relationship-classification gate**:
+
+1. closest contribution comparator;
+2. secondary same-domain evidence;
+3. adjacent system or analogous intervention;
+4. complementary tool or current-practice baseline;
+5. design foundation or inspiration;
+6. motivation, theory, or review; or
+7. excluded or unresolved.
+
+Only the first category is eligible by relationship for overall contribution-comparator rank.
+Attributed contribution credit still requires an explicit author claim and matched demonstration.
+A demonstrated operation from another relationship class—including an unclaimed operation—may
+create a component, mechanism, or independently claimed sub-capability precedent without becoming
+a closest overall comparator or an attributed contribution. It narrows the complete capability
+only when the human-activity predicate matches under the protocol below. A secondary practical
+alternative may receive a tier when the comparison is explicit and passes the same evidence accounting. Foundations, distant analogies,
+theory, reviews, motivation sources, and under-described interactions normally receive `N/A`. A
+change of application domain is not itself a Tier 1 capability.
+Only `SAME-SPECIFIC-PROBLEM` or `SIMILAR-PROBLEM` work may be a closest overall contribution
+comparator. An adjacent or different-problem work can instead be a claim-specific collision.
 
 ## Establish target-problem identity and separate portfolios
 
 Before ranking any work, freeze a **target-problem identity contract**:
 
-`target people → focal activity → triggering or temporal context → unwanted state or episode → intended change or outcome`
+`target people → focal activity → triggering or temporal context → unwanted state or episode →
+intended change or outcome`
 
-Define each element operationally enough that two reviewers could tell whether another paper addresses it, and keep the proposed interface, intervention, or causal explanation out of it; record constructs such as agency or burden separately as hypothesized mechanisms. Reopen the contract when evidence changes an element. Do not use an unvalidated mechanism hypothesis to pull a different-problem paper into the primary ranking.
+Define each element operationally enough that two reviewers could tell whether another paper
+addresses it. Do not put the proposed interface, intervention, or causal explanation inside this
+identity. If constructs such as agency, stimulation, reward, burden, attention, or control are
+hypotheses rather than directly established parts of the human problem, record them separately as
+hypothesized mechanisms or outcomes. Reopen the contract when project evidence changes any of its
+five elements. Do not use an unvalidated mechanism hypothesis to pull a paper solving a different
+problem into the primary ranking.
 
-Assign every retained work one **problem-proximity band** before mechanism similarity, venue, evidence strength, or novelty leverage:
+Assign every retained work one descriptive **problem-proximity band** before mechanism similarity,
+venue, evidence strength, or novelty leverage:
 
-1. `SAME-SPECIFIC-PROBLEM`: substantially the same unwanted state and intended outcome, with a close focal activity and triggering context;
-2. `SIMILAR-PROBLEM`: the same focal difficulty and intended outcome, with a bounded, named difference in population, activity, or context;
-3. `ADJACENT-PROBLEM`: the same broad domain or construct but a materially different unwanted state or objective; or
-4. `DIFFERENT-PROBLEM`: a different human problem that may still supply a mechanism collision, theory, design foundation, or analogy.
+1. `SAME-SPECIFIC-PROBLEM`: substantially the same unwanted state or episode and intended
+   change/outcome, with a close focal activity and triggering context;
+2. `SIMILAR-PROBLEM`: the same focal human difficulty and intended change/outcome, with a bounded
+   difference in population, activity, or context that must be named;
+3. `ADJACENT-PROBLEM`: the same broad domain or construct, but a materially different unwanted
+   state, objective, or intended outcome; or
+4. `DIFFERENT-PROBLEM`: a different human problem that may still supply a mechanism collision,
+   theory, design foundation, feasibility result, or analogy.
 
-Same-domain vocabulary such as wellbeing or engagement cannot upgrade proximity, and neither can a shared device, interaction label, evidence strength, or venue quality.
+Same-domain vocabulary—such as wellbeing, agency, quality, control, engagement, social media,
+collaboration, or personalization—cannot upgrade problem proximity. Neither can a shared device,
+interaction label, outcome valence, or abstract observation. Evidence strength and venue quality
+bound what can be claimed about a work; they do not change which problem it solves.
 
-Sort the corpus into the **primary problem-space portfolio** of verified same/similar-problem works, which alone compete for the closest-work ranking; the **mechanism/capability-collision portfolio** of other-problem work that positive evidence shows operated a causally similar mechanism, an independently claimed sub-capability, or the complete capability, recorded at that level with proposals routed to idea provenance; and the **concept, theory, and foundation inventory** of concepts, reviews, component evidence, current-practice lineage, and analogies, each with a claim-specific role and no closeness rank. Collision-portfolio work cannot displace a closer problem comparator; when a distant work is decisive for one narrow claim, label it a **claim-specific collision** and name the exact claim it bounds.
+Keep three portfolios:
+
+1. **Primary problem-space portfolio:** verified `SAME-SPECIFIC-PROBLEM` and `SIMILAR-PROBLEM`
+   works. These alone compete for the closest-work ranking.
+2. **Mechanism/capability-collision portfolio:** work that addresses another problem but positive
+   evidence shows actually operated a causally similar mechanism, an independently claimed
+   sub-capability, or the complete capability being considered. Record which level matches. A
+   component or mechanism precedent does not narrow the complete capability; a full collision
+   requires the same human-activity predicate. It cannot displace a closer problem comparator.
+   Keep contribution attribution separate. Put proposals in idea provenance, not this portfolio.
+3. **Concept, theory, and foundation inventory:** abstract concepts, reviews, component evidence,
+   theory, exemplars, current-practice lineage, and distant analogies. Give each a claim-specific
+   role; do not assign an overall closeness rank.
+
+A work can be distant overall yet decisive for one narrow claim. Label this a
+**claim-specific collision**, name the exact claim it bounds, and preserve the broader problem
+difference. Never translate “shares a mechanism or vocabulary” into “solves the same problem.”
 
 ## Map current human practice
 
@@ -31,175 +105,569 @@ Before comparing artifacts, map the **existing human workflow**:
 
 `what people do before the focal activity → what they do during it → what they do afterward`
 
-Record the actors, artifacts, setting, and informal workarounds at each stage, then say whether the proposed work replaces, complements, extends, or bridges parts of it; “augments rather than replaces” is not itself a novelty claim.
+Record the actors, artifacts, representations, physical or social setting, purpose, and informal
+human interventions or workarounds at each stage. Then state whether the proposed work replaces,
+complements, extends, or bridges parts of that workflow. Credit the value of current practice.
+“Augments rather than replaces” is not itself a novelty claim because competing systems may also
+coexist with current practice; name the exact workflow stage and human activity affected.
 
-Run a **current-practice collision check** before claiming support at a new workflow stage: is the capability already performed there by people through speech, gesture, demonstration, or another non-digital workaround? “No prior system supports this” does not mean “no current practice supports this.” If people already intervene there, name the more precise change inside the stage—who can address whom, same or different content, or concurrent or serialized delivery.
+Run a **current-practice collision check** before claiming that the project introduces support at a
+new workflow stage:
+
+> Is the proposed capability already performed at that stage by people through speech, gesture,
+> demonstration, coordination, or another non-digital workaround?
+
+“No prior system supports this” does not mean “no current practice supports this.” If people
+already intervene at that stage, preserve that fact and identify the more precise change inside the
+stage—for example who can address whom, whether recipients receive the same or different content,
+whether delivery is concurrent or serialized, or how the intervention relates to the activity.
 
 For every consequential stage, map its **communication and information-distribution structure**:
 
-`sender → author or selector → intended and actual recipients → same or different content → shared or recipient-differentiated visibility → concurrent or serialized delivery → selection provenance → resulting shared awareness`
+`sender → author or selector → intended and actual recipients → same or different content →
+shared or recipient-differentiated visibility → concurrent or serialized delivery → selection
+provenance → resulting shared awareness`
 
-A new communication topology is not a new workflow stage: a project may change recipient/content structure while leaving timing and workflow intact.
+Do not equate a new communication topology with a new workflow stage. A project may extend an
+existing human intervention by changing its recipient/content structure while leaving its timing
+and overall workflow intact.
 
 ## Compare consequential interactions
 
-Compare the closest predecessors' interaction before implementation maturity. Trace the full information flow:
+For the closest predecessors, compare the interaction before comparing implementation maturity.
+Trace the full information flow:
 
-`who defines the guidance → what is sensed or authored → how it is transformed → what the output means → who receives it → when they receive it → what they can do with it`
+`who defines the guidance → what is sensed or authored → how it is transformed → what the output
+means → who receives it → when they receive it → what they can do with it`
 
-Do not confuse one data stream *about* each person with one distinct message delivered *to* each person, and separate a paper's implemented and evaluated interaction from future scenarios in its Discussion. Compare every element of the identity contract and of the communication and information-distribution structure, plus intervention semantics, timing, agency, and evidence, then credit the predecessor's most relevant capability, state one decisive contribution-level contrast (usually recipient topology, information semantics, human agency, timing, or purpose), and connect it to the proposed contribution. For behavior-change or access-control systems, expand `intervention semantics` into:
+Do not confuse one data stream *about* each person with one distinct message delivered *to* each
+person. Separate a paper's implemented and evaluated interaction from future scenarios in its
+Discussion. Use the exemplar pattern for concise positioning:
 
-`intention/goal anchor → configuration object and certainty → access state → activation selector/gate → changed parameter → progression variable → within-active ramp → duration → onset/cadence → cap/reset → scope → override/exceptions → selector`
+1. credit the predecessor's most relevant capability or insight;
+2. state one decisive contribution-level contrast, usually in recipient topology, information
+   semantics, human agency, timing, or purpose; and
+3. connect that contrast directly to the proposed contribution.
 
-These dimensions are not interchangeable: lengthening successive all-or-nothing blocks is graduated **duration** but still binary **access**, whereas leaving an activity usable while progressively changing display, latency, or effort is graduated **attenuation**, and intermittent access windows do not make an intervened state nonbinary. A cumulative daily-use budget and a target-bedtime schedule encode different intentions—aggregate quantity over an accounting day versus a transition relative to a clock or event—so record the configuration burden and evidence for how concretely people can specify either anchor; an author intuition about that difference is a hypothesis, never an established user fact. Name the literal operational difference before deciding whether it is a capability, experience/outcome, or implementation distinction.
+For each closest work, build a dimension-by-dimension comparison before compressing it into one
+sentence:
 
-Treat under-description as unresolved by default, recording the exact source passage or artifact trace needed. Do not substitute a limitation inventory for positioning.
+`problem → people → activity → workflow stage → setting → sender → author/selector → intervention
+semantics → intended and actual recipients → same/different content → concurrent/serialized
+delivery → visibility/shared awareness → selection or adaptation provenance → timing → human
+agency → evidence`
+
+For behavior-change or access-control systems, expand `intervention semantics` into:
+
+`intention/goal anchor → configuration object and certainty → access state → activation
+selector/gate → changed parameter → progression variable → within-active ramp → duration →
+onset/cadence → cap/reset → scope → override/exceptions → selector`
+
+These dimensions are not interchangeable. A system that lengthens successive all-or-nothing
+blocks has graduated **duration** but still binary **access**. A system that leaves an activity
+usable while progressively changing display, latency, interaction effort, or available features
+has graduated **attenuation**. Intermittent access windows do not make each intervened state
+nonbinary. A cumulative daily-use budget and a target-bedtime schedule also encode different
+intentions: aggregate quantity over an accounting day versus a transition relative to a clock or
+event. Record the configuration burden and evidence for how concretely people can specify either
+anchor; never promote an author intuition about that difference into an established user fact.
+Name the literal operational difference first; only then decide whether it is a capability,
+experience/outcome, or implementation distinction.
+
+Treat under-description as unresolved by default. Record the exact source passage or positive
+artifact trace needed. Never use silence or assumptions about what authors would have reported to
+infer an absent capability.
+
+Use implementation age, missing evaluation, latency, or other maturity boundaries only when they
+are themselves central to the contribution. Do not substitute a limitation inventory for
+positioning. Generate three to five candidate comparison sentences, with evidence and tradeoffs,
+before asking the author to choose the emphasis.
 
 ## Compare capability predicates before components
 
-Prevent the **component-subtraction fallacy**: finding generic attributes such as `live`, `multi-user`, or `audio` in unrelated systems does not make a meaningful human capability incremental. Before declaring a collision, write the focal capability as a **human-activity predicate**:
+Prevent the **component-subtraction fallacy**: finding generic attributes such as `live`,
+`multi-user`, `physical`, `different outputs`, or `audio` in unrelated systems does not make a
+meaningful human capability incremental. Before declaring a collision, write the focal capability
+as a **human-activity predicate**:
 
-`[people and roles] can [meaningful action or information relationship] during [focal activity] for [immediate human purpose], under [essential interdependence, semantics, timing, and control]`
+`[people and roles] can [meaningful action or information relationship] during [focal activity]
+for [immediate human purpose], under [essential interdependence, semantics, timing, and control]`
 
-Rewrite the prior work's smallest positively operated capability in the same grammar. A dimension is core only when removing it changes the human intention, coordination relationship, or activity—not the application noun, device, modality, or implementation. Run two counterfactuals: **removal** (does deleting the dimension change what people can meaningfully do together?) and **drop-in port** (could the prior mechanism, unchanged, support the focal semantics, interdependence, and purpose in the focal activity?). Then assign one collision level:
+Rewrite the prior work's smallest positively operated capability in the same grammar. Mark a
+dimension as core only when removing it changes the human intention, coordination relationship, or
+activity—not merely the application noun, device, modality, or implementation. Then run two
+counterfactuals:
 
-- `FULL_CAPABILITY_COLLISION` → `EXACT`: the same action or information relationship and every core predicate dimension.
-- `INDEPENDENT_SUBCAPABILITY_COLLISION` → `PARTIAL`: a named, independently consequential sub-capability the project separately claims. A loose subset of adjectives is not a sub-capability.
-- `COMPONENT_OR_MECHANISM_PRECEDENT` → `NONE` for the complete capability: a device, modality, channel, topology, or mechanism differing in human activity, purpose, semantics, or interdependence. Credit the inheritance; it does not narrow the complete capability.
+1. **Removal:** would deleting this dimension change what people can meaningfully do together?
+2. **Drop-in port:** could the prior mechanism, unchanged, support the focal semantics,
+   interdependence, and purpose in the focal activity?
+
+Assign one collision level:
+
+- `FULL_CAPABILITY_COLLISION` → `EXACT`: the prior work supports the same meaningful action or
+  information relationship and every core predicate dimension.
+- `INDEPENDENT_SUBCAPABILITY_COLLISION` → `PARTIAL`: the prior work supports a named,
+  independently consequential sub-capability that the focal project separately claims. A loose
+  subset of adjectives is not a sub-capability.
+- `COMPONENT_OR_MECHANISM_PRECEDENT` → `NONE` for the complete capability: the work contributes a
+  device, modality, channel, routing pattern, timing property, topology, or low-level mechanism but
+  differs in the human activity, purpose, semantics, participant relationship, or interdependence.
+  Credit the inheritance; do not say it narrows the complete capability.
 - `NO_COLLISION` → `NONE`: no positively operated capability overlaps at a claimed level.
 
-Firstness is assessed at the predicate level: a different-problem work defeats full-capability firstness only when the focal capability is intentionally domain-general and all core dimensions match.
+A different-problem work defeats full-capability firstness only when the focal capability is
+intentionally domain-general and all core predicate dimensions match. Conversely, do not claim
+novelty from a domain label alone when the drop-in-port test shows the same prior capability works
+unchanged. Firstness is assessed at the predicate level: a complete capability can be novel even
+when every supporting component has precedent.
 
 ## Discover objective, state, and temporal contributions
 
-Run every gate below before finalizing contribution packages, keeping their outputs separate until the closest-work and evidence audits show they form one defensible conjunction.
+Feature-by-feature comparison can miss contributions that change what an intervention optimizes,
+what state remains possible, or when a policy acts. Before finalizing contribution packages, run
+all of the following gates. Keep the outputs separate until the closest-work and evidence audits
+show that they form one defensible conjunction.
 
 ### Intervention-objective and equal-quantity gate
 
-Map the success criterion across `quantity or cessation → conditions of remaining activity → trajectory → perceived experience → physiological process → distal outcome`, then ask the **equal-quantity counterfactual**: if elapsed use or another common quantity were identical across conditions, what independently observed construct could still differ, and what evidence would distinguish it?
+Map the proposed success criterion across:
+
+`quantity or cessation → conditions of remaining activity → trajectory → perceived experience →
+physiological process → distal outcome`
+
+Then ask the **equal-quantity counterfactual**: if elapsed use, task completion, or another common
+quantity were identical across conditions, what independently observed construct could still
+differ? A broad statement that “quality matters, not only quantity” is not novel without a
+closest-work audit. Name the operational, experiential, or outcome construct and the evidence that
+would distinguish it.
 
 ### Concept-lineage versus in-domain-collision gate
 
-Separate the field that first established the abstract relationship (**general concept lineage**), the HCI work that already applied it to the target activity, values, or evaluand (**in-domain translation**), and the control policy, measure, mechanism, or finding remaining after both are credited (**exact project delta**). **Retire novelty only at the overlapping level**: no paper absorbs a whole causal chain because its framing sounds broad, and moving a known principle into HCI is not novel when prior HCI work already made that translation.
+Separate three novelty questions that are often collapsed:
+
+1. **General concept lineage:** which field first established the abstract relationship, such as
+   quantity not fully characterizing delivered conditions or behavior?
+2. **In-domain translation:** which HCI work already applied that relationship to the target
+   activity, values, or evaluand, such as agency or meaningfulness in digital wellbeing?
+3. **Exact project delta:** which independently defined control policy, measure, mechanism, or
+   finding remains after both lineages are credited?
+
+A broad concept from another field does not automatically establish a domain-specific human value,
+and an in-domain paper does not automatically cover every technical, experiential, physiological,
+or distal causal rung. Compare the literal constructs and measures. **Retire novelty only at the overlapping level**;
+do not let one paper absorb an entire causal chain because its framing sounds broad. Conversely,
+moving a known principle into HCI is not itself novel when prior HCI work has already made that
+translation.
 
 ### Collision–delta and control-policy anatomy gate
 
-Record `closest prior → shared causal core → exact surviving delta`, and for an intervention policy also `anchor/configuration object → activation selector → states → transitions → actuators/changed parameters → access semantics → protected value → override/bypass → reset/recovery`. A meaningful control state may be capability-level even when it enables no wholly new task.
+For each candidate record:
+
+`closest prior → shared causal core → exact surviving delta`
+
+For an intervention policy also record:
+
+`anchor/configuration object → activation selector → states → transitions → actuators/changed
+parameters → access semantics → protected value → override/bypass → reset/recovery`
+
+A meaningful control state or relationship may be capability-level even when it does not enable a
+wholly new task. Conversely, a familiar component does not become novel because it appears inside
+a new label.
 
 ### Residual-state topology gate
 
-Map what happens when the preferred behavior does not occur: `continue unchanged → continue under named attenuation → retain selected functions → substitute modality/activity → bypass → deny`. Record the protected human value, dimension changed, urgent-use path, accessibility risk, and failure cost, and say `continued access under [named change]` until evidence establishes lower harm or greater agency.
+Map what happens when the preferred behavior does not occur:
+
+`continue unchanged → continue under named attenuation → retain selected functions → substitute
+modality/activity → bypass → deny`
+
+Record the protected human value, operational dimension changed, urgent-use path, substitution
+opportunity, accessibility and task-success risk, and failure cost. Use structural language such
+as `continued access under [named change]` until evidence establishes lower harm, better quality,
+greater agency, or another benefit.
 
 ### Anchor semantics versus anchor quality gate
 
-Session duration, cumulative daily budget, intended clock/event transition, sensed receptivity, and explicit mode selection are different control semantics; clarity, calibration ease, and intention fit are empirical **anchor-quality** claims. A semantic difference cannot be relabeled as better alignment without evidence.
+Separate the system fact encoded by an anchor from claims about how well it represents people.
+Session duration, cumulative daily budget, intended clock/event transition, sensed receptivity,
+and explicit mode selection are different control semantics. Clarity, precision, stability,
+importance, calibration ease, comprehension, and intention fit are empirical **anchor-quality**
+claims. A semantic difference cannot be relabeled as better alignment without evidence.
 
 ### Temporal-role and identifiability gate
 
-Classify the policy as anticipatory, transition-time, reactive, recovery-oriented, or a stated combination, and record onset, within-active trajectory, target-time intensity, duration, cumulative dose, and reset. If a comparison varies more than one of these, call it a policy-package comparison rather than crediting anticipation, gradualness, intensity, or dose without an isolating contrast.
+Classify the policy as anticipatory, transition-time, reactive, recovery-oriented, or a stated
+combination. Record onset, within-active trajectory, target-time intensity, duration, cumulative
+dose, and reset. If a comparison varies more than one of these, name it as a policy-package
+comparison. Do not attribute a result to anticipation, gradualness, intensity, or dose unless that
+factor is identified by an orthogonal, matched, factorial, dismantling, or otherwise defensible
+contrast.
 
 ### Construct-independence and composite-measure veto
 
-Classify each measure as manipulation/fidelity, delivered exposure, perceived mediator, behavior, physiology, or distal outcome; a condition label, assigned level, or treatment-defined weight measures delivered dose, never experience, harm reduction, or benefit. A composite supports a methodological contribution only when the construct is defined independently of treatment, weights are defensible with shown sensitivity, components stay separately reported, convergent and discriminant validity are assessed, and it adds decision-relevant information beyond simpler measures. Prefer a multidimensional profile over a scalar until these pass.
+Classify each proposed measure as manipulation/fidelity, delivered exposure, perceived mediator,
+behavior, physiology, or distal outcome. A condition label, assigned level, or treatment-defined
+weight may measure delivered dose; it cannot mechanically establish experience, harm reduction,
+or benefit. A composite can support a methodological contribution only when:
+
+- the construct is defined independently of treatment;
+- weights are theoretically or empirically defensible;
+- components remain separately reported;
+- uncertainty and sensitivity to weights are shown;
+- convergent and discriminant validity are assessed; and
+- the score adds decision-relevant information beyond simpler measures.
+
+Prefer a multidimensional profile over a scalar until these requirements pass.
 
 ### Causal-ladder and fidelity gate
 
-Audit each edge separately: `engineered setting → delivered operational exposure → perceived or behavioral mediator → physiological mediator → distal outcome`. Record the evidence state and fidelity check for every rung, and never infer a downstream experience, mechanism, physiology, or outcome from a changed upstream setting.
+Audit each edge separately:
+
+`engineered setting → delivered operational exposure → perceived or behavioral mediator →
+physiological mediator → distal outcome`
+
+Record the evidence state and fidelity check for every rung and edge. Never infer a downstream
+experience, mechanism, physiology, or outcome merely because an upstream setting changed. A
+component-foundation paper can motivate a downstream hypothesis; it does not complete the chain
+for the proposed artifact.
 
 ### Null-survival gate
 
-State what reusable capability or knowledge remains if the preferred condition is null, worse, heterogeneous, or burdened. A package fails when its only contribution is that one favored design wins; boundary conditions, tradeoffs, validated measures, and falsified mechanisms are contributions.
+For every contribution package, state what reusable capability or knowledge remains if the
+preferred condition is null, worse, heterogeneous, or burdened. A package fails when its only
+contribution is that one favored design wins. Boundary conditions, identified tradeoffs, validated
+measures, and falsified mechanisms can be contributions when the design can actually establish
+them.
 
 ## Apply six-field prior-work evidence accounting
 
-Read [prior-work-contribution-boundaries.md](prior-work-contribution-boundaries.md). Maintain `prior-work-evidence-accounting.csv`, `idea-provenance-ledger.csv`, and the human-readable `prior-work-contribution-boundary.md`.
+Read [prior-work-contribution-boundaries.md](prior-work-contribution-boundaries.md). Maintain
+`prior-work-evidence-accounting.csv`, `idea-provenance-ledger.csv`, and the human-readable
+`prior-work-contribution-boundary.md`.
 
-Atomize every material proposition and assign six independent fields—`AUTHOR CLAIM`; `DEMONSTRATED ARTIFACT OR STUDY`; `OPERATED CAPABILITY`; `EVALUATED RESULT`; `CAPABILITY COLLISION`; `CONTRIBUTION CREDIT`—where no field inherits truth from another. Compare the smallest positively evidenced operation, configuration, condition, or finding at the component, independently consequential sub-capability, or complete human-activity-predicate level.
+Atomize every material proposition and assign six independent fields:
 
-Use two separate boundaries. **Capability collision** requires positive evidence that the exact operation actually ran, then a collision level; an operated but unclaimed atom is `DEMONSTRATED_UNCLAIMED`, which may narrow firstness only at the matched predicate or independently claimed sub-capability, force a fair comparator, or establish component inheritance. **Contribution attribution** requires an explicit author claim and matched demonstration—plus demonstrated operation for an artifact-capability atom—and credits only the matched intersection at the weakest supported scope.
+- `AUTHOR CLAIM`;
+- `DEMONSTRATED ARTIFACT OR STUDY`;
+- `OPERATED CAPABILITY`;
+- `EVALUATED RESULT`;
+- `CAPABILITY COLLISION`; and
+- `CONTRIBUTION CREDIT`.
 
-A `DEMONSTRATED_UNCLAIMED` operation therefore takes contribution credit `NONE` and is reported as an observed capability of the audited artifact, not a claimed contribution; a `CLAIMED_UNDEMONSTRATED` atom takes `CAPABILITY COLLISION=NONE` and `CONTRIBUTION CREDIT=NONE` unless separate positive operation evidence exists, and stays visible as an accounting row cross-referenced in idea provenance. Keep package results at package scope.
+No field inherits truth from another. Compare the smallest positively evidenced command, parameter,
+input channel, reward channel, configuration, study condition, or finding, then locate that atom at
+the component, independently consequential sub-capability, or complete human-activity-predicate
+level.
 
-Assign `OPERATED CAPABILITY=NO` only from positive evidence that settles the audited artifact version; otherwise `UNRESOLVED`, since source silence creates only `SEARCH_PRIORITY` or `REOPEN_QUERY`. Put proposals, future-work directions, interpretations, and hypothetical scenarios only in `idea-provenance-ledger.csv` with collision and credit both `NONE`; they may constrain conceptual provenance or “first idea” wording, never realized capability, effectiveness, or contribution novelty. Decompose mixed systems channel by channel and reject a whole-system label unless positive evidence qualifies every required channel.
+Use two separate boundaries:
+
+1. **Capability collision:** require positive evidence that the exact operation actually ran and
+   classify its collision level. An operated but unclaimed atom is `DEMONSTRATED_UNCLAIMED`; it may
+   narrow firstness only at the matched predicate or independently claimed sub-capability, force a
+   fair comparator, or establish component inheritance.
+2. **Contribution attribution:** require an explicit author claim and matched demonstration. For an
+   artifact-capability atom, also require demonstrated operation. Credit only the matched
+   intersection and narrow it to the weakest supported scope.
+
+A `DEMONSTRATED_UNCLAIMED` operation receives `CONTRIBUTION CREDIT=NONE`; describe it as an observed
+capability of the audited artifact, not as the authors' claimed contribution. A
+`CLAIMED_UNDEMONSTRATED` atom receives `CAPABILITY COLLISION=NONE` and
+`CONTRIBUTION CREDIT=NONE` unless separate positive operation evidence exists.
+
+Keep package results at package scope and reject operator-specific causal claims without an
+isolating contrast. Reject equivalent, comparable, maintained, or non-inferior wording based only
+on nonsignificance.
+
+Assign `OPERATED CAPABILITY=NO` only from positive evidence that settles the audited artifact
+version. If positive evidence does not settle the unit, use `UNRESOLVED`. Source silence can create
+only `SEARCH_PRIORITY` or `REOPEN_QUERY`; it cannot establish capability, absence, collision, or
+credit.
+
+Put proposals, future-work directions, interpretations, and hypothetical scenarios only in
+`idea-provenance-ledger.csv`, with collision and credit both `NONE`. They may constrain conceptual
+provenance or “first idea” wording, never realized capability, effectiveness, or contribution
+novelty. Preserve an explicit author claim of realized capability without matched evidence as a
+`CLAIMED_UNDEMONSTRATED` accounting row; it may also be cross-referenced as an unverified
+implementation claim in idea provenance, but gains neither collision nor credit.
+
+Decompose mixed systems channel by channel—for example user-action-to-command,
+conventional-input-to-navigation, sensed-or-computed-state-to-adaptation/reward,
+condition-to-gating, and system-state-to-feedback.
+Reject a whole-system label unless positive evidence qualifies every required channel.
 
 ## Separate activity from implementation
 
 Run an **activity-versus-implementation counterfactual**:
 
-> If both systems used the same hardware, interface, and output modality, would the proposed contribution-level difference remain?
+> If both systems used the same hardware, interface, and output modality, would the proposed
+> contribution-level difference remain?
 
-If not, normally treat it as an implementation or design choice. The exception is a project whose medium or device is itself the proposed contribution and complete-source evidence demonstrates a nontrivial reusable adaptation, a new class of use, or a directly validated empirical finding; frame that demonstrated change, not the device label. A zero-credit port may still collide at the underlying operated-capability level. Headset versus earbud and physical versus rendered setting **when described only as hardware or medium** are platform substitutions, not independent novelty claims; a physical-versus-virtual distinction becomes contribution-relevant only when evidence shows it changes the supported human activity—participants, interdependence, agency, or risk.
+If not, normally treat it as an implementation or design choice. The exception is a project whose
+medium or device is itself the proposed contribution and complete-source evidence demonstrates a
+nontrivial reusable adaptation, a new class of use, or a directly validated empirical finding.
+Frame that demonstrated change, not the device label. A zero-credit port may still collide at the
+underlying operated-capability level. Headset versus earbud,
+tablet versus cue matrix, visual annotation versus speech, and physical versus rendered setting
+**when described only as hardware or medium** are platform substitutions, not independent novelty
+claims. A physical-versus-virtual distinction becomes contribution-relevant only when evidence
+shows that it changes the supported human activity—for example the participants, interdependence,
+real objects, movement, timing, agency, risk, or consequences—not merely where pixels are rendered.
 
 ## Test conjunctive claims and terminology
 
-Run a **conjunctive claim test**: split the candidate into its complete human-activity predicate, independently consequential sub-capabilities, and supporting implementation components, then identify which close work supplies each positively evidenced element. The complete capability survives when no verified full copy realizes the complete predicate, even if separate works contain every generic qualifier or component. Never perform novelty by aggregation or anti-novelty by component subtraction, and never promote one qualifier—“real-time,” “personalized,” “multi-user”—into a standalone novelty claim when prior work already establishes it.
+Run a **conjunctive claim test**. First split the candidate into its complete human-activity
+predicate, independently consequential sub-capabilities, and supporting implementation components.
+Then identify which close work supplies each positively evidenced element. The complete capability
+survives when no verified full copy realizes the complete predicate, even if separate works contain
+every generic qualifier or component. Never perform novelty by aggregation or anti-novelty by
+component subtraction. Likewise, never promote one qualifier—such as “real-time,” “personalized,”
+“multi-user,” “audio,” or “physical”—into a standalone novelty claim when prior work already
+establishes it.
 
-Apply the same test **symmetrically to the proposed project**: complete all six fields independently for every qualifier in the surviving conjunction, keep planned or future work outside capability and contribution credit, and list unknowns explicitly. If a qualifier is claimed in an author draft but not independently inspectable, record only `AUTHOR CLAIM`.
+Apply the same test **symmetrically to the proposed project**. For every qualifier in the surviving
+conjunction, complete all six fields independently. Keep planned or future work outside capability
+and contribution credit and list unknowns explicitly. If a qualifier is claimed in an author draft
+but not independently inspectable, record only `AUTHOR CLAIM`; do not upgrade demonstration,
+operation, evaluation, collision, or credit.
 
-The claim cannot be stronger than its weakest necessary qualifier. Do not infer recipient-specific routing from separate devices, recipient exclusivity from intended addressing, or concurrent delivery from participation in the same session: “Independently addressed” requires routing evidence; “private” requires an access or audibility rule; and “simultaneous” or “concurrent” requires overlapping-stream or timing evidence. If several cues occur during one unfolding activity but temporal overlap is unverified, say **during the same unfolding activity** instead.
+The claim cannot be stronger than its weakest necessary qualifier. Do not infer recipient-specific
+routing from separate devices alone, recipient exclusivity from intended addressing, or concurrent
+delivery from participation in the same session. “Independently addressed” requires routing
+evidence; “private” requires an access or audibility rule; and “simultaneous” or “concurrent”
+requires overlapping-stream or timing evidence. If several cues occur during one unfolding
+activity but temporal overlap is not verified, say **during the same unfolding activity** instead.
 
 Use a precise terminology contract:
 
-- **shared or group-wide:** the same content on a common channel;
-- **player-specific or recipient-specific:** content directed to one recipient; implies neither different content nor exclusivity;
-- **recipient-differentiated:** recipients may receive different content; says nothing about privacy, automatic selection, or an individual model;
-- **role- or profile-configured:** a person selects content by declared roles or attributes;
-- **personalizable or user-adjustable:** a person configures one named dimension, not the whole intervention;
-- **system-personalized:** selection from a stored or inferred individual model; say how it is made and whether it changes; and
-- **adaptive:** support updates from changing inferred state, behavior, or performance.
+- **shared or group-wide:** recipients receive the same content through a common channel;
+- **player-specific or recipient-specific:** content is directed to a particular recipient; this
+  alone establishes neither different content nor exclusivity;
+- **recipient-differentiated:** intended recipients can receive different content; this says
+  nothing by itself about privacy, automatic selection, or an individual model;
+- **role- or profile-configured:** a person explicitly selects different content using declared
+  roles, levels, or other configured attributes;
+- **personalizable or user-adjustable:** a person can configure a named dimension; do not extend
+  that property to the whole intervention;
+- **system-personalized:** the system uses a stored or inferred individual model to select support;
+  state how that model is created and whether it changes; and
+- **adaptive:** the system updates support from changing inferred state, behavior, or performance.
 
-`Individualized` is an accessible umbrella only when its project-specific basis is defined at first use. Do not use it as a catch-all. `Personalized` more strongly suggests tailoring from named personal characteristics or a person model; name the basis and selector rather than labeling the whole system. Do not call manually configured differentiation automatic personalization, and do not call information merely addressed to one recipient “private” until access and routing are verified. Preserve each prior work's own exact terminology when describing what it claims.
+`Individualized` is an accessible umbrella only when its project-specific basis is defined at
+first use. Do not use it as a catch-all. `Personalized` more strongly suggests tailoring from named
+personal characteristics, preferences, history, needs, or a person model; name the basis and
+selector rather than applying the label to the whole system. Do not call manually configured
+differentiation automatic personalization, and do not use “private” unless access and routing have
+been verified. Distinguish information that is addressed to one recipient from information that
+other participants cannot hear or see.
 
-Shared communication can also provide mutual awareness. Treat preserved awareness, lower workload, better coordination, or better learning as design rationales or
-outcome hypotheses until evidence establishes them, and record whether a recipient-differentiated channel could hide information that collaborators need.
+Do not demand one winner among these terms: a concrete recipient term, an architectural contrast
+term, a scoped user-control term, and a reserved overclaim can coexist in one approved hierarchy.
+Use the project's author-approved terminology contract when compressing comparisons, while
+preserving each prior work's own exact terminology when describing what it claims.
+
+Shared communication can also provide mutual awareness. Treat preserved awareness, reduced
+distraction, lower workload, better coordination, or better learning as design rationales or
+outcome hypotheses until appropriate evidence establishes them. Record whether a
+recipient-differentiated channel could hide information that collaborators need.
 
 ## Calibrate novelty assertiveness
 
-Do not let caution about untested outcomes erase a coherent **prospective** capability hypothesis, but do not call it a current contribution before matched demonstration. Audit four questions separately: does the project propose a new causal interaction, control policy, or humanly meaningful state; has it been implemented and demonstrated; does evidence establish consequential human value; and which details are supporting implementation rather than novelty-bearing? A missing or negative second answer keeps the capability outside the current contribution boundary; a missing third answer excludes the value atom without erasing a separately claimed-and-demonstrated artifact capability. Conversely, a proposed configuration does not establish that it is realized, usable, effective, or preferable.
+Do not let caution about untested outcomes erase a coherent **prospective** capability hypothesis,
+but do not call it a current contribution before matched demonstration. Audit four
+questions separately:
+
+1. Does the project propose a new causal interaction, control policy, or humanly meaningful state?
+2. Has that capability been implemented and demonstrated?
+3. Does evidence establish consequential human value or benefit?
+4. Which details are supporting implementation rather than novelty-bearing?
+
+A missing or negative answer to question 2 keeps the focal capability outside its current
+contribution boundary. A missing answer to question 3 excludes the value atom without erasing a
+separately claimed-and-demonstrated artifact capability. Conversely, a proposed configuration or
+mechanism does not establish that it is realized, usable, effective, beneficial, or preferable.
 
 For every surviving conjunctive claim, separate:
 
-- **novelty-bearing causal core:** the minimum interdependent elements enacting one distinct human intention, information flow, access policy, or interaction capability;
-- **supporting implementation:** platform, defaults, labels, algorithms, and other details that do not independently change the human capability;
-- **realization evidence:** what proves the capability works as specified; and
-- **value evidence:** what would establish behavioral, experiential, accessibility, safety, or outcome significance.
+- **novelty-bearing causal core:** the minimum set of interdependent elements that enacts one
+  distinct human intention, information flow, access policy, or interaction capability;
+- **supporting implementation:** platform, exact defaults, labels, brand list, algorithms,
+  calibration values, and other details that do not independently change the human capability;
+- **realization evidence:** what proves the proposed capability works as specified; and
+- **value evidence:** what would establish behavioral, experiential, accessibility, safety, or
+  outcome significance.
 
-A conjunction stays a prospective capability hypothesis until explicitly claimed and demonstrated; removing one core element changes the encoded intention, coordination relationship, or control policy—for example from an event-transition policy to a usage quota, or from usable attenuation to denial. Treat semantic control signals as interaction structure, not threshold values: the anchors separated in the anchor-semantics gate encode different reasons for intervention.
+Reject both a brittle “first” assembled from incidental qualifiers and a brittle anti-novelty
+argument assembled by finding those qualifiers separately in unrelated systems. A conjunction can
+remain a prospective capability hypothesis when removing one core element changes the encoded
+human intention, coordination relationship, activity, or control policy—for example from an
+event-transition policy to a usage quota, from automatic progression to explicit mode selection,
+from usable attenuation to denial, or from practising an interdependent tactic to avoiding another
+participant's path. It enters the focal project's contribution boundary only after it is explicitly
+claimed and demonstrated.
 
-Before finalizing positioning, write both the strongest attributed claimed-and-demonstrated contribution statement now, scoped to the audited corpus and accompanied by every separate demonstrated-unclaimed capability collision and overclaiming risk, and the stronger empirical/value statement that becomes available only after named evidence. Challenge understatement as well as overstatement: a synthesis of only collisions and fallbacks may have conflated outcome uncertainty with capability absence, and one of only differences must be re-run through the counterfactuals above.
+Treat semantic control signals as interaction structure, not mere threshold values. Session
+duration, cumulative daily budget, intended clock/event transition, sensed receptivity, and
+explicit mode selection encode different reasons for intervention. Compare what the system is
+responding to and what state it makes possible.
+
+Distinguish prior-work realization status:
+
+- a claimed-and-demonstrated operated atom can receive attributed contribution credit;
+- a `DEMONSTRATED_UNCLAIMED` operation can create a collision at its matched predicate or
+  independently claimed sub-capability level, or establish a component precedent, but receives no
+  attributed contribution credit;
+- a `CLAIMED_UNDEMONSTRATED` atom receives no capability or contribution credit;
+- a Discussion or future-work proposal belongs only to idea provenance, with collision and credit
+  both `NONE`; and
+- source silence creates only search priority or a reopen query.
+
+Before finalizing positioning, write both:
+
+1. the strongest attributed claimed-and-demonstrated contribution statement now, scoped to the
+   audited corpus, plus every separate demonstrated-unclaimed capability collision and overclaiming
+   risk; and
+2. the stronger empirical/value statement that becomes available only after named evidence.
+
+Challenge both understatement and overstatement. If the synthesis lists only collisions and
+fallbacks, ask whether it has conflated outcome uncertainty with capability absence. If it lists
+only differences, apply the activity/implementation counterfactual, conjunctive test, current-
+practice collision, and closest-work audit again.
 
 ## Rank contribution strength and proximity
 
 Rank each meaningful comparison by the strongest defensible user-facing difference:
 
 1. **capability:** the project would let people do something consequential the comparison does not;
-2. **experience or outcome:** the capability already exists, but the project may improve a meaningful human outcome, experience, or performance measure; and
-3. **cost or access:** comparable capability and experience exist, but the project may make them lighter, cheaper, easier to deploy, or more accessible.
+2. **experience or outcome:** the capability already exists, but the project may improve a
+   meaningful human outcome, experience, or performance measure; and
+3. **cost or access:** comparable capability and experience exist, but the project may make them
+   smaller, lighter, cheaper, easier to deploy, or more accessible.
 
-This is an ordered contribution-strength ladder, not a classification of research methods: quantitative validation of a new capability does not make the contribution “experience-level,” and a statistically significant result does not make an incremental capability novel. Record a fallback tier when the primary distinction is contestable.
+This is an ordered contribution-strength ladder, not a classification of research methods.
+Quantitative validation of a new capability does not make the contribution “experience-level,” and
+a statistically significant result does not make an incremental capability novel. Record a
+fallback tier when the primary distinction is contestable.
 
-Also record **comparison proximity**: a capability-level difference from a distant analogy is much weaker novelty evidence than the same tier from the closest same-problem work. Determine it lexicographically by the dossier ranking order, never as one scalar in which mechanism similarity compensates for solving a different problem.
+Also record **comparison proximity**. A capability-level difference from a distant analogy is much
+weaker novelty evidence than the same tier from the closest same-problem/similar-approach work.
+Determine comparison proximity lexicographically: problem-proximity band first, then fit to the
+people/activity/context within that band, then causal-mechanism similarity, then comparator or
+novelty leverage. Do not collapse these dimensions into one scalar score that lets mechanism
+similarity compensate for solving a different problem.
 
-Do not force theory, reviews, component techniques, distant analogies, or under-described interactions into the ladder; label them `N/A` and state what role they serve. If nearly every work appears to be Tier 1, the audit has probably mistaken domain change, surface mechanism overlap, or implementation choice for novelty; reclassify the corpus and rescope the intended contribution.
+Do not force theory, reviews, component techniques, motivation sources, exemplars, or internal
+artifacts into the ladder; label them `N/A` and state what role they actually serve. If nearly every
+work appears to be Tier 1, the audit has probably mistaken domain change, surface mechanism overlap,
+or implementation choice for novelty. Reclassify the corpus and rescope the intended contribution
+before continuing.
 
 ## Situate the work in the HCI community
 
-Complete the native ACM DL and SIGCHI coverage protocol in [acm-sigchi-related-work.md](acm-sigchi-related-work.md) before selecting a gap; the deliberate CHI/SIGCHI search priority confers no claim strength.
+Complete the native ACM DL and SIGCHI coverage protocol in
+[acm-sigchi-related-work.md](acm-sigchi-related-work.md) before selecting a gap. CHI and relevant
+SIGCHI-sponsored/co-sponsored work receive deliberate search priority because they establish the
+HCI conversation a reviewer expects the project to acknowledge. This priority does not confer
+claim strength: assess every retained result through the same source, directness, method, and
+claim-specific evidence gates.
 
-Do not reduce positioning to a list of similar systems: complete the community-conversation, unresolved-tension, project-leverage, and transfer-boundary synthesis defined in [acm-sigchi-related-work.md](acm-sigchi-related-work.md), keeping idea provenance from prior Discussion or future-work proposals at collision and contribution credit `NONE`, and use it to show how a demonstrated result realizes, tests, complicates, or bounds an earlier aspiration rather than presenting the proposal as prior capability. “This is an interface” or “no one combined these components” is insufficient.
+Do not reduce positioning to a list of similar systems. Synthesize:
+
+- the established HCI problem, interaction lineage, or design space the project joins;
+- the unresolved tension, tradeoff, or knowledge uncertainty exposed across the closest works;
+- any idea provenance found in prior Discussion or future-work proposals, explicitly kept at
+  collision and contribution credit `NONE`;
+- what studying the project could teach beyond its immediate artifact or population; and
+- the boundary on transfer to other HCI settings.
+
+Credit relevant CHI/SIGCHI work positively and say whether the project replicates, extends,
+contrasts, instantiates, or tests a proposition from that lineage. A broader-HCI claim must reopen
+a question or transferable design tension. Use idea provenance in Discussion to show how a
+demonstrated result realizes, tests, complicates, or bounds an earlier aspiration; never present
+the proposal as prior capability. “This is an interface” or “no one combined these components” is
+insufficient.
 
 ## Write the ranked positioning dossier
 
-Create `ranked-related-work-positioning.md` after the bounded full-copy landscape pass and before the author chooses a gap or primary contribution. Select up to approximately ten verified works from the primary problem-space portfolio and rank lexicographically by: (1) `SAME-SPECIFIC-PROBLEM` before `SIMILAR-PROBLEM`; (2) match to the target people, activity, and triggering or temporal context within that band; (3) similarity of the causal interaction mechanism, including access state and progression variable; (4) leverage over the claimed gap or novelty boundary; and (5) value as a fair empirical or design comparator.
+Create `ranked-related-work-positioning.md` after the bounded full-copy landscape pass and before
+the author chooses a gap or primary contribution. Select up to approximately ten verified works
+from the primary problem-space portfolio so the dossier is deep enough for reviewer-facing
+reasoning but still forces prioritization. Rank lexicographically by:
 
-Venue prestige, recency, and evidence strength are not hidden relevance scores, though evidence strength still bounds what a paragraph may say, and an adjacent or different-problem work cannot displace a same/similar-problem work for sharing a mechanism. If fewer than approximately ten verified same/similar-problem works exist, include all of them, disclose the shortage and residual search risk, and **do not pad** the primary ranking with distant analogies. State ties or conditional ordering when unfinished project choices could change the ranking.
+1. `SAME-SPECIFIC-PROBLEM` before `SIMILAR-PROBLEM`;
+2. match to the target people, activity, and triggering or temporal context within that band;
+3. similarity of the causal interaction mechanism, including access state and progression
+   variable;
+4. leverage over the claimed gap or novelty boundary; and
+5. value as a fair empirical or design comparator.
 
-Write one full working paragraph per ranked work, crediting the predecessor's claimed-and-demonstrated contribution, separately stating any demonstrated-unclaimed capability collision, stating the material evidence boundary, naming one consequential literal operational difference, saying what the project inherits, characterizing the relationship as replication, extension, contrast, instantiation, or a test, and ending with the safe positioning boundary. Keep overclaiming risks in the internal record and route proposals to idea provenance. Do not turn a limitation list into the contrast or imply the planned project already works. These paragraphs are research artifacts that can later support a Related Work section; they are not final manuscript prose.
+Do not include venue prestige, recency alone, or evidence strength as a hidden relevance score.
+Evidence strength still bounds what a paragraph may say. A work in an adjacent or different
+problem band cannot displace a same/similar-problem work because it shares a mechanism or sounds
+conceptually similar. If fewer than approximately ten verified same/similar-problem works exist,
+include all of them, disclose the shortage and residual search risk, and **do not pad** the primary
+ranking with distant analogies. State ties or conditional ordering when unfinished project choices
+could change the ranking.
 
-Write a separate claim-specific note for each material item in the mechanism/capability-collision portfolio: the different problem, the prior human-activity predicate, whether the overlap is `FULL_CAPABILITY_COLLISION`, `INDEPENDENT_SUBCAPABILITY_COLLISION`, or `COMPONENT_OR_MECHANISM_PRECEDENT`, the positive operation evidence, whether it was author-claimed, its contribution-credit disposition, and the exact claim narrowed or inherited. Re-rank when the target-problem identity, mechanism, access state, progression variable, contribution layer, source completeness, or closest-work set changes.
+Write one full working paragraph per ranked work. Each paragraph must credit the predecessor's
+claimed-and-demonstrated contribution, separately state any demonstrated-unclaimed capability
+collision, state the material evidence boundary, name one literal consequential difference, say
+what the project inherits, characterize the relationship as
+replication, extension, contrast, instantiation, or a test, and end with the safe positioning
+boundary. Keep demonstrated-unclaimed operated capabilities and overclaiming risks in the internal
+record and surface them when they materially constrain firstness or comparator choice. Route proposals to
+idea provenance for later Discussion. Do not turn a limitation list into the contrast, and do not
+imply the planned project already works. These paragraphs are research artifacts that can later
+support a Related Work section; they are not final manuscript prose.
+
+Write a separate claim-specific note for each material item in the
+mechanism/capability-collision portfolio: state the different problem, the prior human-activity
+predicate, whether the overlap is `FULL_CAPABILITY_COLLISION`,
+`INDEPENDENT_SUBCAPABILITY_COLLISION`, or `COMPONENT_OR_MECHANISM_PRECEDENT`, the positive operation
+evidence, whether it was author-claimed, its contribution-credit disposition, the exact claim
+narrowed or inherited, and what remains project-specific. Retain
+ideas, proposals,
+theory, foundations, reviews, secondary comparators, and rank-sensitive alternatives in their
+named inventories. Re-rank when the target-problem identity, population, activity, mechanism,
+access state, progression variable, user control, contribution layer, source completeness, or
+closest-work set changes.
 
 ## Produce the audit
 
-Create `related-work-contribution-tier-audit.md` covering every catalogued reference, recording for each applicable work the outputs of the gates above in the fields its template defines, plus the most concise significant difference, what the project inherits, the evidence boundary, overclaim risks, an unsafe claim to avoid, a lower-tier fallback, and a fair future comparator that preserves valued current practice. Include every non-comparator in a completeness inventory with its real role so references do not silently disappear.
+Create `related-work-contribution-tier-audit.md` covering every catalogued reference. For each
+applicable work:
 
-Cross-reference `acm-sigchi-related-work-audit.md`; the contribution audit cannot be complete while that coverage gate remains open.
+- record its relationship class and proximity;
+- record its problem-proximity band and portfolio assignment before mechanism similarity;
+- atomize each material proposition into the six independent accounting fields;
+- use positively operated capability for collision and claimed-plus-demonstrated evidence for
+  contribution attribution;
+- write the focal and prior human-activity predicates, apply the removal and drop-in-port
+  counterfactuals, and classify full-capability, independent-sub-capability, and component/mechanism
+  overlap without qualifier subtraction;
+- record `DEMONSTRATED_UNCLAIMED` operations as collisions/risks with contribution credit `NONE`;
+- record `CLAIMED_UNDEMONSTRATED` atoms with both collision and credit `NONE`;
+- assign operated capability `NO` only from positive artifact evidence; route silence only to
+  search priority or a reopen query;
+- preserve proposals in the idea-provenance ledger with collision and credit both `NONE`;
+- decompose mixed channels and reject unsupported whole-system labels;
+- apply the demonstrated port/adaptation credit gate;
+- compare the relevant dimensions and existing-workflow relationship;
+- report the current-practice collision check and communication structure;
+- run the activity-versus-implementation counterfactual and conjunctive claim test;
+- separate and rank workflow significance, interaction or information-distribution capability,
+  setting/activity boundary, implementation/design rationale, and untested outcome hypothesis;
+- give the most concise significant difference;
+- identify what the project learns or inherits;
+- state the evidence boundary, tag evidence, capability/overclaim risks, idea-lineage role, and
+  unresolved source question;
+- list an unsafe claim to avoid and lower-tier fallback; and
+- specify a fair future comparator that preserves valued current practice.
+
+Include every non-comparator in a completeness inventory with its real role so references do not
+silently disappear.
+
+Cross-reference `acm-sigchi-related-work-audit.md`, including its native ACM queries, explicit
+CHI/SIGCHI inclusion/exclusion decisions, independent contribution-boundary tags,
+capability/overclaim risks, idea-lineage distinctions, citation-chain saturation, and broader-HCI
+situating synthesis. The contribution audit cannot be complete while that coverage gate remains
+open.

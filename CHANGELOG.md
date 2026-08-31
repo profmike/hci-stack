@@ -1,15 +1,5 @@
 # Changelog
 
-## [0.4.7] - 2026-08-31 — Compact Instructions, Same Contracts
-
-### Changed
-
-- **`hci-motivation-and-contributions` 0.1.9.** Instruction and reference prose compacted by
-  roughly a third to give newer models more room for their own writing judgment. Test-pinned
-  strings, script invocations, schema and enumeration definitions, exemplar facts with their
-  exact claim modality, and every explicitly authored rule are preserved verbatim; scripts and
-  tests are unchanged and the full suite passes.
-
 ## [0.4.6] - 2026-08-09 — Declarative Motivation and User Value
 
 ### Changed

@@ -1,97 +1,206 @@
 # Evidence and citation protocol
 
-Keep **source tier**, **ingestion completeness**, **claim directness**, and
-**claim-specific evidence strength** as four independent dimensions: a prestigious venue does not
-make every statement strong evidence. A record such as `[T2A | FULL | Adjacent | ES1]` carries one
-value per dimension, defined below; the same source takes different `ES` labels for different
-claims. The contribution-strength ladder
-(`Tier 1 — capability`, `Tier 2 — experience or outcome`, `Tier 3 — cost or access`) ranks what a
-project may contribute; it does not rate evidence.
+Use separate dimensions for **source tier**, **ingestion completeness**, **claim directness**, and
+**claim-specific evidence strength**. A prestigious venue does not make every statement strong
+evidence, and a large sample does not repair an indirect measure.
+
+## Contents
+
+1. Source tiers
+2. Claim support levels
+3. Method-strength rules
+4. Reusable evidence-strength register
+5. Quantitative-claim checklist
+6. Citation verification
+7. Prior-work six-field evidence accounting
+8. Evidence sufficiency by framing move
+9. Inherited foundations and reader-facing boundaries
+
+## How to read the labels
+
+A compact record such as `[T2A | FULL | Adjacent | ES1]` answers four different questions:
+
+| Label | Question answered | Example interpretation |
+|---|---|---|
+| `T1`, `T2A`, `T2B` | What kind of source is this? | Strongest published/authoritative, useful external, or authors' own evidence |
+| `FULL`, `PARTIAL`, `BROKEN` | How completely was the exact source obtained and opened? | Methods/results/limits available, incomplete, or unusable |
+| `Direct`, `Inferred`, `Adjacent`, `Analogy` | How closely does it match the proposed claim? | Exact match through design-transfer only |
+| `ES3`, `ES2`, `ES1`, `ES0` | How strongly does it support this one named claim after audit? | Anchor, bounded support, context only, or do not use |
+
+These are not four versions of one grade. A `T1` meta-analysis can be `ES1` for an exact bedtime
+feed-scrolling claim because its exposure is generic daily screen time. A careful `T2B` formative
+study can be `ES3` for a narrow claim about the sampled users' workflow. The same source can receive
+different ES labels for different claims.
+
+Do not confuse source tiers with the separate related-work **contribution-strength ladder**
+(`Tier 1 — capability`, `Tier 2 — experience or outcome`, `Tier 3 — cost or access`). The latter
+ranks what a proposed project may contribute relative to a comparator; it does not rate evidence.
 
 ## Source tiers
 
-**T1 — authoritative or strongest published evidence:** official statistics from a body with the
-relevant remit, evidence syntheses, strong primary studies, and highly relevant peer-reviewed
-work; use the original dataset or primary study. An authoritative body counts only within its
-verified remit and in the role of the exact document used. Read [authoritative-domain-sources.md](authoritative-domain-sources.md) and
-maintain `authoritative-source-map.md`. Authority never overrides ingestion, directness, recency,
-document type, or the claim-specific `ES` audit. Prioritize CHI and the current official SIGCHI
-sponsored/co-sponsored roster for related-work coverage; that priority
-does **not** automatically assign `T1`, increase directness, repair bias, or upgrade an `ES`
-label.
+### T1 - authoritative or strongest published evidence
 
-**T2A — useful published or external evidence:** adjacent venues, industry reports, telemetry,
-official specifications or release records. State conflicts of interest and opacity; never treat
-an industry survey with undisclosed recruitment, weighting, or instruments as population truth.
+- Official public-health, government, standards, or intergovernmental data for population facts
+  (for example, WHO when the health claim is within WHO's remit).
+- Systematic reviews, meta-analyses, consensus statements, and strong primary studies.
+- Highly relevant, peer-reviewed work from the leading venue for the question (for HCI, prefer CHI
+  over a less selective venue when both directly support the same claim).
 
-**T2B — the authors' evidence:** their own formative studies, log analysis, pilots, and
-evaluations, reported with limitations, de-identified, kept inside the sampled population and
-context.
+Use the original dataset or primary study when it is available. "Highly cited" is a discovery
+heuristic, not proof of validity.
+
+An authoritative body is authoritative only for claims within its verified remit and for the role
+of the exact document used. Read
+[authoritative-domain-sources.md](authoritative-domain-sources.md) and maintain
+`authoritative-source-map.md`. A meeting report may anchor institutional attention while remaining
+weak for causality; a guideline may establish a recommendation but not uptake; official product
+documentation may establish capability but not effectiveness. Authority never overrides
+ingestion, directness, recency, document type, or the claim-specific `ES` audit.
+
+For HCI related-work coverage, prioritize CHI and the relevant conferences on the current official
+SIGCHI sponsored/co-sponsored roster. That search priority helps situate the project in its
+community; it does **not** automatically assign `T1`, increase directness, repair bias, or upgrade
+an `ES` label. A close, rigorous non-ACM source may be stronger evidence for a named claim than an
+indirect CHI paper.
+
+### T2A - useful published or external evidence
+
+- Relevant peer-reviewed work from adjacent or second-tier venues and journals.
+- Transparent industry reports, product telemetry, and market studies.
+- Official product specifications and release records for technical or timing facts.
+
+State conflicts of interest and methodological opacity. Do not present an industry survey as
+population truth when recruitment, weighting, or instruments are undisclosed.
+
+### T2B - the authors' evidence
+
+- Formative interviews, contextual inquiry, diary studies, surveys, log analysis, pilots, and
+  evaluations conducted by the authors.
+
+Report recruitment, inclusion criteria, setting, sample, instrument/task, analysis, and limitations.
+Use de-identified aggregate evidence. Do not generalize beyond the sampled population and context.
 
 ## Claim support levels
 
-**Direct** — same construct, population, context, relationship. **Inferred** — a bounded
-conclusion the source does not state; keep it out of the default prior-work contribution boundary,
-and never use source silence to infer an absent capability. **Adjacent** — a neighbor with the
-difference named. **Analogy** — motivates a hypothesis or design transfer only. Prefer T1 direct
-evidence, except that T2B direct evidence may be strongest for a novel, narrow need published work
-has not studied. Prevalence, trend, causal, and equivalence wording each require the matching
-design; absent it, bound the wording. Absence of published work is not proof that no work exists:
-state the databases, queries, dates, and scope behind a novelty claim — distinct from a bounded
-inference about one fully checked system.
+- **Direct:** the source measured or established the same construct, population, context, and
+  relationship asserted by the claim.
+- **Inferred:** checked evidence supports a bounded analytical conclusion that the source does not
+  state directly. Keep it out of the default prior-work contribution boundary and never use source
+  silence to infer an absent capability.
+- **Adjacent:** the source supports a neighboring population, context, construct, or mechanism.
+  Name the difference and use cautious language.
+- **Analogy:** the source only motivates a hypothesis or design transfer. Never present it as direct
+  proof of the target problem.
+
+Prefer T1 direct evidence. T2B direct evidence can be the strongest support for a novel, narrowly
+defined user need that published work has not studied.
+
+## Method-strength rules
+
+- Prevalence requires a defined population, sampling frame, measurement, and timeframe.
+- Trends require comparable measurements across time; two unrelated point estimates are not a
+  trend.
+- Causal language requires a design and analysis that identify causality. Cross-sectional,
+  observational, and self-report studies ordinarily support association only.
+- Qualitative work supports experiences, mechanisms, meanings, and design implications; frequency
+  within a small purposive sample is not population prevalence.
+- Statistical significance alone does not establish practical importance. Record effect size and
+  uncertainty where available.
+- A non-significant difference is not evidence of equivalence without an appropriate equivalence or
+  non-inferiority design.
+- Absence of published work is not proof that no work exists. State the databases, queries, dates,
+  and scope behind a novelty claim. This literature-search rule is distinct from a bounded
+  inference about one fully checked published/demonstrated system.
 
 ## Reusable evidence-strength register
 
-Maintain `evidence-strength-register.md` on two independent axes.
+Maintain `evidence-strength-register.md`. Its purpose is to cache a completed source audit so later
+analysis can reuse it without silently treating a source as universally strong.
 
-**Ingestion completeness.** `FULL`: the version needed for the assessment — methods, results,
-limitations, supplements — was obtained and opened. `PARTIAL`: an abstract, excerpt, or partial
-rendering, usable for identity or a narrow abstract-level fact but never a methods-dependent
-claim. `BROKEN`: CAPTCHA, error page, failed import, or the wrong content, supplying no evidence.
+Use two independent axes:
 
-**Claim-specific evidence strength**, judged for one named narrow claim, not for prestige or
-overall study quality; a null finding retains strength when its design supports the bounded null.
+### Ingestion completeness
 
-- `ES3 ANCHOR`: a `FULL` primary or authoritative source matching construct, population, context,
-  exposure/outcome, and relationship, with stated uncertainty and no risk-of-bias veto.
-- `ES2 BOUNDED SUPPORT`: a `FULL` supporting source whose material limit — design, self-report,
-  exposure mismatch, selected population, weak precision — forces bounded wording.
-- `ES1 CONTEXT ONLY`: definition, lived experience, hypothesis, coverage, contradiction, or
-  adjacent mechanism, unable to quantify or establish it.
-- `ES0 DO NOT USE`: `BROKEN`, incomplete, or fatally flawed for the claim.
+- `FULL`: the complete version needed for the assessment, including relevant methods, results,
+  limitations, and supplements, was obtained and opened.
+- `PARTIAL`: only an abstract, excerpt, repository record, institutional summary, or incomplete
+  rendering is available. It may support identity or a narrowly stated abstract-level fact, but not
+  a methods-dependent quantitative or causal claim.
+- `BROKEN`: CAPTCHA, error page, wrong page, failed import, or content that does not contain the
+  intended source. It supplies no evidence.
+
+### Claim-specific evidence strength
+
+- `ES3 ANCHOR`: for the **named narrow claim**, a `FULL` primary or authoritative source closely
+  matches the construct, population, context, exposure/outcome, and relationship; supplies temporal
+  or comparative leverage appropriate to the wording; reports interpretable estimates and
+  uncertainty where quantitative; and passes the critical-risk-of-bias veto.
+- `ES2 BOUNDED SUPPORT`: a `FULL` source supports the named claim, but one or more material limits
+  require bounded wording—for example cross-sectional design, self-report, exposure mismatch,
+  selected population, weak precision, or incomplete causal identification.
+- `ES1 CONTEXT ONLY`: useful for construct definition, lived experience, hypothesis, broad
+  coverage, contradiction, or an adjacent mechanism; it cannot quantify or causally establish the
+  exact target claim.
+- `ES0 DO NOT USE`: the source cannot support the named claim, is `BROKEN`, is too incomplete for
+  the proposed use, or has a fatal validity/provenance problem.
+
+These tags assess evidence for a claim, not paper prestige or overall study quality. The same source
+may be `ES3` for a narrow descriptive result, `ES2` for a nearby association, and `ES0` for a
+distal causal claim. Qualitative work may be strong for meanings and experience while remaining
+inappropriate for prevalence. Null findings retain strength when the design supports the bounded
+null; non-significance alone is not equivalence.
 
 ### Critical-risk-of-bias veto
 
-`ES3` is prohibited while a critical issue remains in the part of the study supporting it:
-incoherent allocation, comparison, exposure, or outcome construction; analysis incompatible with
-the design or missing uncertainty; a component credited from a multi-component
-intervention; attrition, selective reporting, confounding, or measurement validity that plausibly
-overturns the result; an item not `FULL` or under correction; or stated limitations. A design
-label such as "RCT", a large sample, or
-venue prestige never overrides this veto.
+`ES3` is prohibited when any critical issue remains in the part of the study supporting the claim:
+
+- allocation, comparison, exposure, or outcome construction is unclear or internally inconsistent;
+- the analysis is incompatible with the design, materially underpowered for the asserted
+  conclusion, or omits required uncertainty;
+- a multi-component intervention is credited to an isolated component without identification;
+- attrition, missingness, selective reporting, multiplicity, confounding, or measurement validity
+  plausibly overturns the result;
+- the ingested item is not `FULL`, or a correction/retraction/version conflict is unresolved; or
+- the source's own limitations contradict the proposed strength or causal wording.
+
+A design label such as “RCT,” a large sample, venue prestige, or an AI/NotebookLM rating never
+overrides this veto.
+
 NotebookLM ratings never override the veto.
 
 ### Cache and re-review rule
 
-Each register row names the supported claim, ingestion tag, strength tag, direction, decisive
-estimate/locator, decisive limitation, auditor/date, and re-review trigger. Reuse it without
-re-reading only while the source version, the claim and its scope, and the known corrections and
-risk-of-bias information are unchanged, and re-review when it becomes decision-critical. An
-unmarked source is `UNASSESSED`, not implicitly `ES1`.
+Each register row must name the supported claim, ingestion tag, strength tag, direction, decisive
+estimate/locator, decisive limitation, auditor/date, and re-review trigger. Future analysis may
+reuse the row without re-reading the whole source only when all of these remain unchanged:
+
+- bibliographic identity and source version;
+- proposed construct, population, context, exposure, outcome, and comparator;
+- association/causal wording and required precision; and
+- known corrections, retractions, contradictions, and risk-of-bias information.
+
+Re-review when any item changes, when a stronger claim is proposed, when the full source replaces a
+partial import, when direct contradictory evidence appears, or when the source becomes
+decision-critical. An unmarked source is `UNASSESSED`, not implicitly `ES1` or stronger.
 
 ### Source-resolution rule
 
-`UNASSESSED` describes missing assessment; it is never a terminal grade or end-of-round
-disposition. Enter every potentially decision-relevant candidate in
-`source-resolution.csv` when it is discovered, and continue until it is audited into a completed
-register row; screened out by a documented check showing it cannot affect an active claim,
-comparison, rank, or study requirement; superseded by a verified stronger source with the
-consequence recorded; or blocked behind human-only access after lawful routes were tried and an
-exact `NEEDS_AUTHOR_SOURCE_ACCESS` request was surfaced to the author. At phase readiness every
-HTTP(S) `references.csv` citation key needs a resolution row, and only explicitly classified
-`internal:` project evidence is exempt. A supersession must name a different retained, fully
-assessed source with a stable citation key; a human-access state keeps the surfaced-request
-date/locator, affected claims, fallback, and reopen trigger.
+`UNASSESSED` describes missing assessment; it is not a terminal evidence grade or a defensible
+end-of-round disposition. Put every potentially decision-relevant candidate in
+`source-resolution.csv` when it is discovered. Continue until it is:
+
+- fully obtained, opened, audited, and linked to a completed evidence-register row;
+- screened out before retention because a documented metadata/abstract relevance check shows it
+  cannot affect an active claim, mechanism, comparison, rank, or study requirement;
+- superseded by a verified stronger source with the consequence recorded; or
+- blocked behind human-only access after lawful routes were tried and an exact
+  `NEEDS_AUTHOR_SOURCE_ACCESS` request was surfaced to the author.
+
+At phase readiness, use `references.csv` URLs to distinguish external research evidence from
+project evidence: every HTTP(S) citation key needs a source-resolution row, while only explicitly
+classified `internal:` project evidence is exempt. A supersession must resolve to a different
+retained, fully assessed source with a stable citation key. A human-access state must preserve the
+actual surfaced-request date/locator, affected claims, fallback or narrowing, and reopen trigger.
 
 ### Lawful acquisition routes to exhaust before declaring a source blocked
 
@@ -100,26 +209,31 @@ A `403` from an automated fetcher usually means bot detection, not absent entitl
 `NEEDS_AUTHOR_SOURCE_ACCESS` on that signal alone. Drive the author's already-authenticated,
 already-entitled headed browser instead, and try these routes in order:
 
-1. **Direct fetch** with normal headers, for open-access and repository copies.
+1. **Direct fetch** with normal headers. Works for open-access and repository-hosted copies.
 2. **The author's headed browser, using the attachment-disposition parameter.** For ACM Digital
    Library, appending `?download=true` to the PDF path makes the server respond with
-   `Content-Disposition: attachment`, so the browser writes the file to its download directory:
+   `Content-Disposition: attachment`, so the browser writes the file to its default download
+   directory instead of opening the built-in PDF viewer:
 
    ```
    https://dl.acm.org/doi/pdf/<DOI>?download=true
    ```
 
-   This changes only the response disposition and asserts no entitlement the session lacks: an
-   unentitled session still receives the paywall page.
-3. **Preflight the browser's download settings before the batch.** For Chrome, read (never write)
+   This changes only the response disposition. It asserts no entitlement the session does not
+   already have: an unentitled session still receives the paywall page. Navigating one URL per
+   request works without any scripting bridge, so it does not need Chrome's
+   "Allow JavaScript from Apple Events" setting, and several such navigations may be issued
+   concurrently.
+3. **Preflight the browser's download settings before the batch**, so no dialog interrupts an
+   unattended run and every file lands in a known directory. For Chrome, read (never write)
    `~/Library/Application Support/Google/Chrome/<Profile>/Preferences` and confirm
-   `download.prompt_for_download` is `false` and `savefile.default_directory` is expected. If a
-   prompt is configured, ask the author to change it; do not change it yourself.
-4. **Publisher-neutral fallbacks**: Unpaywall, the institutional repository, author's page.
+   `download.prompt_for_download` is `false` and `savefile.default_directory` is the expected
+   folder. If a prompt is configured, ask the author to change it; do not change it yourself.
+4. **Publisher-neutral fallbacks**: Unpaywall, the institutional repository, the author's page.
 
-Rename publisher-assigned filenames (ACM uses `<prefix>.<suffix>.pdf`) to the repository
-convention when copying into `research-framing/sources/full-text/`, keeping the original
-identifier in the resolution row.
+Downloaded filenames are publisher-assigned (ACM uses `<prefix>.<suffix>.pdf`). Rename each file to
+the repository convention on the copy into `research-framing/sources/full-text/`, and keep the
+original identifier in the resolution row so the mapping stays auditable.
 
 Never ask for, read, copy, or reuse passwords, cookies, session tokens, or browser profiles. Driving
 a browser the author already controls is permitted; extracting its authentication material is not.
@@ -127,73 +241,161 @@ This route serves entitled access; it is not a paywall, CAPTCHA, or sign-in bypa
 genuinely unentitled, return to the `NEEDS_AUTHOR_SOURCE_ACCESS` path.
 
 Record every supplied draft, bibliography, and reading-list entry in
-`imported-bibliography-accountability.csv`; their presence makes them neither author decisions nor
-evidence. Every materially relevant entry must reach a terminal `source-resolution.csv` row and,
-when retained, its six-field accounting row — never a future-tense "obtain full copy" task inside a
-completed audit. A downloaded file is only `FULL_TEXT_OBTAINED` until its methods,
-results, limitations, and corrections have been reviewed.
+`imported-bibliography-accountability.csv`. Their presence does not make them author decisions or
+evidence. Every materially relevant entry must resolve to a terminal `source-resolution.csv` row
+and, when retained, to the applicable six-field accounting row. A potentially relevant entry
+cannot remain a future-tense “obtain full copy” task in a completed audit. `PARTIAL` and `BROKEN`
+describe what was opened; they do not close the acquisition loop. A downloaded file is still
+`FULL_TEXT_OBTAINED` until the relevant methods, results, limitations, corrections, and supplements
+have actually been reviewed.
 
 ### Author-provided seeds do not set the evidence ceiling
 
-For every author-provided or imported source retained for a material claim, document an
-independent upgrade search across these axes: institutional authority and remit; design validity,
-causal identification, risk of bias, and coverage; directness to construct, population, context,
-exposure, comparator, and outcome; currency, correction state, and contradictory evidence; and
-publication quality. Never convert a venue label, citation count, institutional brand, or author
-preference into evidence strength. Retain the seed while it remains uniquely direct but bound its
-claim; mark it `SUPERSEDED` only when the replacement covers its evidentiary role more defensibly,
-keeping the replacement locator and consequence. Reconcile any NotebookLM rating against the
-opened original and record the disagreement rather than voting.
+For every author-provided or imported source retained for a material claim, document an independent
+upgrade search. Compare at least:
 
-## Quantitative claims and citation verification
+- institutional authority and remit for normative or official claims;
+- design validity, causal identification, risk of bias, sample/coverage, and synthesis quality;
+- directness to the construct, population, context, exposure/intervention, comparator, and outcome;
+- currency, correction/retraction/supersession state, and contradictory evidence; and
+- publication and peer-review quality, including top HCI/domain venues where relevant.
 
-For each number, record what was measured, over what unit, period, sampling, and method; whether it
-is an observed count, estimate, prediction, or marketing claim; and its uncertainty, denominator,
-comparator, and locator. Use numbers only where they sharpen magnitude, trajectory, mismatch, or
-validation. Resolve source identity through a stable identifier, check corrections, retractions,
-and supersessions, and re-open the cited passage during the sentence-level audit.
+These are independent axes. Do not convert a venue label, citation count, institutional brand, or
+author preference into evidence strength. Retain the seed when it remains uniquely direct or useful,
+but bound its claim. Corroborate it when stronger evidence agrees. Mark it `SUPERSEDED` only when the
+replacement covers its intended evidentiary role more defensibly, and preserve the stable
+replacement locator and consequence for downstream claims.
+
+NotebookLM may apply and stress-test the rubric, but the final cached rating must be reconciled
+against the opened original. Persist the vetted bar and markings in NotebookLM as a note or
+dedicated text source when that notebook is the project's research hub. If NotebookLM disagrees
+with the manual audit, record the disagreement; never resolve it by vote.
+
+## Quantitative-claim checklist
+
+For each number, record:
+
+1. What was measured, in what unit, and over what period?
+2. Who or what was sampled, how, and with what coverage or sample size?
+3. What method produced the estimate?
+4. Is the value an observed count, model estimate, effect, prediction, or marketing claim?
+5. What uncertainty, denominator, comparator, and limitations affect interpretation?
+6. Where exactly is the support: page, section, table, figure, dataset cell, or official page?
+
+Use numbers when they sharpen magnitude, trajectory, mismatch, or validation. Do not add weak
+statistics merely to make every sentence look quantitative.
+
+## Citation verification
+
+For every material factual claim:
+
+- Resolve bibliographic identity using a DOI, PMID, ISBN, report identifier, dataset record, or
+  canonical URL.
+- Open the full source. Confirm title, authors/organization, year, venue, and version.
+- Read the methods and limitations needed to interpret the cited result.
+- Record the exact locator and a concise paraphrase of what the source actually supports.
+- Cite the primary source instead of a secondary article that merely cites it.
+- Check for corrections, retractions, superseding releases, and material conflicts.
+- Re-open the cited passage during the sentence-level audit.
+
+Reject a source when only an abstract, search snippet, AI summary, or another paper's paraphrase is
+available for a claim that depends on methodological detail.
 
 ## Prior-work six-field evidence accounting
 
-Read [prior-work-contribution-boundaries.md](prior-work-contribution-boundaries.md) for the
-decision procedure and labels; maintain `prior-work-evidence-accounting.csv`,
-`idea-provenance-ledger.csv`, and the human-readable `prior-work-contribution-boundary.md`. For
-every material prior-work or focal-project atom, record `AUTHOR CLAIM`,
-`DEMONSTRATED ARTIFACT OR STUDY`, `OPERATED CAPABILITY`, `EVALUATED RESULT`,
-`CAPABILITY COLLISION`, and `CONTRIBUTION CREDIT` independently: no field inherits truth from
-another. Collision requires positive evidence that the smallest named operation ran plus a diff of
-the complete human-activity predicate; credit requires an explicit author claim with matched
-demonstration; both are bounded to the weakest supported unit, people, activity, comparator,
-outcome, causal rung, and timeframe. `DEMONSTRATED_UNCLAIMED` takes credit `NONE`,
-`CLAIMED_UNDEMONSTRATED` takes neither collision nor credit, and proposals, future work, and
-unverified implementation claims go to `idea-provenance-ledger.csv` with
-`CAPABILITY COLLISION=NONE` and `CONTRIBUTION CREDIT=NONE`. Assign `OPERATED CAPABILITY=NO` only
-from positive artifact evidence about the audited version; source silence may create only
-`SEARCH_PRIORITY` or `REOPEN_QUERY`.
+Read [prior-work-contribution-boundaries.md](prior-work-contribution-boundaries.md) and maintain
+`prior-work-evidence-accounting.csv`, `idea-provenance-ledger.csv`, and the human-readable
+`prior-work-contribution-boundary.md`.
+
+For every material prior-work or focal-project atom, record these independently:
+
+- `AUTHOR CLAIM`;
+- `DEMONSTRATED ARTIFACT OR STUDY`;
+- `OPERATED CAPABILITY`;
+- `EVALUATED RESULT`;
+- `CAPABILITY COLLISION`; and
+- `CONTRIBUTION CREDIT`.
+
+No field inherits truth from another. The familiar `Claimed`, `Demonstrated`, and `Capability`
+tags are shorthand views only.
+
+Capability collision requires positive evidence that the smallest named operation actually ran and
+comparison of its complete human-activity predicate. A `DEMONSTRATED_UNCLAIMED` operation can narrow
+firstness only at the matched full-predicate or independently claimed sub-capability scope; a
+component/mechanism precedent establishes inheritance without narrowing the complete capability.
+Contribution credit requires an explicit author claim and matched
+demonstration; artifact-capability credit additionally requires demonstrated operation. Bound both
+to the weakest supported command, parameter, channel, condition, people, activity, artifact
+version, data, comparator, outcome, causal rung, and timeframe.
+
+Treat the asymmetric states explicitly:
+
+- `DEMONSTRATED_UNCLAIMED`: may create a matched-scope capability collision or a component precedent,
+  and therefore a false-firstness, implementation-novelty, inheritance, or fair-comparator risk at
+  that exact scope; contribution credit is `NONE` and the operation is not attributed as the
+  authors' claimed contribution.
+- `CLAIMED_UNDEMONSTRATED`: receives neither capability collision nor contribution credit unless
+  separate positive execution evidence exists.
+- A package comparison supports package-level results only. It cannot identify one operator or
+  mechanism without a defensible isolating contrast.
+- Nonsignificance never supports equivalent, comparable, maintained, or non-inferior wording
+  without an appropriate equivalence or non-inferiority design.
+
+Assign `OPERATED CAPABILITY=NO` only from positive artifact evidence that settles the audited
+version's interaction or architecture. Source silence and expected author behavior may create only
+`SEARCH_PRIORITY` or `REOPEN_QUERY`; they cannot populate positive capability, negative absence,
+collision, or contribution credit. Use `UNRESOLVED` when positive evidence does not settle the
+unit.
+
+Put proposals, future work, interpretations, and hypothetical scenarios only in
+`idea-provenance-ledger.csv`, with `CAPABILITY COLLISION=NONE` and
+`CONTRIBUTION CREDIT=NONE`. They may constrain conceptual provenance or “first idea” wording, but
+cannot retire a demonstrated capability claim. If an explicit author claim says a realized
+capability exists but matched evidence does not verify it, keep a `CLAIMED_UNDEMONSTRATED`
+accounting row so the excluded claim remains visible; it may also be cross-referenced as an
+unverified implementation claim in idea provenance.
+
+Decompose hybrid systems into one row per user-action-to-command, conventional-input,
+sensed-or-computed-state-to-adaptation/reward, condition-to-gating, or system-state-to-feedback
+channel. Reject a whole-system label unless positive evidence qualifies every channel required by
+the operational definition.
+
+Normalize away platform, hardware, sensor, OS, app, and game labels. A port receives contribution
+credit only when complete-source evidence demonstrates nontrivial adaptation knowledge, a new use
+class, or a directly validated empirical finding. A zero-credit port can still create a capability
+collision.
 
 ## Evidence sufficiency by framing move
 
-- **Context and why now:** authoritative facts on scale or trajectory, plus official
-  release/capability evidence and the adoption, exposure, or contextual change.
-- **Pain and gap:** direct user evidence with an evidence-ranked consequence, severity separate
-  from confidence; primary papers/products carried through six-field evidence accounting, with
-  collisions separated from attribution and proposals and silence excluded.
-- **Approach and contribution:** enabling mechanism, adopted foundations, likely costs, an
-  explicit line between implemented facts and plans, and a reusable capability or knowledge
-  hypothesis with its Phase 2–3 evidence.
+- **Context:** one or two authoritative facts that establish scale or trajectory.
+- **Pain:** direct user evidence plus an evidence-ranked consequence; triangulate published evidence
+  and the authors' observations when possible. Keep severity and confidence separate.
+- **Gap:** primary papers/products with six-field evidence accounting, capability collisions
+  separated from contribution attribution, and proposals/silence excluded—not review articles or
+  inferred absences alone.
+- **Why now:** official release/capability evidence plus adoption, exposure, or contextual change.
+- **Approach hypothesis:** enabling mechanism, intended experience, adopted foundations, likely
+  costs, and explicit distinction between implemented facts and plans.
+- **Research process:** traceable completed artifacts and decisions plus labeled future work.
+- **Prospective contribution:** a reusable capability or knowledge hypothesis with the Phase 2 and
+  Phase 3 evidence required to support it.
+- **Broader value:** a reasoned implication whose scope does not exceed the evidence.
 
 Before choosing a motivation frame, apply
 [consequence-severity-research.md](consequence-severity-research.md). Do not use prevalence as
-severity, significance as practical importance, cross-sectional association as causality, or
-general downstream harms as though the target behavior established every causal step.
+severity, statistical significance as practical importance, cross-sectional association as
+causality, or general downstream harms as though the target behavior established every causal
+link.
 
 ## Inherited foundations and reader-facing boundaries
 
 A checked external source may establish a general mechanism, design fact, or measurement
-relationship the project adopts. Do not demand a redundant project study because the project uses
-that foundation; require project-specific evidence when the active claim concerns the
-exact artifact, parameter value, implementation fidelity, coverage, dose, robustness, or
-downstream effect. Keep the full uncertainty record internally; per
-[claim-focused-writing.md](claim-focused-writing.md), a limitation enters narrative prose only
-when it materially constrains a claim the text actually makes, and an unclaimed distal outcome
-needs no prophylactic disclaimer.
+relationship that the project adopts. Do not demand a redundant project study merely because the
+project uses that foundation. Require project-specific evidence when the active claim concerns the
+exact artifact, parameter value, implementation fidelity, device or setting coverage, delivered
+dose, robustness, or downstream effect.
+
+Keep the full uncertainty and limitation record here even when a reader-facing passage does not
+need every item. Apply [claim-focused-writing.md](claim-focused-writing.md): include a limitation or
+counterfinding in narrative prose only when it materially constrains a claim or comparison the
+text actually makes. An unclaimed distal outcome does not require a prophylactic disclaimer.
